@@ -2,7 +2,7 @@ import cv2 as cv
 import numpy
 
 
-def lane_cheeck(thresh_mask):
+def lane_check(thresh_mask):
     return 0
 
 
@@ -18,7 +18,16 @@ while True:
     cv.imshow('binary thresh feed', thresh_mask)
     # print(gray_img[:, 30])
 
-    lane_cheeck(thresh_mask)
+    lane_check(thresh_mask)
+
+
+
+
+
+
+
+
+
 
     ############################################################################
     ##################Otsu's THRESHOLDING########################################
@@ -41,13 +50,7 @@ while True:
     # th5 = cv.adaptiveThreshold(gray_img, 30, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 3, 2)
     # cv.imshow('adapt thresh 2 feed', th5)
 
-    ############################################################################
-    ##################CANNY EDGE DETECTION########################################
-    ######################################################################################
-    # blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    # canny = cv.Canny(blur, 20, 70)
-    # ret, mask = cv.threshold(canny, 240, 255, cv.THRESH_BINARY)
-    # cv2.imshow('canny feed', mask)
+
 
     if cv.waitKey(1) == 13:
         break
