@@ -2,9 +2,16 @@ import cv2 as cv
 import numpy
 
 
-def lane_check(thresh_mask):
-    return 0
+#Idea should be to get the binary mask
+#get rid of as much noise as possible and keep the line
+#we will leave lane checking to stay on track for the light bar
+#now we need to create protocol for intersection detection
+#
 
+def left_check(thresh_mask):
+    return 0
+def right_check(thresh_mask):
+    return 0
 
 cap = cv.VideoCapture(0)
 while True:
@@ -14,20 +21,15 @@ while True:
     # print(img.shape) # img is a numpy matrix 480 x 640 x 3
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-    ret2, thresh_mask = cv.threshold(gray_img, 210, 255, cv.THRESH_BINARY)
+    blur = cv.GaussianBlur(gray_img, (5, 5), 0)
+    ret2, thresh_mask = cv.threshold(blur, 210, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
     # print(gray_img[:, 30])
 
-    lane_check(thresh_mask)
 
 
-
-
-
-
-
-
-
+    left_check(thresh_mask)
+    right_check(thresh_mask)
 
     ############################################################################
     ##################Otsu's THRESHOLDING########################################
@@ -49,6 +51,15 @@ while True:
 
     # th5 = cv.adaptiveThreshold(gray_img, 30, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 3, 2)
     # cv.imshow('adapt thresh 2 feed', th5)
+
+    ############################################################################
+    ##################CANNY########################################
+    #####################################################################################
+    #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
+    #canny = cv.Canny(blur, 10, 70)
+    #ret, mask = cv.threshold(canny, 70, 255, cv.THRESH_BINARY)
+    #cv.imshow('canny feed', mask)
+
 
 
 
