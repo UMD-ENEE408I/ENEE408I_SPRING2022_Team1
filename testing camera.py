@@ -7,11 +7,20 @@ import numpy
 #we will leave lane checking to stay on track for the light bar
 #now we need to create protocol for intersection detection
 #
+#After getting the binary mask, we will take a 30x640 row vectors at the top of the matrix,
+#we take the sum of this matrix and once it passes a threshold we send a stop and push by some constant command to esp32
+#so we can align up the camera with the entire intersection.
+#We wait for esp32 complete response and then find what type of intersection we have.
+#now ....
 
-def left_check(thresh_mask):
-    return 0
-def right_check(thresh_mask):
-    return 0
+def find_type_of_intersection(thresh_mask):
+    top_crop = thresh_mask[0:30, :] #maybe get more rows.
+    #if sum(top_crop) > somenumber:
+    #   send stop and push command
+    #
+    #
+    #
+    #
 
 cap = cv.VideoCapture(0)
 while True:
@@ -28,8 +37,25 @@ while True:
 
 
 
-    left_check(thresh_mask)
-    right_check(thresh_mask)
+    find_type_of_intersection(thresh_mask)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ############################################################################
     ##################Otsu's THRESHOLDING########################################
