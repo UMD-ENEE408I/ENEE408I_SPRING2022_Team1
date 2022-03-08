@@ -1,5 +1,5 @@
 import cv2 as cv
-import numpy
+import numpy as np
 
 
 #Idea should be to get the binary mask
@@ -15,6 +15,10 @@ import numpy
 
 def find_type_of_intersection(thresh_mask):
     top_crop = thresh_mask[0:30, :] #maybe get more rows.
+    cv.imshow('cropped feed', top_crop)
+    print(top_crop.sum())  #or print(np.sum(top_crop))
+
+
     #if sum(top_crop) > somenumber:
     #   send stop and push command
     #
@@ -31,7 +35,7 @@ while True:
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    ret2, thresh_mask = cv.threshold(blur, 210, 255, cv.THRESH_BINARY)
+    ret2, thresh_mask = cv.threshold(blur, 220, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
     # print(gray_img[:, 30])
 
