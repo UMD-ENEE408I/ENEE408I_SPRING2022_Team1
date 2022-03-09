@@ -1,7 +1,8 @@
 import cv2 as cv
 import numpy as np
+import time
 
-
+beginFlag = False
 #Idea should be to get the binary mask
 #get rid of as much noise as possible and keep the line
 #we will leave lane checking to stay on track for the light bar
@@ -16,7 +17,7 @@ import numpy as np
 def find_type_of_intersection(thresh_mask):
     top_crop = thresh_mask[0:30, :] #maybe get more rows.
     cv.imshow('cropped feed', top_crop)
-    print(top_crop.sum())  #or print(np.sum(top_crop))
+    #print(top_crop.sum())  #or print(np.sum(top_crop))
 
 
     #if sum(top_crop) > somenumber:
@@ -34,14 +35,14 @@ while True:
     # print(img.shape) # img is a numpy matrix 480 x 640 x 3
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
-    blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    ret2, thresh_mask = cv.threshold(blur, 220, 255, cv.THRESH_BINARY)
+    #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
+    ret2, thresh_mask = cv.threshold(gray_img, 220, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
-    # print(gray_img[:, 30])
 
 
 
     find_type_of_intersection(thresh_mask)
+
 
 
 
