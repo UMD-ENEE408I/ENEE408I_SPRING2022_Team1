@@ -1,34 +1,68 @@
 import cv2 as cv
 import numpy as np
 import time
+from intersectionType import *
 
 beginFlag = False
+
+
+
+
+
+
+
 #Idea should be to get the binary mask
 #get rid of as much noise as possible and keep the line
 #we will leave lane checking to stay on track for the light bar
 #now we need to create protocol for intersection detection
 #
-#After getting the binary mask, we will take a 30x640 row vectors at the top of the matrix,
-#we take the sum of this matrix and once it passes a threshold we send a stop and push by some constant command to esp32
-#so we can align up the camera with the entire intersection.
-#We wait for esp32 complete response and then find what type of intersection we have.
-#now ....
+#when the beginFlag is made true in the while loop, we can assume the arduino/platformIO code has the mouse 
+#positioned correctly 
 
 def find_type_of_intersection(thresh_mask):
     top_crop = thresh_mask[0:30, :] #maybe get more rows.
-    cv.imshow('cropped feed', top_crop)
-    #print(top_crop.sum())  #or print(np.sum(top_crop))
+    left_crop = thresh_mask[:, 110:160]
+    right_crop = thresh_mask[:, 480:530]
+
+    #FOR DEBUGGING AND FINDING GOOD THRESHOLD VALUES
+    ##############################################################
+    #For  0:30, 110:160 and 480:530 ->  80000 seems to work
+    cv.imshow('top cropped feed', top_crop)
+    cv.imshow('left cropped feed', left_crop)
+    cv.imshow('right cropped feed', right_crop)
+    print(top_crop.sum())
+    print(left_crop.sum())
+    print(right_crop.sum())
+    time.sleep(.5)  
+    ###############################################################
+
+    top_crop_sum = top_crop.sum()
+    left_crop_sum = left_crop.sum()
+    right_crop_sum = right_crop.sum()
+    topThreshold = 200000
+    LRThreshold = 200000
+
+    if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
+        return (intersectionType.Three_Way)
+    elif left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Left and Right
+        return (intersectionType.T)
+    elif top_crop_sum > topThreshold and left_crop_sum > LRThreshold: #Top and Left
+        return (intersectionType.Left_and_Foward)
+    elif top_crop_sum > topThreshold and right_crop_sum > LRThreshold: #Top and Right
+        return (intersectionType.Right_and_Foward)
+    elif left_crop_sum > LRThreshold: # Left
+        return (intersectionType.Left)
+    else: # Right
+        return (intersectionType.Right)
 
 
-    #if sum(top_crop) > somenumber:
-    #   send stop and push command
-    #
-    #
-    #
-    #
+
+
+
 
 cap = cv.VideoCapture(0)
 while True:
+
     ret, img = cap.read()
 
     # print(type(img)) #This is a <class 'numpy.ndarray'>
@@ -36,12 +70,11 @@ while True:
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    ret2, thresh_mask = cv.threshold(gray_img, 220, 255, cv.THRESH_BINARY)
+    ret2, thresh_mask = cv.threshold(gray_img, 205, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
 
-
-
-    find_type_of_intersection(thresh_mask)
+    type_of_inter = find_type_of_intersection(thresh_mask)
+    print(type_of_inter.name)
 
 
 
