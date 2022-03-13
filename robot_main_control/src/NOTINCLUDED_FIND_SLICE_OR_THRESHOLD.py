@@ -73,31 +73,11 @@ while True:
 
     ret, img = cap.read()
     cv.imshow('pure feed', img)
-    #GET THE BLUETOOTH MESSAGE
+
+    type_of_inter = find_type_of_intersection(img) # For debug
+    print(type_of_inter.name) # For debug
 
 
-
-
-    if(beginFlag == True):
-        # print(type(img)) #This is a <class 'numpy.ndarray'>
-        # print(img.shape) # img is a numpy matrix 480 x 640 x 3
-        acc = 0
-        setDict(myDict)
-
-        while acc < 100:
-            ret, img = cap.read()
-            type_of_inter = find_type_of_intersection(img).name # For debug
-            print(type_of_inter) # For debug
- 
-            myDict[find_type_of_intersection(img).name] += 1
-            acc += 1
-
-        type_of_inter = max(myDict, key = myDict.get)
-        print('FINAL -> ' + type_of_inter)
-
-        beginFlag = False
-
-        #NOW WE NEED TO UPDATE MAZE STRUCTURE AND SEND COMMAND BACK TO ESP32
 
 
 
