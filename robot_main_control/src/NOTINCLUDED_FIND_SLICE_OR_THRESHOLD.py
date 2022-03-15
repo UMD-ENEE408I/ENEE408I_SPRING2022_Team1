@@ -41,7 +41,7 @@ def find_type_of_intersection(img):
     print(top_crop.sum())
     print(left_crop.sum())
     print(right_crop.sum())
-    #time.sleep(.5)  
+    time.sleep(.5)  
     ###############################################################
 
     top_crop_sum = top_crop.sum()
@@ -68,7 +68,7 @@ def find_type_of_intersection(img):
 
 
 
-cap = cv.VideoCapture(0)
+cap = cv.VideoCapture(1)
 while True:
 
     ret, img = cap.read()
