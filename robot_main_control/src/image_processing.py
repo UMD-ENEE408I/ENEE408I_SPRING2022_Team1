@@ -1,6 +1,4 @@
 from typing import Dict
-import cv2 as cv
-import numpy as np
 import time
 from intersectionType import *
 
@@ -74,7 +72,11 @@ cap = cv.VideoCapture(0)
 while True:
 
     ret, img = cap.read()
-    cv.imshow('pure feed', img)
+    #cv.imshow('pure feed', img)
+    img = img[0:380, :]
+    newimg = decrease_brightness(img, 190)
+    cv.imshow('pure feed with brightness turned down', newimg)
+
     #GET THE BLUETOOTH MESSAGE
 
 
@@ -88,7 +90,9 @@ while True:
 
         while acc < 100:
             ret, img = cap.read()
-            type_of_inter = find_type_of_intersection(img).name # For debug
+            newimg = decrease_brightness(img, 190)
+            cv.imshow('pure feed with brightness turned down', newimg)
+            type_of_inter = find_type_of_intersection(newimg).name # For debug
             print(type_of_inter) # For debug
  
             myDict[find_type_of_intersection(img).name] += 1
