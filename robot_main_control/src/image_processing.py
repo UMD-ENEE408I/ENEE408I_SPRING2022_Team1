@@ -60,8 +60,10 @@ def find_type_of_intersection(img):
         return (intersectionType.Right_and_Foward)
     elif left_crop_sum > LRThreshold: # Left
         return (intersectionType.Left)
-    else: # Right
+    elif right_crop_sum > LRThreshold: # Right
         return (intersectionType.Right)
+    else:
+        return (intersectionType.Dead_End) #It is a dead end
 
 
 

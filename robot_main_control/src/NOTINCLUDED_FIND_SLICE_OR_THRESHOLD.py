@@ -1,6 +1,4 @@
 from typing import Dict
-import cv2 as cv
-import numpy as np
 import time
 from intersectionType import *
 
@@ -21,14 +19,16 @@ myDict = dict()
 #positioned correctly 
 
 def find_type_of_intersection(img):
+
+
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    ret2, thresh_mask = cv.threshold(gray_img, 205, 255, cv.THRESH_BINARY)
+    ret2, thresh_mask = cv.threshold(gray_img, 70, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
 
 
-    top_crop = thresh_mask[0:30, :] #maybe get more rows.
+    top_crop = thresh_mask[0:40, :] #maybe get more rows.
     left_crop = thresh_mask[:, 110:160]
     right_crop = thresh_mask[:, 480:530]
 
@@ -48,7 +48,7 @@ def find_type_of_intersection(img):
     left_crop_sum = left_crop.sum()
     right_crop_sum = right_crop.sum()
     topThreshold = 200000
-    LRThreshold = 200000
+    LRThreshold = 300000
 
     if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
         return (intersectionType.Three_Way)
@@ -60,21 +60,29 @@ def find_type_of_intersection(img):
         return (intersectionType.Right_and_Foward)
     elif left_crop_sum > LRThreshold: # Left
         return (intersectionType.Left)
-    else: # Right
+    elif right_crop_sum > LRThreshold: # Right
         return (intersectionType.Right)
+    else:
+        return (intersectionType.Dead_End) #It is a dead end
 
 
 
 
 
 
-cap = cv.VideoCapture(1)
+cap = cv.VideoCapture(0)
 while True:
 
+
     ret, img = cap.read()
+    img = img[0:380, :]
     cv.imshow('pure feed', img)
 
-    type_of_inter = find_type_of_intersection(img) # For debug
+    newimg = decrease_brightness(img, 190)
+    cv.imshow('pure feed with brightness turned down', newimg)
+
+
+    type_of_inter = find_type_of_intersection(newimg) # For debug
     print(type_of_inter.name) # For debug
 
 
