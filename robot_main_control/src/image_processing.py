@@ -22,11 +22,11 @@ def find_type_of_intersection(img):
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    ret2, thresh_mask = cv.threshold(gray_img, 205, 255, cv.THRESH_BINARY)
+    ret2, thresh_mask = cv.threshold(gray_img, 70, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
 
 
-    top_crop = thresh_mask[0:30, :] #maybe get more rows.
+    top_crop = thresh_mask[0:40, :] #maybe get more rows.
     left_crop = thresh_mask[:, 110:160]
     right_crop = thresh_mask[:, 480:530]
 
@@ -46,7 +46,7 @@ def find_type_of_intersection(img):
     left_crop_sum = left_crop.sum()
     right_crop_sum = right_crop.sum()
     topThreshold = 200000
-    LRThreshold = 200000
+    LRThreshold = 300000
 
     if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
         return (intersectionType.Three_Way)
