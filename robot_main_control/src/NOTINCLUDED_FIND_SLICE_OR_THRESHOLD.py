@@ -41,7 +41,7 @@ def find_type_of_intersection(img):
     print(top_crop.sum())
     print(left_crop.sum())
     print(right_crop.sum())
-    time.sleep(.5)  
+    time.sleep(.2)  
     ###############################################################
 
     top_crop_sum = top_crop.sum()

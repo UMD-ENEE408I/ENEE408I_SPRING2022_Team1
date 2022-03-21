@@ -15,7 +15,7 @@ const char* password = "BSY89A602856";
 
 // Set web server port number to 80
 WiFiServer server(80);
-
+WiFiClient client;
 // Variable to store the HTTP request
 String header;
 
@@ -51,6 +51,7 @@ void setup() {
 
 void loop(){
   WiFiClient client = server.available();   // Listen for incoming clients
+  client.write("Hello Python");
 
   if (client) {                             // If a new client connects,
     currentTime = millis();
@@ -69,17 +70,21 @@ void loop(){
           if (currentLine.length() == 0) {
             // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
             // and a content-type so the client knows what's coming, then a blank line:
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println("Connection: close");
-            client.println();
+            //client.println("HTTP/1.1 200 OK");
+            //client.println("Content-type:text/html");
+            //client.println("Connection: close");
+            //client.println();
+            client.write("made it");
             
-            
-            
-            client.println(currentLine);
+            //client.println("<!DOCTYPE html><html>");
+            //client.println("<head><meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">");
+            //client.println("<link rel=\"icon\" href=\"data:,\">");
+            //client.println("<body><h1>currentLine is" + header + "</h1>");
+            //client.println("</body></html>");
            
             // The HTTP response ends with another blank line
-            client.println();
+            //client.println();
+            //client.write("request done");
             // Break out of the while loop
             break;
           } else { // if you got a newline, then clear currentLine

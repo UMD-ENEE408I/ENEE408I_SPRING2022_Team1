@@ -90,12 +90,13 @@ while True:
 
         while acc < 100:
             ret, img = cap.read()
+            img = img[0:380, :]
             newimg = decrease_brightness(img, 190)
-            cv.imshow('pure feed with brightness turned down', newimg)
+            cv.imshow('pure feed with brightness turned down in loop', newimg)
             type_of_inter = find_type_of_intersection(newimg).name # For debug
             print(type_of_inter) # For debug
  
-            myDict[find_type_of_intersection(img).name] += 1
+            myDict[find_type_of_intersection(newimg).name] += 1
             acc += 1
 
         type_of_inter = max(myDict, key = myDict.get)
