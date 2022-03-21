@@ -5,7 +5,7 @@ TCP_IP = '192.168.0.18'
 TCP_PORT = 80
 BUFFER_SIZE = 5
 MESSAGE = "three way\n"
-
+data = ""
 
 # while True:
 #    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -16,7 +16,7 @@ MESSAGE = "three way\n"
 #    s.close()
 #    print ("received data:", data)
 
-data = ""
+
 
 while True:
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -25,7 +25,7 @@ while True:
     print ("received data:", data)
 
     if data == "Begin":
-        print ("received data:", data)
+        print("received data:", data)
         s.send(MESSAGE.encode())
 
     if data == "close":
@@ -33,7 +33,7 @@ while True:
     
     data = ""
     time.sleep(1)
-    s.close()
+    
 
 
 

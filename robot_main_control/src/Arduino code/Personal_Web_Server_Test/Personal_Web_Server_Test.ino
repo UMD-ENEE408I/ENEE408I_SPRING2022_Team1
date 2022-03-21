@@ -72,7 +72,7 @@ void loop(){
   }
 
     
-  //if (client.connected()) {  
+  if (client.connected()) {  
       client.write("Begin");
       delay(5000);
       if(client.available()){
@@ -84,7 +84,7 @@ void loop(){
         }
         Serial.println("FINAL MESSAGE ->>" + rec_Message);
       }
- // }
+  }
 
 
     

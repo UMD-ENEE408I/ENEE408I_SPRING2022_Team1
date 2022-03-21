@@ -1,13 +1,26 @@
+from email.message import Message
 from typing import Dict
-import time
+from webbrowser import get
 from intersectionType import *
+import socket
+import time
 
-beginFlag = True
+beginFlag = False
 myDict = dict()
+TCP_IP = '192.168.0.18'
+TCP_PORT = 80
+BUFFER_SIZE = 5
+MESSAGE = ""
+data = ""
+s = socket
 
-
-
-
+def get_message():
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.connect((TCP_IP, TCP_PORT))
+    data = s.recv(BUFFER_SIZE).decode().strip()
+    print ("received data:", data)
+    time.sleep(1)
+    return (s,data)
 
 
 #Idea should be to get the binary mask
@@ -71,14 +84,15 @@ def find_type_of_intersection(img):
 cap = cv.VideoCapture(0)
 while True:
 
-    ret, img = cap.read()
-    #cv.imshow('pure feed', img)
-    img = img[0:380, :]
-    newimg = decrease_brightness(img, 190)
-    cv.imshow('pure feed with brightness turned down', newimg)
+    ret, img = cap.read() #debug
+    #cv.imshow('pure feed', img) #debug
+    img = img[0:380, :] #debug
+    newimg = decrease_brightness(img, 190) #debug
+    cv.imshow('pure feed with brightness turned down', newimg) #debug
 
-    #GET THE BLUETOOTH MESSAGE
-
+    #GET THE WIFI MESSAGE
+    if get_message() == (_,"Begin"):
+        beginFlag = True
 
 
 
@@ -102,9 +116,13 @@ while True:
         type_of_inter = max(myDict, key = myDict.get)
         print('FINAL -> ' + type_of_inter)
 
-        beginFlag = False
 
         #NOW WE NEED TO UPDATE MAZE STRUCTURE AND SEND COMMAND BACK TO ESP32
+        MESSAGE = f"{type_of_inter}\n"
+        s.send(MESSAGE.encode())
+        beginFlag = False
+
+
 
 
 
