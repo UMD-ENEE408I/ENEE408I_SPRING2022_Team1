@@ -12,7 +12,7 @@ TCP_PORT = 80
 BUFFER_SIZE = 5
 MESSAGE = ""
 data = ""
-s = socket
+#s = socket.socket()
 
 def get_message():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -91,7 +91,8 @@ while True:
     cv.imshow('pure feed with brightness turned down', newimg) #debug
 
     #GET THE WIFI MESSAGE
-    if get_message() == (_,"Begin"):
+    (s,rec_msg) = get_message()
+    if rec_msg == "Begin":
         beginFlag = True
 
 

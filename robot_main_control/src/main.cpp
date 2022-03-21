@@ -74,7 +74,7 @@ void loop(){
     
   if (client.connected()) {  
       client.write("Begin");
-      delay(5000);
+      delay(7000);
       if(client.available()){
         Serial.println("is available");
         while(holder != '\n'){
