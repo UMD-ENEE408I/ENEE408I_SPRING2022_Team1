@@ -12,30 +12,21 @@
 // Replace with your network credentials
 const char* ssid = "ARRIS-93FA";
 const char* password = "BSY89A602856";
+const uint16_t port = 8000;
+const char * host = "192.168.0.14";
 
 // Set web server port number to 80
-WiFiServer server(80);
-WiFiClient client;
+
 // Variable to store the HTTP request
 String rec_Message = "";
 char holder;
+bool client_Flag = true;
 
-// Current time
-unsigned long currentTime = millis();
-// Previous time
-unsigned long previousTime = 0; 
+
 // Define timeout time in milliseconds (example: 2000ms = 2s)
-const long timeoutTime = 2000;
 String currentLine = "";                // make a String to hold incoming data from the client
 
-//##################################################################################################
 
-void waitforclient(){
-  while(!client.available()){
-    delay(500);
-    Serial.println("waiting for client response");
-  }
-}
 
 
 //##################################################################################################
@@ -58,7 +49,6 @@ void setup() {
   Serial.println("WiFi connected.");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
-  server.begin();
 }
 
 //##################################################################################################
@@ -66,26 +56,33 @@ void setup() {
 
 
 void loop(){
-  WiFiClient client = server.available();   // Listen for incoming clients
-  if(client){
-    Serial.println("client first time connected");
-  }
+  WiFiClient client;   // Listen for incoming clients
 
-    
-  if (client.connected()) {  
-      client.write("Begin");
-      delay(7000);
-      if(client.available()){
-        Serial.println("is available");
-        while(holder != '\n'){
-          Serial.println("INEHRE");
-          holder = client.read();
-          rec_Message += holder;
+  if(client_Flag == true){
+
+    while(!client.connect(host, port)){
+      Serial.println("client connecting");
+    }
+      
+    if (client.connected()) {
+        Serial.println("client connected");
+        client.write("Begin");
+        delay(7000);
+        if(client.available()){
+          Serial.println("is available");
+          while(holder != '\n'){
+            holder = client.read();
+            Serial.println("holder is" + holder);
+            rec_Message += holder;
+          }
+          Serial.println("FINAL MESSAGE ->>" + rec_Message);
+          rec_Message = "";
+          holder = '\0';
         }
-        Serial.println("FINAL MESSAGE ->>" + rec_Message);
-      }
+    }
   }
 
 
-    
+  delay(10000);
+  //client_Flag = true;
 }

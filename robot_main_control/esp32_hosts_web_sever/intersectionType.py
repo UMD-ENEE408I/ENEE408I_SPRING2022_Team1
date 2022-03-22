@@ -4,8 +4,8 @@ import numpy as np
 
 
 class intersectionType(Enum):
-    Left_and_Foward = 1
-    Right_and_Foward = 2
+    Left_and_Forward = 1
+    Right_and_Forward = 2
     T = 3
     Left = 4
     Right = 5
@@ -16,8 +16,8 @@ class intersectionType(Enum):
 
 def setDict(dict):
     dict.clear
-    dict[intersectionType.Left_and_Foward.name] = 0
-    dict[intersectionType.Right_and_Foward.name] = 0
+    dict[intersectionType.Left_and_Forward.name] = 0
+    dict[intersectionType.Right_and_Forward.name] = 0
     dict[intersectionType.T.name] = 0
     dict[intersectionType.Left.name] = 0
     dict[intersectionType.Right.name] = 0

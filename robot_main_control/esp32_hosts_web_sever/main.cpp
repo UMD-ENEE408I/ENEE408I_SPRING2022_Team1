@@ -4,10 +4,10 @@
 *********/
 
 // Load Wi-Fi library
-//#include <Arduino.h>
+#include <Arduino.h>
 #include <WiFi.h>
-//#include <Wire.h>
-//#include <SPI.h>
+#include <Wire.h>
+#include <SPI.h>
 
 // Replace with your network credentials
 const char* ssid = "ARRIS-93FA";
@@ -19,6 +19,7 @@ WiFiClient client;
 // Variable to store the HTTP request
 String rec_Message = "";
 char holder;
+bool client_Flag = false;
 
 // Current time
 unsigned long currentTime = millis();
@@ -30,12 +31,12 @@ String currentLine = "";                // make a String to hold incoming data f
 
 //##################################################################################################
 
-void waitforclient(){
-  while(!client.available()){
-    delay(500);
-    Serial.println("waiting for client response");
-  }
-}
+//void waitforclient(){
+//  while(!client.available()){
+//    delay(500);
+//    Serial.println("waiting for client response");
+//  }
+//}
 
 
 //##################################################################################################
@@ -67,26 +68,31 @@ void setup() {
 
 void loop(){
   WiFiClient client = server.available();   // Listen for incoming clients
-  if(client){
-    Serial.println("client first time connected");
-  }
 
-    
-  if (client.connected()) {  
-      client.write("Begin");
-      delay(5000);
-      if(client.available()){
-        Serial.println("is available");
-        while(holder != '\n'){
-          Serial.println("INEHRE");
-          holder = client.read();
-          rec_Message += holder;
+  if(client_Flag == true){
+    WiFiClient client = server.available();   // Listen for incoming clients
+    if(client){
+      Serial.println("client first time connected");
+    }
+      
+    if (client.connected()) {
+        client.write("Begin");
+        delay(7000);
+        if(client.available()){
+          Serial.println("is available");
+          while(holder != '\n'){
+            Serial.println("holder is" + holder);
+            holder = client.read();
+            rec_Message += holder;
+          }
+          Serial.println("FINAL MESSAGE ->>" + rec_Message);
+          rec_Message = "";
+          holder = '\0';
         }
-        Serial.println("FINAL MESSAGE ->>" + rec_Message);
-        rec_Message = "";
-      }
+    }
   }
 
 
-    
+  //delay(10000);
+  //client_Flag = true;
 }

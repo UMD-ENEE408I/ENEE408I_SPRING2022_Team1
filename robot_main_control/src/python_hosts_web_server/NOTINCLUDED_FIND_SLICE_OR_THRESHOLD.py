@@ -47,21 +47,26 @@ def find_type_of_intersection(img):
     top_crop_sum = top_crop.sum()
     left_crop_sum = left_crop.sum()
     right_crop_sum = right_crop.sum()
+    mask_sum = thresh_mask.sum()
+
     topThreshold = 200000
     LRThreshold = 300000
+    winThreshold = 10000000
 
     if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
         return (intersectionType.Three_Way)
     elif left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Left and Right
         return (intersectionType.T)
     elif top_crop_sum > topThreshold and left_crop_sum > LRThreshold: #Top and Left
-        return (intersectionType.Left_and_Foward)
+        return (intersectionType.Left_and_Forward)
     elif top_crop_sum > topThreshold and right_crop_sum > LRThreshold: #Top and Right
-        return (intersectionType.Right_and_Foward)
+        return (intersectionType.Right_and_Forward)
     elif left_crop_sum > LRThreshold: # Left
         return (intersectionType.Left)
     elif right_crop_sum > LRThreshold: # Right
         return (intersectionType.Right)
+    elif mask_sum > winThreshold: # WE ARE AT MIDDLE
+        return (intersectionType.Middle_of_Maze)
     else:
         return (intersectionType.Dead_End) #It is a dead end
 
