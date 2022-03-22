@@ -183,6 +183,7 @@ while True:
         send_message(type_of_inter, my_client_connection)
         beginFlag = False
         data = ""
+        rec_msg = ""
 
 
 
