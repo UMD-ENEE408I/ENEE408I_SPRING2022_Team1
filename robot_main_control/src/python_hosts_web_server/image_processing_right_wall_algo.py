@@ -30,7 +30,6 @@ s.settimeout(5)
 
 
 def get_message1():
-
     try:
         client_connection, client_address = s.accept()        
         global data
@@ -146,14 +145,14 @@ def find_type_of_intersection(img):
 cap = cv.VideoCapture(0)
 while True:
 
-    ret, img = cap.read() #debug
-    #cv.imshow('pure feed', img) #debug
-    img = img[0:380, :] #debug
-    newimg = decrease_brightness(img, 190) #debug
-    cv.imshow('pure feed with brightness turned down', newimg) #debug
+    ret, img = cap.read()  #
+    #cv.imshow('pure feed', img)  # debug
+    img = img[0:380, :]  # debug
+    newimg = decrease_brightness(img, 190)  # debug
+    cv.imshow('pure feed with brightness turned down', newimg)  # debug
 
-    #GET THE WIFI MESSAGE
-    (client_connection, rec_msg) = get_message1()
+    # GET THE WIFI MESSAGE
+    (my_client_connection, rec_msg) = get_message1()
     if rec_msg == "Begin":
         beginFlag = True
 
@@ -181,7 +180,7 @@ while True:
 
 
         #NOW WE NEED TO UPDATE MAZE STRUCTURE AND SEND COMMAND BACK TO ESP32
-        send_message(type_of_inter, client_connection)
+        send_message(type_of_inter, my_client_connection)
         beginFlag = False
         data = ""
 
