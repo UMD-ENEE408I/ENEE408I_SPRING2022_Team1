@@ -55,11 +55,12 @@ void setup() {
 
 
 
-void loop(){
-  WiFiClient client;   // Listen for incoming clients
+
+void send_and_recieve_message_to_client(WiFiClient client){
+  rec_Message = "";
+  holder = '\0';
 
   if(client_Flag == true){
-
     while(!client.connect(host, port)){
       Serial.println("client connecting");
     }
@@ -75,14 +76,22 @@ void loop(){
             Serial.println("holder is" + holder);
             rec_Message += holder;
           }
-          Serial.println("FINAL MESSAGE ->>" + rec_Message);
-          rec_Message = "";
-          holder = '\0';
+          Serial.println("FINAL MESSAGE ->> " + rec_Message);
         }
     }
+
   }
+}
+
+
+
+void loop(){
+  WiFiClient client;   // Listen for incoming clients
+  send_and_recieve_message_to_client(client);
+  Serial.println("scope check" + rec_Message);
 
 
   delay(10000);
+  
   //client_Flag = true;
 }
