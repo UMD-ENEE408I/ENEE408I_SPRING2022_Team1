@@ -13,7 +13,7 @@
 const char* ssid = "ARRIS-93FA";
 const char* password = "BSY89A602856";
 const uint16_t port = 8000;
-const char * host = "192.168.0.14";
+const char* host = "192.168.0.14";
 
 // Set web server port number to 80
 
@@ -31,6 +31,10 @@ String currentLine = "";                // make a String to hold incoming data f
 
 //##################################################################################################
 void setup() {
+  pinMode(14,OUTPUT);
+  digitalWrite(14,LOW);
+  delay(100);
+
   Serial.begin(115200);
   // Initialize the output variables as outputs
 
@@ -68,15 +72,18 @@ void send_and_recieve_message_to_client(WiFiClient client){
     if (client.connected()) {
         Serial.println("client connected");
         client.write("Begin");
-        delay(7000);
-        if(client.available()){
-          Serial.println("is available");
-          while(holder != '\n'){
-            holder = client.read();
-            Serial.println("holder is" + holder);
-            rec_Message += holder;
-          }
-          Serial.println("FINAL MESSAGE ->> " + rec_Message);
+
+        while(client.available() == 0){
+          delay(500);
+        }
+        Serial.println("is available");
+
+        while(holder != '\n'){
+          holder = client.read();
+          Serial.println("holder is" + holder);
+          rec_Message += holder;
+        //Serial.println("FINAL MESSAGE ->> " + rec_Message);
+        delay(200);
         }
     }
 
@@ -86,12 +93,12 @@ void send_and_recieve_message_to_client(WiFiClient client){
 
 
 void loop(){
-  WiFiClient client;   // Listen for incoming clients
-  send_and_recieve_message_to_client(client);
-  Serial.println("scope check" + rec_Message);
+  //WiFiClient client;   // Listen for incoming clients
+  //send_and_recieve_message_to_client(client);
+  //Serial.println("scope check and FINAL -->> " + rec_Message);
 
 
-  delay(10000);
+  delay(6000);
   
   //client_Flag = true;
 }

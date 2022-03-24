@@ -8,14 +8,15 @@ import time
 
 
 
-
-beginFlag = False
-myDict = dict()
-SERVER_HOST = '192.168.0.14'
-SERVER_PORT = 8000
 BUFFER_SIZE = 5
 MESSAGE = ""
 data = ""
+beginFlag = False
+myDict = dict()
+
+
+SERVER_HOST = '192.168.0.14'
+SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind((SERVER_HOST, SERVER_PORT))
@@ -118,7 +119,7 @@ def find_type_of_intersection(img):
 
     topThreshold = 200000
     LRThreshold = 300000
-    winThreshold = 10000000
+    winThreshold = 40000000
 
     if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
         return (intersectionType.Three_Way)
@@ -180,6 +181,7 @@ while True:
 
 
         #NOW WE NEED TO UPDATE MAZE STRUCTURE AND SEND COMMAND BACK TO ESP32
+
         send_message(type_of_inter, my_client_connection)
         beginFlag = False
         data = ""
