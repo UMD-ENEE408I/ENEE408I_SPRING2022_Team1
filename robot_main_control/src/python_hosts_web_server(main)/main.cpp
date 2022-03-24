@@ -8,7 +8,8 @@
 #include <WiFi.h>
 #include <Wire.h>
 #include <SPI.h>
-
+#include <Encoder.h>
+#include <Adafruit_MCP3008.h>
 // Replace with your network credentials
 const char* ssid = "ARRIS-93FA";
 const char* password = "BSY89A602856";
