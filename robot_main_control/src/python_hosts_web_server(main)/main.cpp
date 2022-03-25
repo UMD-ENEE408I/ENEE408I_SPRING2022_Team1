@@ -1,16 +1,36 @@
-/*********
-  Rui Santos
-  Complete project details at https://randomnerdtutorials.com  
-*********/
 #include "definitions.hpp"
 
-// Variable to store the HTTP request
+
+//################################
 String rec_Message = "";
-char holder;
-bool client_Flag = true;
+char holder;                     //# FOR WIFI FUNCTION
+bool client_Flag = false;
+const char* ssid = "ARRIS-93FA";
+const char* password = "BSY89A602856";
+const uint16_t port = 8000;
+const char* host = "192.168.0.14";   
+//################################
 
 
-String currentLine = "";     // make a String to hold incoming data from the client
+
+//################################
+Adafruit_MCP3008 adc1;
+Adafruit_MCP3008 adc2;
+
+
+
+
+//################################
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -21,13 +41,13 @@ void setup() {
   delay(100);
 
   Serial.begin(115200);
-  // Initialize the output variables as outputs
 
 
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.mode(WIFI_STA);
+  WiFi.disconnect(false,true);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -38,52 +58,41 @@ void setup() {
   Serial.println("WiFi connected.");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP());
+
+
+  adc1.begin(ADC_1_CS);  
+  adc2.begin(ADC_2_CS); 
+ 
 }
+
+
+
+
+
+
+
+
+
 
 //##################################################################################################
 
-
-
-
-void send_and_recieve_message_to_client(WiFiClient client){
-  rec_Message = "";
-  holder = '\0';
-
-  if(client_Flag == true){
-    while(!client.connect(host, port)){
-      Serial.println("client connecting");
-    }
-      
-    if (client.connected()) {
-        Serial.println("client connected");
-        client.write("Begin");
-
-        while(client.available() == 0){
-          delay(500);
-        }
-        Serial.println("is available");
-
-        while(holder != '\n'){
-          holder = client.read();
-          Serial.println("holder is" + holder);
-          rec_Message += holder;
-        //Serial.println("FINAL MESSAGE ->> " + rec_Message);
-        delay(200);
-        }
-    }
-
-  }
-}
-
-
-
 void loop(){
-  WiFiClient client;   // Listen for incoming clients
-  send_and_recieve_message_to_client(client);
-  Serial.println("scope check and FINAL -->> " + rec_Message);
-  
+  Encoder enc1(M1_ENC_A, M1_ENC_B);
+  Encoder enc2(M2_ENC_A, M2_ENC_B);
 
-  delay(6000);  
-  
+
+
+  while(true){
+    WiFiClient client;   // Listen for incoming clients
+    send_and_recieve_message_to_client(client);
+    //Serial.println("scope check and FINAL -->> " + rec_Message);
+
+    ADC_test();
+    //Encoder_Test(enc1, enc2);
+
+
+
+    //delay(6000);
   //client_Flag = true;
+  }
 }

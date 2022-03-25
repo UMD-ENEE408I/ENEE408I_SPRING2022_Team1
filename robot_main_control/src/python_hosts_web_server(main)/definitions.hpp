@@ -5,37 +5,50 @@
 #include <WiFi.h>
 #include <Wire.h>
 #include <SPI.h>
-//#include <Encoder.h>
+#include <Encoder.h>
 #include <Adafruit_MCP3008.h>
 
 
-
-
-
-
+void send_and_recieve_message_to_client(WiFiClient client);
+void ADC_test();
+void Encoder_Test(Encoder, Encoder);
+//#######################################################################
+//#######################################################################
 // Replace with your network credentials
-const char* ssid = "ARRIS-93FA";
-const char* password = "BSY89A602856";
-const uint16_t port = 8000;
-const char* host = "192.168.0.14";
+extern const char* ssid;
+extern const char* password;
+extern const uint16_t port;
+extern const char* host;                                 //# FOR WIFI FUNCTION
 
-// Set web server port number to 80
-
-// Variable to store the HTTP request
 extern String rec_Message;
 extern char holder;
 extern bool client_Flag;
-
-
-// Define timeout time in milliseconds (example: 2000ms = 2s)
-extern String currentLine;                // make a String to hold incoming data from the client
-
+//#######################################################################
+//#######################################################################
 
 
 
 
 
 
+
+
+
+
+//#######################################################################
+//#######################################################################
+extern Adafruit_MCP3008 adc1;
+extern Adafruit_MCP3008 adc2;
+const unsigned int ADC_1_CS = 2;
+const unsigned int ADC_2_CS = 17;
+
+
+
+
+const unsigned int M1_ENC_A = 39;
+const unsigned int M1_ENC_B = 38;
+const unsigned int M2_ENC_A = 37;
+const unsigned int M2_ENC_B = 36;
 
 
 
