@@ -48,11 +48,12 @@ void setup() {
   Serial.println(ssid);
   WiFi.mode(WIFI_STA);
   WiFi.disconnect(false,true);
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
+  //WiFi.begin(ssid, password);
+  //while (WiFi.status() != WL_CONNECTED) {
+  //  delay(500);
+  //  Serial.print(".");
+  // }
+
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -87,9 +88,15 @@ void loop(){
     send_and_recieve_message_to_client(client);
     //Serial.println("scope check and FINAL -->> " + rec_Message);
 
-    ADC_test();
-    //Encoder_Test(enc1, enc2);
+    //ADC_test();
 
+    //Encoder_Test(enc1, enc2); ask levi why passing in like this screws with it
+    long enc1_value = enc1.read();
+    long enc2_value = enc2.read();
+    Serial.print(enc1_value);
+    Serial.print("\t");
+    Serial.print(enc2_value);
+    Serial.println();
 
 
     //delay(6000);
