@@ -2,21 +2,7 @@
   Rui Santos
   Complete project details at https://randomnerdtutorials.com  
 *********/
-
-// Load Wi-Fi library
-#include <Arduino.h>
-#include <WiFi.h>
-#include <Wire.h>
-#include <SPI.h>
-#include <Encoder.h>
-#include <Adafruit_MCP3008.h>
-// Replace with your network credentials
-const char* ssid = "ARRIS-93FA";
-const char* password = "BSY89A602856";
-const uint16_t port = 8000;
-const char* host = "192.168.0.14";
-
-// Set web server port number to 80
+#include "definitions.hpp"
 
 // Variable to store the HTTP request
 String rec_Message = "";
@@ -24,9 +10,7 @@ char holder;
 bool client_Flag = true;
 
 
-// Define timeout time in milliseconds (example: 2000ms = 2s)
-String currentLine = "";                // make a String to hold incoming data from the client
-
+String currentLine = "";     // make a String to hold incoming data from the client
 
 
 
@@ -94,12 +78,12 @@ void send_and_recieve_message_to_client(WiFiClient client){
 
 
 void loop(){
-  //WiFiClient client;   // Listen for incoming clients
-  //send_and_recieve_message_to_client(client);
-  //Serial.println("scope check and FINAL -->> " + rec_Message);
+  WiFiClient client;   // Listen for incoming clients
+  send_and_recieve_message_to_client(client);
+  Serial.println("scope check and FINAL -->> " + rec_Message);
+  
 
-
-  delay(6000);
+  delay(6000);  
   
   //client_Flag = true;
 }
