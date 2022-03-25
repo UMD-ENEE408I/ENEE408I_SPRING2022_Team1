@@ -18,7 +18,7 @@ void send_and_recieve_message_to_client(WiFiClient client){
           delay(500);
         }
         Serial.println("is available");
-
+        delay(500);
         while(holder != '\n'){
           holder = client.read();
           Serial.println("holder is" + holder);

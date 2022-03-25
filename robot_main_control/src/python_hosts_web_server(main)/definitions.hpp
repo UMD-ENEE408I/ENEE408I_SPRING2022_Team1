@@ -15,6 +15,8 @@ void Encoder_Test(Encoder, Encoder);
 //#######################################################################
 //#######################################################################
 // Replace with your network credentials
+
+//extern WiFiClient client;
 extern const char* ssid;
 extern const char* password;
 extern const uint16_t port;
