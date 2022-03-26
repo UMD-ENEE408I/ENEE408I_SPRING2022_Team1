@@ -145,11 +145,16 @@ void loop(){
 
     //M1_forward();
     //M2_forward();
-    //delay(2000);
+   // delay(1000);
+    //M1_stop();
+   // M2_stop();
+   // delay(1000);
     //M1_backward();
-    //M2_backward();
-    //delay(2000);
-
+   // M2_backward();
+   // delay(1000);
+   // M1_stop();
+   // M2_stop();
+   // delay(1000);
 
 
     //delay(6000);
