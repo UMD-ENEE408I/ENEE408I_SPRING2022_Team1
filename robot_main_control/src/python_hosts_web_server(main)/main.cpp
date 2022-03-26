@@ -7,7 +7,7 @@
 WiFiClient client;   
 String rec_Message = "";
 char holder;                     // FOR WIFI FUNCTION
-bool client_Flag = true;
+bool client_Flag = false;
 const char* ssid = "ARRIS-93FA";
 const char* password = "BSY89A602856";
 const uint16_t port = 8000;
@@ -30,6 +30,8 @@ const unsigned int M1_ENC_A = 39;
 const unsigned int M1_ENC_B = 38;   // FOR ENCODER
 const unsigned int M2_ENC_A = 37;
 const unsigned int M2_ENC_B = 36;
+long enc1_value = 0;
+long enc2_value = 0;
 //################################
 
 
@@ -134,27 +136,21 @@ void loop(){
 
     //ADC_test();
 
-    //Encoder_Test(enc1, enc2); //ask levi why passing in like this screws with it
-    long enc1_value = enc1.read();
-    long enc2_value = enc2.read();
-    Serial.print(enc1_value);
-    Serial.print("\t");
-    Serial.print(enc2_value);
-    Serial.println();
+    enc1_value = enc1.read();
+    enc2_value = enc2.read();
+    Encoder_Print(); 
 
 
-    //M1_forward();
-    //M2_forward();
-   // delay(1000);
-    //M1_stop();
-   // M2_stop();
-   // delay(1000);
-    //M1_backward();
-   // M2_backward();
-   // delay(1000);
-   // M1_stop();
-   // M2_stop();
-   // delay(1000);
+
+
+
+
+
+
+
+
+
+
 
 
     //delay(6000);

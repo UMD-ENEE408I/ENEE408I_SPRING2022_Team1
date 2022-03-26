@@ -10,6 +10,7 @@
 
 //function prototypes
 void send_and_recieve_message_to_client();
+void Encoder_Print(); 
 
 void ADC_test();
 void M1_backward();
@@ -51,7 +52,8 @@ extern Adafruit_MCP3008 adc2;
 //#######################################################################
 //#######################################################################
                                                 //FOR ENCODER
-
+extern long enc1_value;
+extern long enc2_value;
 
 
 

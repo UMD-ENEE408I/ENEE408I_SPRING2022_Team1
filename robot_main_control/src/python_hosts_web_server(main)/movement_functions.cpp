@@ -1,6 +1,11 @@
 #include "definitions.hpp"
 
-
+void Encoder_Print(){
+  Serial.print(enc1_value);
+  Serial.print("\t");
+  Serial.print(enc2_value);
+  Serial.println();
+}
 
 void ADC_test(){
 
