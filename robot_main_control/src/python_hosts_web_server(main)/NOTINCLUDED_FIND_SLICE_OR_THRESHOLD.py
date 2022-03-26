@@ -52,7 +52,7 @@ def find_type_of_intersection(img):
 
     topThreshold = 200000
     LRThreshold = 300000
-    winThreshold = 40000000
+    winThreshold = 30000000
 
     if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
         return (intersectionType.Three_Way)

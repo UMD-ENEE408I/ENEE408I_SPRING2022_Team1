@@ -4,8 +4,8 @@
 //################################
 WiFiClient client;   // Listen for incoming clients
 String rec_Message = "";
-char holder;                     //# FOR WIFI FUNCTION
-bool client_Flag = false;
+char holder;                     // FOR WIFI FUNCTION
+bool client_Flag = true;
 const char* ssid = "ARRIS-93FA";
 const char* password = "BSY89A602856";
 const uint16_t port = 8000;
@@ -53,7 +53,7 @@ void setup() {
   //while (WiFi.status() != WL_CONNECTED) {
   //  delay(500);
   //  Serial.print(".");
-  // }
+  //}
 
   // Print local IP address and start web server
   Serial.println("");

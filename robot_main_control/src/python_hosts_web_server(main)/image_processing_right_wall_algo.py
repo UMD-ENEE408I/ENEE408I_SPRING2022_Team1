@@ -32,7 +32,7 @@ s.settimeout(5)
 
 def get_message1():
     try:
-        client_connection, client_address = s.accept()        
+        client_connection, client_address = s.accept()
         global data
         data = client_connection.recv(BUFFER_SIZE).decode().strip()
         print("received data:", data)
@@ -119,9 +119,11 @@ def find_type_of_intersection(img):
 
     topThreshold = 200000
     LRThreshold = 300000
-    winThreshold = 40000000
+    winThreshold = 30000000
 
-    if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
+    if mask_sum > winThreshold: # WE ARE AT MIDDLE
+        return (intersectionType.Middle_of_Maze)
+    elif top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
         return (intersectionType.Three_Way)
     elif left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Left and Right
         return (intersectionType.T)
@@ -133,8 +135,6 @@ def find_type_of_intersection(img):
         return (intersectionType.Left)
     elif right_crop_sum > LRThreshold: # Right
         return (intersectionType.Right)
-    elif mask_sum > winThreshold: # WE ARE AT MIDDLE
-        return (intersectionType.Middle_of_Maze)
     else:
         return (intersectionType.Dead_End) #It is a dead end
 
