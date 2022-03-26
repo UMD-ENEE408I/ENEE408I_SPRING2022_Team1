@@ -9,14 +9,14 @@
 #include <Adafruit_MCP3008.h>
 
 
-void send_and_recieve_message_to_client(WiFiClient client);
+void send_and_recieve_message_to_client();
 void ADC_test();
 void Encoder_Test(Encoder, Encoder);
 //#######################################################################
 //#######################################################################
 // Replace with your network credentials
 
-//extern WiFiClient client;
+extern WiFiClient client;
 extern const char* ssid;
 extern const char* password;
 extern const uint16_t port;

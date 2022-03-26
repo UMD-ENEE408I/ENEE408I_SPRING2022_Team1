@@ -2,6 +2,7 @@
 
 
 //################################
+WiFiClient client;   // Listen for incoming clients
 String rec_Message = "";
 char holder;                     //# FOR WIFI FUNCTION
 bool client_Flag = false;
@@ -84,22 +85,27 @@ void loop(){
 
 
   while(true){
-    WiFiClient client;   // Listen for incoming clients
-    send_and_recieve_message_to_client(client);
+    
+    //send_and_recieve_message_to_client();
     //Serial.println("scope check and FINAL -->> " + rec_Message);
 
     //ADC_test();
 
-    //Encoder_Test(enc1, enc2); ask levi why passing in like this screws with it
-    long enc1_value = enc1.read();
-    long enc2_value = enc2.read();
-    Serial.print(enc1_value);
-    Serial.print("\t");
-    Serial.print(enc2_value);
-    Serial.println();
+    //Encoder_Test(enc1, enc2); //ask levi why passing in like this screws with it
+    //long enc1_value = enc1.read();
+    //long enc2_value = enc2.read();
+    //Serial.print(enc1_value);
+    //Serial.print("\t");
+    //Serial.print(enc2_value);
+    //Serial.println();
+
+
+
+
+
 
 
     //delay(6000);
-  //client_Flag = true;
+    //client_Flag = true;
   }
 }

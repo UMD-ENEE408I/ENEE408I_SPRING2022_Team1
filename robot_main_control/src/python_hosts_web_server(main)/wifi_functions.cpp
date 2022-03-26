@@ -1,6 +1,6 @@
 #include "definitions.hpp"
 
-void send_and_recieve_message_to_client(WiFiClient client){
+void send_and_recieve_message_to_client(){
   rec_Message = "";
   holder = '\0';
 
