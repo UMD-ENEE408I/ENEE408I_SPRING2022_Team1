@@ -4,7 +4,7 @@
 
 void ADC_test(){
 
-  int adc1_buf[8];
+  int adc1_buf[8]; // could make these extern
   int adc2_buf[8];
 
   int t_start = micros();
@@ -33,18 +33,33 @@ void ADC_test(){
 
 
 
-void Encoder_Test(Encoder enc1, Encoder enc2){
-    // Create the encoder objects after the motor has
-    // stopped, else some sort exception is triggered
 
+void M1_backward() {
+  ledcWrite(M1_IN_1_CHANNEL, PWM_VALUE);
+  ledcWrite(M1_IN_2_CHANNEL, 0);
+}
 
-    long enc1_value = enc1.read();
-    long enc2_value = enc2.read();
-    Serial.print(enc1_value);
-    Serial.print("\t");
-    Serial.print(enc2_value);
-    Serial.println();
-    //delay(10); //If you add this delay it sometimes misses encoder ticks on enc2 even though interrupts are used....
+void M1_forward() {
+  ledcWrite(M1_IN_1_CHANNEL, 0);
+  ledcWrite(M1_IN_2_CHANNEL, PWM_VALUE);
+}
 
+void M1_stop() {
+  ledcWrite(M1_IN_1_CHANNEL, 0);
+  ledcWrite(M1_IN_2_CHANNEL, 0);
+}
 
+void M2_backward() {
+  ledcWrite(M2_IN_1_CHANNEL, PWM_VALUE);
+  ledcWrite(M2_IN_2_CHANNEL, 0);
+}
+
+void M2_forward() {
+  ledcWrite(M2_IN_1_CHANNEL, 0);
+  ledcWrite(M2_IN_2_CHANNEL, PWM_VALUE);
+}
+
+void M2_stop() {
+  ledcWrite(M2_IN_1_CHANNEL, 0);
+  ledcWrite(M2_IN_2_CHANNEL, 0);
 }
