@@ -4,58 +4,75 @@
 //################################
 // Replace with your network credentials
 
-WiFiClient client;   
-String rec_Message = "";
-char holder;                     // FOR WIFI FUNCTION
-bool client_Flag = false;
-const char* ssid = "ARRIS-93FA";
-const char* password = "BSY89A602856";
-const uint16_t port = 8000;
-const char* host = "192.168.0.14";   
+WiFiClient client; // extern   
+String rec_Message = ""; // extern
+char holder; // extern                                   // FOR WIFI
+bool client_Flag = false; // extern
+const char* ssid = "ARRIS-93FA"; // extern
+const char* password = "BSY89A602856"; // extern
+const uint16_t port = 8000; // extern
+const char* host = "192.168.0.14"; // extern
 //################################
 
 
 
 //################################
-Adafruit_MCP3008 adc1;
-Adafruit_MCP3008 adc2;            //FOR LIGHT BAR
+Adafruit_MCP3008 adc1; // extern
+Adafruit_MCP3008 adc2; // extern                        //FOR LIGHT BAR
 const unsigned int ADC_1_CS = 2;
 const unsigned int ADC_2_CS = 17;
+int* adc1_buf = (int*) malloc(sizeof(int)*8); // extern 
+int adc2_buf[8]; // extern 
 //################################
 
 
 
 //################################
 const unsigned int M1_ENC_A = 39;
-const unsigned int M1_ENC_B = 38;   // FOR ENCODER
+const unsigned int M1_ENC_B = 38;                       // FOR ENCODER
 const unsigned int M2_ENC_A = 37;
 const unsigned int M2_ENC_B = 36;
-long enc1_value = 0;
-long enc2_value = 0;
+long enc1_value = 0; // extern
+long enc2_value = 0; // extern
 //################################
 
 
 //################################
-const unsigned int M1_IN_1 = 13;
-const unsigned int M1_IN_2 = 12;
-const unsigned int M2_IN_1 = 25;
-const unsigned int M2_IN_2 = 14;              // FOR MOTOR CONTROLS
+const unsigned int M1_IN_1 = 13; // extern
+const unsigned int M1_IN_2 = 12; // extern
+const unsigned int M2_IN_1 = 25; // extern
+const unsigned int M2_IN_2 = 14; // extern            
 
-const unsigned int M1_IN_1_CHANNEL = 1;
-const unsigned int M1_IN_2_CHANNEL = 2;
-const unsigned int M2_IN_1_CHANNEL = 3;
-const unsigned int M2_IN_2_CHANNEL = 4;
+const unsigned int M1_IN_1_CHANNEL = 1; // extern
+const unsigned int M1_IN_2_CHANNEL = 2; // extern
+const unsigned int M2_IN_1_CHANNEL = 3; // extern                   // FOR MOTOR 
+const unsigned int M2_IN_2_CHANNEL = 4; // extern
 
-const unsigned int M1_I_SENSE = 35;
-const unsigned int M2_I_SENSE = 34;
+const unsigned int M1_I_SENSE = 35; // extern
+const unsigned int M2_I_SENSE = 34; // extern
 
 const int freq = 5000;
 const int ledChannel = 0;
 const int resolution = 8;  // we can write PWM wave with max of 2^8 - 1 = 255
 
-const float M_I_COUNTS_TO_A = (3.3 / 1024.0) / 0.120;
-const unsigned int PWM_VALUE = 90; 
+const float M_I_COUNTS_TO_A = (3.3 / 1024.0) / 0.120; // extern
+const unsigned int PWM_VALUE = 90;  // extern
 //################################
+
+
+
+
+//################################
+unsigned int prev_twinky_time = 0;
+
+                                                  //For Motor PID Control Loop
+
+
+
+//################################
+
+
+
 
 
 
@@ -75,7 +92,7 @@ void setup() {
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.mode(WIFI_STA);
-  WiFi.disconnect(false,true);
+  //WiFi.disconnect(false, true);
   //WiFi.begin(ssid, password);
   //while (WiFi.status() != WL_CONNECTED) {
   //  delay(500);
@@ -135,10 +152,21 @@ void loop(){
     //Serial.println("scope check and FINAL -->> " + rec_Message);
 
     //ADC_test();
+    //Serial.println("SCOPE Check ");
+    //Serial.print(adc1_buf[0]);
+    //Serial.println(adc2_buf[0]);
+    //delay(1000);
 
-    enc1_value = enc1.read();
-    enc2_value = enc2.read();
-    Encoder_Print(); 
+    //enc1_value = enc1.read();
+    //enc2_value = enc2.read();
+    //Encoder_Print();
+
+    //-------------above is testing-------------------
+    if((millis() - prev_twinky_time) > 20){
+      //pid_v1_control();
+      prev_twinky_time = millis();
+    }
+
 
 
 

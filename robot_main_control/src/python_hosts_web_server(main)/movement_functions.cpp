@@ -9,8 +9,8 @@ void Encoder_Print(){
 
 void ADC_test(){
 
-  int adc1_buf[8]; // could make these extern
-  int adc2_buf[8];
+  //int adc1_buf[8]; // could make these extern
+  //int adc2_buf[8];
 
   int t_start = micros();
   for (int i = 0; i < 8; i++) {
@@ -68,3 +68,62 @@ void M2_stop() {
   ledcWrite(M2_IN_1_CHANNEL, 0);
   ledcWrite(M2_IN_2_CHANNEL, 0);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -27,7 +27,7 @@ extern WiFiClient client;
 extern const char* ssid;
 extern const char* password;
 extern const uint16_t port;
-extern const char* host;                                 //# FOR WIFI FUNCTION
+extern const char* host;                                 //# FOR WIFI
 
 extern String rec_Message;
 extern char holder;
@@ -43,6 +43,8 @@ extern bool client_Flag;
 //#######################################################################
 extern Adafruit_MCP3008 adc1;                   //FOR THE LIGHT BAR
 extern Adafruit_MCP3008 adc2;
+extern int* adc1_buf; // could change syntax back
+extern int adc2_buf[8];
 //#######################################################################
 //#######################################################################
 
@@ -50,13 +52,9 @@ extern Adafruit_MCP3008 adc2;
 
 
 //#######################################################################
-//#######################################################################
-                                                //FOR ENCODER
-extern long enc1_value;
+//#######################################################################                   
+extern long enc1_value;                           //FOR ENCODER
 extern long enc2_value;
-
-
-
 //#######################################################################
 //#######################################################################
 
@@ -71,7 +69,7 @@ extern const unsigned int M2_IN_2;
 
 extern const unsigned int M1_IN_1_CHANNEL;
 extern const unsigned int M1_IN_2_CHANNEL;
-extern const unsigned int M2_IN_1_CHANNEL;                 // FOR MOTOR CONTROLS
+extern const unsigned int M2_IN_1_CHANNEL;                 // FOR MOTOR
 extern const unsigned int M2_IN_2_CHANNEL;
 
 extern const unsigned int M1_I_SENSE;
@@ -81,6 +79,36 @@ extern const float M_I_COUNTS_TO_A;
 extern const unsigned int PWM_VALUE; 
 //#######################################################################
 //#######################################################################
+
+
+
+
+
+//#######################################################################
+//#######################################################################
+
+
+
+
+
+
+
+
+
+
+
+//#######################################################################
+//#######################################################################
+
+
+
+
+
+
+
+
+
+
 
 
 
