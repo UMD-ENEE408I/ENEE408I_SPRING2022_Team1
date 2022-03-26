@@ -39,7 +39,7 @@ const unsigned int M1_IN_2 = 12;
 const unsigned int M2_IN_1 = 25;
 const unsigned int M2_IN_2 = 14;              // FOR MOTOR CONTROLS
 
-const unsigned int M1_IN_1_CHANNEL = 1;        
+const unsigned int M1_IN_1_CHANNEL = 1;
 const unsigned int M1_IN_2_CHANNEL = 2;
 const unsigned int M2_IN_1_CHANNEL = 3;
 const unsigned int M2_IN_2_CHANNEL = 4;
