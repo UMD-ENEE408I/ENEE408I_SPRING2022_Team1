@@ -4,7 +4,7 @@
 
 
 
-void Encoder_Print(){
+void Encoder_Print(int enc1_value, int enc2_value){
   Serial.print(enc1_value);
   Serial.print("\t");
   Serial.print(enc2_value);
@@ -59,13 +59,13 @@ void M1_stop() {
 }
 
 void M2_backward() {
-  ledcWrite(M2_IN_1_CHANNEL, M2_PWM_VALUE);
+  ledcWrite(M2_IN_1_CHANNEL, M2_PWM_VALUE);// this one M2_PWM_VALUE
   ledcWrite(M2_IN_2_CHANNEL, 0);
 }
 
 void M2_forward() {
   ledcWrite(M2_IN_1_CHANNEL, 0);
-  ledcWrite(M2_IN_2_CHANNEL, M2_PWM_VALUE);
+  ledcWrite(M2_IN_2_CHANNEL, M2_PWM_VALUE);// this one M2_PWM_VALUE
 }
 
 void M2_stop() {
@@ -77,18 +77,18 @@ void M2_stop() {
 
 
 
-void pid_v1_control(){
+void pid_v1_control(int enc1_value, int enc2_value){
   //get desired input distance
   twinky_one = twinky_one + (current_time - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
   twinky_two = twinky_two + (current_time - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
 
   // COMPUTE PID VL OUTPUT
-  whl_1_2_vl_PID_calculation();
+  whl_1_2_vl_PID_calculation(enc1_value, enc2_value);
   motor_move();
 }
 
 
-void whl_1_2_vl_PID_calculation(){
+void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value){
   // ERROR
   whl1_vl_PID_error = twinky_one - enc1_value; //this should be the desired - the current_read, twinky_one has been pushed up to a desired position.
   whl2_vl_PID_error = twinky_two - enc2_value;
@@ -103,7 +103,7 @@ void whl_1_2_vl_PID_calculation(){
   if(whl1_vl_PID_I > 255) whl1_vl_PID_I = 255;               // cam this possibly go over 255?
   if(whl1_vl_PID_I < -255) whl1_vl_PID_I = -255;
 
-  whl2_vl_PID_I += whl2_vl_PID_error * whl2_vl_PID_KI * (float)(current_time - whl1_vl_PID_D_time_prev); // I accumulates with the error times the kI constant
+  whl2_vl_PID_I += whl2_vl_PID_error * whl2_vl_PID_KI * (float)(current_time - whl2_vl_PID_D_time_prev); // I accumulates with the error times the kI constant
   if(whl2_vl_PID_I > 255) whl2_vl_PID_I = 255;               // cam this possibly go over 255?
   if(whl2_vl_PID_I < -255) whl2_vl_PID_I = -255;
 
@@ -120,7 +120,7 @@ void whl_1_2_vl_PID_calculation(){
   // SUMMATION
   whl1_vl_PID_out = whl1_vl_PID_P + whl1_vl_PID_I + whl1_vl_PID_D;
   if(whl1_vl_PID_out > 255) whl1_vl_PID_out = 255;
-  if(whl1_vl_PID_out < -255) whl1_vl_PID_out = -255;  
+  if(whl1_vl_PID_out < -255) whl1_vl_PID_out = -255;
 
   whl2_vl_PID_out = whl2_vl_PID_P + whl2_vl_PID_I + whl2_vl_PID_D;
   if(whl2_vl_PID_out > 255) whl2_vl_PID_out = 255;
@@ -138,6 +138,7 @@ void motor_move(){
     M1_forward();
 
   }else{  // IF PID_1 REVERSE
+    whl1_vl_PID_out = whl1_vl_PID_out * -1;
     M1_backward(); 
   }
 
@@ -146,6 +147,7 @@ void motor_move(){
     M2_forward();
 
   }else{ // IF PID_2 REVERSE
+    whl2_vl_PID_out = whl2_vl_PID_out * -1;
     M2_backward();
   }
 

@@ -32,8 +32,8 @@ const unsigned int M1_ENC_A = 39;
 const unsigned int M1_ENC_B = 38;                       // FOR ENCODER
 const unsigned int M2_ENC_A = 37;
 const unsigned int M2_ENC_B = 36;
-long enc1_value = 0; // extern
-long enc2_value = 0; // extern
+//long enc1_value = 0; // extern
+//long enc2_value = 0; // extern
 //################################
 
 
@@ -82,14 +82,14 @@ float whl2_vl_PID_I = 0; // extern
 float whl1_vl_PID_D = 0; // extern 
 float whl2_vl_PID_D = 0; // extern 
 
-float whl1_vl_PID_KP = 00.9000; // extern 
-float whl2_vl_PID_KP = 00.9000; // extern 
+float whl1_vl_PID_KP = 00.6000; // extern 
+float whl2_vl_PID_KP = 00.6000; // extern 
 
-float whl1_vl_PID_KI = 00.0180; // extern 
-float whl2_vl_PID_KI = 00.0180; // extern 
+float whl1_vl_PID_KI = 0.0010; // extern 
+float whl2_vl_PID_KI = 0.0010; // extern 
 
-float whl1_vl_PID_KD = 20.0000; // extern 
-float whl2_vl_PID_KD = 20.0000; // extern 
+float whl1_vl_PID_KD = 16.5; // extern 
+float whl2_vl_PID_KD = 16.5; // extern 
 
 float whl1_vl_PID_error_prev = 0; // extern 
 float whl2_vl_PID_error_prev = 0; // extern 
@@ -115,7 +115,7 @@ unsigned long current_time = 0; // extern
 void setup() {
   pinMode(14,OUTPUT);
   digitalWrite(14,LOW);
-  delay(2000);
+  delay(100);
 
   Serial.begin(115200);
 
@@ -199,10 +199,12 @@ void loop(){
 
     //Motor control PID loop
     if((current_time - prev_twinky_time) > 20){
-      enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
-      enc2_value = enc2.read() * -1;
+      int enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+      int enc2_value = enc2.read() * -1; // should be -1.
 
-      pid_v1_control();
+      pid_v1_control(enc1_value, enc2_value);
+      Encoder_Print(enc1_value, enc2_value);
+
       prev_twinky_time = current_time;
     }
 

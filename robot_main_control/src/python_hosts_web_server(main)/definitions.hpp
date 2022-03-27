@@ -10,7 +10,7 @@
 
 //function prototypes
 void send_and_recieve_message_to_client();
-void Encoder_Print(); 
+void Encoder_Print(int, int); 
 
 void ADC_test();
 void M1_backward();
@@ -19,8 +19,8 @@ void M1_stop();
 void M2_backward();
 void M2_forward();
 void M2_stop();
-void pid_v1_control();
-void whl_1_2_vl_PID_calculation();
+void pid_v1_control(int, int);
+void whl_1_2_vl_PID_calculation(int, int);
 void motor_move();
 //#######################################################################
 //#######################################################################
@@ -54,8 +54,8 @@ extern int adc2_buf[8];
 
 //#######################################################################
 //#######################################################################                   
-extern long enc1_value;                           //FOR ENCODER
-extern long enc2_value;
+//extern long enc1_value;                           //FOR ENCODER
+//extern long enc2_value;
 //#######################################################################
 //#######################################################################
 
