@@ -21,7 +21,7 @@ void M2_forward();
 void M2_stop();
 void pid_v1_control();
 void whl_1_2_vl_PID_calculation();
-
+void motor_move();
 //#######################################################################
 //#######################################################################
 extern WiFiClient client;
@@ -87,26 +87,41 @@ extern const unsigned int PWM_VALUE;
 
 //#######################################################################
 //#######################################################################
-extern unsigned int prev_twinky_time;
+extern unsigned long prev_twinky_time;
 extern float twinky_one;
 extern float twinky_two;
 extern float twinky_one_speed;
 extern float twinky_two_speed;
+
 extern float whl1_vl_PID_error;
 extern float whl2_vl_PID_error;
+
 extern float whl1_vl_PID_P;
 extern float whl2_vl_PID_P;
+
 extern float whl1_vl_PID_I;
 extern float whl2_vl_PID_I;                                  //FOR Motor PID Controller
+                             
 extern float whl1_vl_PID_D;
 extern float whl2_vl_PID_D;
+
 extern float whl1_vl_PID_KP;
-extern float whl1_vl_PID_KI;
-extern float whl1_vl_PID_KD;
 extern float whl2_vl_PID_KP;
+
+extern float whl1_vl_PID_KI;
 extern float whl2_vl_PID_KI;
+
+extern float whl1_vl_PID_KD;
 extern float whl2_vl_PID_KD;
 
+extern float whl1_vl_PID_error_prev;
+extern float whl2_vl_PID_error_prev;
+
+extern unsigned long whl1_vl_PID_D_time_prev;
+extern unsigned long whl2_vl_PID_D_time_prev;
+
+extern float whl1_vl_PID_out;
+extern float whl2_vl_PID_out;
 
 
 //#######################################################################

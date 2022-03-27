@@ -78,12 +78,13 @@ void M2_stop() {
 
 
 void pid_v1_control(){
+  //get desired input distance
   twinky_one = twinky_one + (millis() - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
   twinky_two = twinky_two + (millis() - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
 
   // COMPUTE PID VL OUTPUT
   whl_1_2_vl_PID_calculation();
-
+  motor_move();
 }
 
 
@@ -93,14 +94,52 @@ void whl_1_2_vl_PID_calculation(){
   whl2_vl_PID_error = twinky_two - enc2_value;
 
   // PROPORTIONAL
-  whl1_vl_PID_P = whl1_vl_PID_error * whl1_vl_PID_KP ;
+  whl1_vl_PID_P = whl1_vl_PID_error * whl1_vl_PID_KP; // error times kP constant
+  whl2_vl_PID_P = whl2_vl_PID_error * whl2_vl_PID_KP;
+
+  
+  // INTEGRAL
+  whl1_vl_PID_I = whl1_vl_PID_I + whl1_vl_PID_error * whl1_vl_PID_KI; // I accumulates with the error times the kI constant
+  if(whl1_vl_PID_I > 255) whl1_vl_PID_I = 255;               // cam this possibly go over 255?
+  if(whl1_vl_PID_I < -255) whl1_vl_PID_I = -255;
+
+  whl2_vl_PID_I = whl2_vl_PID_I + whl2_vl_PID_error * whl2_vl_PID_KI; // I accumulates with the error times the kI constant
+  if(whl2_vl_PID_I > 255) whl2_vl_PID_I = 255;               // cam this possibly go over 255?
+  if(whl2_vl_PID_I < -255) whl2_vl_PID_I = -255;
 
 
+  // DERIVATIVE
+  whl1_vl_PID_D = ( (whl1_vl_PID_error - whl1_vl_PID_error_prev) / (float)(millis() - whl1_vl_PID_D_time_prev) ) * whl1_vl_PID_KD;
+  whl1_vl_PID_error_prev = whl1_vl_PID_D; // should this be whl1_vl_PID_error?
+  whl1_vl_PID_D_time_prev = millis();
+
+  whl2_vl_PID_D = ( (whl2_vl_PID_error - whl2_vl_PID_error_prev) / (float)(millis() - whl2_vl_PID_D_time_prev) ) * whl2_vl_PID_KD;
+  whl2_vl_PID_error_prev = whl2_vl_PID_D;
+  whl2_vl_PID_D_time_prev = millis();
+
+  // SUMMATION
+  whl1_vl_PID_out = whl1_vl_PID_P + whl1_vl_PID_I + whl1_vl_PID_D;
+  if(whl1_vl_PID_out > 255) whl1_vl_PID_out = 255;
+  if(whl1_vl_PID_out < -255) whl1_vl_PID_out = -255;  
+
+  whl2_vl_PID_out = whl2_vl_PID_P + whl2_vl_PID_I + whl2_vl_PID_D;
+  if(whl2_vl_PID_out > 255) whl2_vl_PID_out = 255;
+  if(whl2_vl_PID_out < -255) whl2_vl_PID_out = -255;    
 
 }
 
 
+void motor_move(){
 
+
+
+
+
+
+
+
+
+}
 
 
 

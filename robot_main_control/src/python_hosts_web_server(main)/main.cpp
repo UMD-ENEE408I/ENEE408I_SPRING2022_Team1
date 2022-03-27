@@ -45,7 +45,7 @@ const unsigned int M2_IN_2 = 14; // extern
 
 const unsigned int M1_IN_1_CHANNEL = 1; // extern
 const unsigned int M1_IN_2_CHANNEL = 2; // extern
-const unsigned int M2_IN_1_CHANNEL = 3; // extern                   // FOR MOTOR 
+const unsigned int M2_IN_1_CHANNEL = 3; // extern                   // FOR MOTORS
 const unsigned int M2_IN_2_CHANNEL = 4; // extern
 
 const unsigned int M1_I_SENSE = 35; // extern
@@ -63,32 +63,41 @@ const unsigned int PWM_VALUE = 90;  // extern
 
 
 //################################
-unsigned int prev_twinky_time = 0; // extern
+unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
 float twinky_one_speed = 0.15; // extern
-float twinky_two_speed = 0.15; // extern                                  //For Motor PID Control Loop
-float whl1_vl_PID_error = 0;
-float whl2_vl_PID_error = 0;
+float twinky_two_speed = 0.15; // extern                                  
 
-float whl1_vl_PID_P = 0;
-float whl2_vl_PID_P = 0;
+float whl1_vl_PID_error = 0; // extern  
+float whl2_vl_PID_error = 0; // extern 
 
-float whl1_vl_PID_I = 0;
-float whl2_vl_PID_I = 0;
+float whl1_vl_PID_P = 0; // extern 
+float whl2_vl_PID_P = 0; // extern 
 
-float whl1_vl_PID_D = 0;
-float whl2_vl_PID_D = 0;
+float whl1_vl_PID_I = 0; // extern                    //For Motors PID Control Loop
+float whl2_vl_PID_I = 0; // extern 
 
-float whl1_vl_PID_KP = 00.9000;
-float whl2_vl_PID_KP = 00.9000;
+float whl1_vl_PID_D = 0; // extern 
+float whl2_vl_PID_D = 0; // extern 
 
-float whl1_vl_PID_KI = 00.0180;
-float whl2_vl_PID_KI = 00.0180;
+float whl1_vl_PID_KP = 00.9000; // extern 
+float whl2_vl_PID_KP = 00.9000; // extern 
 
-float whl1_vl_PID_KD = 20.0000;
-float whl2_vl_PID_KD = 20.0000;
+float whl1_vl_PID_KI = 00.0180; // extern 
+float whl2_vl_PID_KI = 00.0180; // extern 
 
+float whl1_vl_PID_KD = 20.0000; // extern 
+float whl2_vl_PID_KD = 20.0000; // extern 
+
+float whl1_vl_PID_error_prev = 0; // extern 
+float whl2_vl_PID_error_prev = 0; // extern 
+
+unsigned long whl1_vl_PID_D_time_prev = 0; // extern 
+unsigned long whl2_vl_PID_D_time_prev = 0; // extern 
+
+float whl1_vl_PID_out = 0; // extern 
+float whl2_vl_PID_out = 0; // extern 
 //################################
 
 
