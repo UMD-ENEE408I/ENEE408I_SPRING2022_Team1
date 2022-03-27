@@ -99,17 +99,17 @@ void whl_1_2_vl_PID_calculation(){
 
   
   // INTEGRAL
-  whl1_vl_PID_I +=  whl1_vl_PID_error * whl1_vl_PID_KI; // I accumulates with the error times the kI constant
+  whl1_vl_PID_I +=  whl1_vl_PID_error * whl1_vl_PID_KI * (float)(current_time - whl1_vl_PID_D_time_prev); // I accumulates with the error times the kI constant
   if(whl1_vl_PID_I > 255) whl1_vl_PID_I = 255;               // cam this possibly go over 255?
   if(whl1_vl_PID_I < -255) whl1_vl_PID_I = -255;
 
-  whl2_vl_PID_I += whl2_vl_PID_error * whl2_vl_PID_KI; // I accumulates with the error times the kI constant
+  whl2_vl_PID_I += whl2_vl_PID_error * whl2_vl_PID_KI * (float)(current_time - whl1_vl_PID_D_time_prev); // I accumulates with the error times the kI constant
   if(whl2_vl_PID_I > 255) whl2_vl_PID_I = 255;               // cam this possibly go over 255?
   if(whl2_vl_PID_I < -255) whl2_vl_PID_I = -255;
 
 
   // DERIVATIVE
-  whl1_vl_PID_D = ( (whl1_vl_PID_error - whl1_vl_PID_error_prev) / (float)(current_time - whl1_vl_PID_D_time_prev) ) * whl1_vl_PID_KD;
+  whl1_vl_PID_D = ( (whl1_vl_PID_error - whl1_vl_PID_error_prev)/(float)(current_time - whl1_vl_PID_D_time_prev) ) * whl1_vl_PID_KD;
   whl1_vl_PID_error_prev = whl1_vl_PID_error; // should this be whl1_vl_PID_error? not whl1_vl_PID_D
   whl1_vl_PID_D_time_prev = current_time;
 
