@@ -1,6 +1,7 @@
-#include "definitions.hpp"
-
-
+#include <WiFi.h>
+#include <Encoder.h>
+#include <Adafruit_MCP3008.h>
+#include <SPI.h>
 //################################
 // Replace with your network credentials
 
@@ -82,14 +83,14 @@ float whl2_vl_PID_I = 0; // extern
 float whl1_vl_PID_D = 0; // extern 
 float whl2_vl_PID_D = 0; // extern 
 
-float whl1_vl_PID_KP = 00.9500; // extern 
-float whl2_vl_PID_KP = 00.9500; // extern 
+float whl1_vl_PID_KP = 00.6000; // extern 
+float whl2_vl_PID_KP = 00.6000; // extern 
 
-float whl1_vl_PID_KI = 0.0026; // extern 
-float whl2_vl_PID_KI = 0.0026; // extern 
+float whl1_vl_PID_KI = 0.0010; // extern 
+float whl2_vl_PID_KI = 0.0010; // extern 
 
-float whl1_vl_PID_KD = 46; // extern 
-float whl2_vl_PID_KD = 46; // extern 
+float whl1_vl_PID_KD = 16.5; // extern 
+float whl2_vl_PID_KD = 16.5; // extern 
 
 float whl1_vl_PID_error_prev = 0; // extern 
 float whl2_vl_PID_error_prev = 0; // extern 
