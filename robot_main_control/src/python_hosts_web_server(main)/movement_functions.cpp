@@ -44,13 +44,13 @@ void ADC_test(){
 
 
 void M1_backward() {
-  ledcWrite(M1_IN_1_CHANNEL, PWM_VALUE);
+  ledcWrite(M1_IN_1_CHANNEL, M1_PWM_VALUE);
   ledcWrite(M1_IN_2_CHANNEL, 0);
 }
 
 void M1_forward() {
   ledcWrite(M1_IN_1_CHANNEL, 0);
-  ledcWrite(M1_IN_2_CHANNEL, PWM_VALUE);
+  ledcWrite(M1_IN_2_CHANNEL, M1_PWM_VALUE);
 }
 
 void M1_stop() {
@@ -59,13 +59,13 @@ void M1_stop() {
 }
 
 void M2_backward() {
-  ledcWrite(M2_IN_1_CHANNEL, PWM_VALUE);
+  ledcWrite(M2_IN_1_CHANNEL, M2_PWM_VALUE);
   ledcWrite(M2_IN_2_CHANNEL, 0);
 }
 
 void M2_forward() {
   ledcWrite(M2_IN_1_CHANNEL, 0);
-  ledcWrite(M2_IN_2_CHANNEL, PWM_VALUE);
+  ledcWrite(M2_IN_2_CHANNEL, M2_PWM_VALUE);
 }
 
 void M2_stop() {
@@ -79,8 +79,8 @@ void M2_stop() {
 
 void pid_v1_control(){
   //get desired input distance
-  twinky_one = twinky_one + (millis() - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
-  twinky_two = twinky_two + (millis() - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
+  twinky_one = twinky_one + (current_time - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
+  twinky_two = twinky_two + (current_time - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
 
   // COMPUTE PID VL OUTPUT
   whl_1_2_vl_PID_calculation();
@@ -99,23 +99,23 @@ void whl_1_2_vl_PID_calculation(){
 
   
   // INTEGRAL
-  whl1_vl_PID_I = whl1_vl_PID_I + whl1_vl_PID_error * whl1_vl_PID_KI; // I accumulates with the error times the kI constant
+  whl1_vl_PID_I +=  whl1_vl_PID_error * whl1_vl_PID_KI; // I accumulates with the error times the kI constant
   if(whl1_vl_PID_I > 255) whl1_vl_PID_I = 255;               // cam this possibly go over 255?
   if(whl1_vl_PID_I < -255) whl1_vl_PID_I = -255;
 
-  whl2_vl_PID_I = whl2_vl_PID_I + whl2_vl_PID_error * whl2_vl_PID_KI; // I accumulates with the error times the kI constant
+  whl2_vl_PID_I += whl2_vl_PID_error * whl2_vl_PID_KI; // I accumulates with the error times the kI constant
   if(whl2_vl_PID_I > 255) whl2_vl_PID_I = 255;               // cam this possibly go over 255?
   if(whl2_vl_PID_I < -255) whl2_vl_PID_I = -255;
 
 
   // DERIVATIVE
-  whl1_vl_PID_D = ( (whl1_vl_PID_error - whl1_vl_PID_error_prev) / (float)(millis() - whl1_vl_PID_D_time_prev) ) * whl1_vl_PID_KD;
-  whl1_vl_PID_error_prev = whl1_vl_PID_D; // should this be whl1_vl_PID_error?
-  whl1_vl_PID_D_time_prev = millis();
+  whl1_vl_PID_D = ( (whl1_vl_PID_error - whl1_vl_PID_error_prev) / (float)(current_time - whl1_vl_PID_D_time_prev) ) * whl1_vl_PID_KD;
+  whl1_vl_PID_error_prev = whl1_vl_PID_error; // should this be whl1_vl_PID_error? not whl1_vl_PID_D
+  whl1_vl_PID_D_time_prev = current_time;
 
-  whl2_vl_PID_D = ( (whl2_vl_PID_error - whl2_vl_PID_error_prev) / (float)(millis() - whl2_vl_PID_D_time_prev) ) * whl2_vl_PID_KD;
-  whl2_vl_PID_error_prev = whl2_vl_PID_D;
-  whl2_vl_PID_D_time_prev = millis();
+  whl2_vl_PID_D = ( (whl2_vl_PID_error - whl2_vl_PID_error_prev) / (float)(current_time - whl2_vl_PID_D_time_prev) ) * whl2_vl_PID_KD;
+  whl2_vl_PID_error_prev = whl2_vl_PID_error;
+  whl2_vl_PID_D_time_prev = current_time;
 
   // SUMMATION
   whl1_vl_PID_out = whl1_vl_PID_P + whl1_vl_PID_I + whl1_vl_PID_D;
@@ -130,13 +130,24 @@ void whl_1_2_vl_PID_calculation(){
 
 
 void motor_move(){ 
+  M1_PWM_VALUE = whl1_vl_PID_out;
+  M2_PWM_VALUE = whl2_vl_PID_out;
 
+  // IF PID_1 FORWARD    
+  if(whl1_vl_PID_out >= 0){
+    M1_forward();
 
+  }else{  // IF PID_1 REVERSE
+    M1_backward(); 
+  }
 
+  // IF PID_2 FORWARD    
+  if (whl2_vl_PID_out >= 0) {
+    M2_forward();
 
-
-
-
+  }else{ // IF PID_2 REVERSE
+    M2_backward();
+  }
 
 }
 

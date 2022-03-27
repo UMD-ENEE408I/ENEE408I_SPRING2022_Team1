@@ -77,7 +77,9 @@ extern const unsigned int M1_I_SENSE;
 extern const unsigned int M2_I_SENSE;
 
 extern const float M_I_COUNTS_TO_A;
-extern const unsigned int PWM_VALUE; 
+extern unsigned int M1_PWM_VALUE; 
+extern unsigned int M2_PWM_VALUE; 
+
 //#######################################################################
 //#######################################################################
 
@@ -123,6 +125,7 @@ extern unsigned long whl2_vl_PID_D_time_prev;
 extern float whl1_vl_PID_out;
 extern float whl2_vl_PID_out;
 
+extern unsigned long current_time;
 
 //#######################################################################
 //#######################################################################

@@ -56,7 +56,8 @@ const int ledChannel = 0;
 const int resolution = 8;  // we can write PWM wave with max of 2^8 - 1 = 255
 
 const float M_I_COUNTS_TO_A = (3.3 / 1024.0) / 0.120; // extern
-const unsigned int PWM_VALUE = 90;  // extern
+unsigned int M1_PWM_VALUE = 0;  // extern
+unsigned int M2_PWM_VALUE = 0;  // extern
 //################################
 
 
@@ -98,6 +99,8 @@ unsigned long whl2_vl_PID_D_time_prev = 0; // extern
 
 float whl1_vl_PID_out = 0; // extern 
 float whl2_vl_PID_out = 0; // extern 
+
+unsigned long current_time = 0; // extern 
 //################################
 
 
@@ -192,15 +195,19 @@ void loop(){
     //Encoder_Print();
 
     //-------------above is testing-------------------
-    if((millis() - prev_twinky_time) > 20){
+    current_time = millis();
+
+    //Motor control PID loop
+    if((current_time - prev_twinky_time) > 20){
       enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
       enc2_value = enc2.read() * -1;
 
       pid_v1_control();
-      prev_twinky_time = millis();
+      prev_twinky_time = current_time;
     }
 
 
+    //Line follow PID loop
 
 
 
