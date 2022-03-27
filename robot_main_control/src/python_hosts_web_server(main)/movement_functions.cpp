@@ -1,5 +1,9 @@
 #include "definitions.hpp"
 
+
+
+
+
 void Encoder_Print(){
   Serial.print(enc1_value);
   Serial.print("\t");
@@ -9,7 +13,7 @@ void Encoder_Print(){
 
 void ADC_test(){
 
-  //int adc1_buf[8]; // could make these extern
+  //int adc1_buf[8]; // could make these extern, update: I did
   //int adc2_buf[8];
 
   int t_start = micros();
@@ -73,11 +77,27 @@ void M2_stop() {
 
 
 
+void pid_v1_control(){
+  twinky_one = twinky_one + (millis() - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
+  twinky_two = twinky_two + (millis() - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
+
+  // COMPUTE PID VL OUTPUT
+  whl_1_2_vl_PID_calculation();
+
+}
+
+
+void whl_1_2_vl_PID_calculation(){
+  // ERROR
+  whl1_vl_PID_error = twinky_one - enc1_value; //this should be the desired - the current_read, twinky_one has been pushed up to a desired position.
+  whl2_vl_PID_error = twinky_two - enc2_value;
+
+  // PROPORTIONAL
+  whl1_vl_PID_P = whl1_vl_PID_error * whl1_vl_PID_KP ;
 
 
 
-
-
+}
 
 
 

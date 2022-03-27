@@ -21,7 +21,7 @@ Adafruit_MCP3008 adc1; // extern
 Adafruit_MCP3008 adc2; // extern                        //FOR LIGHT BAR
 const unsigned int ADC_1_CS = 2;
 const unsigned int ADC_2_CS = 17;
-int* adc1_buf = (int*) malloc(sizeof(int)*8); // extern 
+int* adc1_buf = (int*) malloc(sizeof(int)*8); // extern  or could do "new int[8];"
 int adc2_buf[8]; // extern 
 //################################
 
@@ -63,11 +63,31 @@ const unsigned int PWM_VALUE = 90;  // extern
 
 
 //################################
-unsigned int prev_twinky_time = 0;
+unsigned int prev_twinky_time = 0; // extern
+float twinky_one = 0; // extern
+float twinky_two = 0; // extern
+float twinky_one_speed = 0.15; // extern
+float twinky_two_speed = 0.15; // extern                                  //For Motor PID Control Loop
+float whl1_vl_PID_error = 0;
+float whl2_vl_PID_error = 0;
 
-                                                  //For Motor PID Control Loop
+float whl1_vl_PID_P = 0;
+float whl2_vl_PID_P = 0;
 
+float whl1_vl_PID_I = 0;
+float whl2_vl_PID_I = 0;
 
+float whl1_vl_PID_D = 0;
+float whl2_vl_PID_D = 0;
+
+float whl1_vl_PID_KP = 00.9000;
+float whl2_vl_PID_KP = 00.9000;
+
+float whl1_vl_PID_KI = 00.0180;
+float whl2_vl_PID_KI = 00.0180;
+
+float whl1_vl_PID_KD = 20.0000;
+float whl2_vl_PID_KD = 20.0000;
 
 //################################
 
@@ -127,6 +147,7 @@ void setup() {
 
   pinMode(M1_I_SENSE, INPUT);
   pinMode(M2_I_SENSE, INPUT);
+
 }
 
 
@@ -163,7 +184,10 @@ void loop(){
 
     //-------------above is testing-------------------
     if((millis() - prev_twinky_time) > 20){
-      //pid_v1_control();
+      enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+      enc2_value = enc2.read() * -1;
+
+      pid_v1_control();
       prev_twinky_time = millis();
     }
 
