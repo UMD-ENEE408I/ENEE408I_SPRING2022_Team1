@@ -198,7 +198,7 @@ void loop(){
     current_time = millis();
 
     //Motor control PID loop
-    if((current_time - prev_twinky_time) > 40){
+    if((current_time - prev_twinky_time) > 20){
       int enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
       int enc2_value = enc2.read() * -1; // should be -1.
 
