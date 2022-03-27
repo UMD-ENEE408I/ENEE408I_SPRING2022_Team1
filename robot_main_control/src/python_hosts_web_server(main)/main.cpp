@@ -119,17 +119,18 @@ void setup() {
 
   Serial.begin(115200);
 
-
+  /*
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
   WiFi.mode(WIFI_STA);
-  //WiFi.disconnect(false, true);
-  //WiFi.begin(ssid, password);
-  //while (WiFi.status() != WL_CONNECTED) {
-  //  delay(500);
-  //  Serial.print(".");
-  //}
+  WiFi.disconnect(false, true);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  */
 
   // Print local IP address and start web server
   Serial.println("");
@@ -183,7 +184,9 @@ void loop(){
     
     //send_and_recieve_message_to_client();
     //Serial.println("scope check and FINAL -->> " + rec_Message);
-
+    //if(rec_Message == "Right\n"){
+    //  Serial.println("HEEEEEEEELLLLLO");
+    //}
     //ADC_test();
     //Serial.println("SCOPE Check ");
     //Serial.print(adc1_buf[0]);
@@ -193,11 +196,12 @@ void loop(){
     //enc1_value = enc1.read();
     //enc2_value = enc2.read();
     //Encoder_Print();
-
+    //----------------------------------------------
     //-------------above is testing-------------------
-    current_time = millis();
 
+  
     //Motor control PID loop
+    current_time = millis();
     if((current_time - prev_twinky_time) > 20){
       int enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
       int enc2_value = enc2.read() * -1; // should be -1.
@@ -207,6 +211,8 @@ void loop(){
 
       prev_twinky_time = current_time;
     }
+    
+
 
 
     //Line follow PID loop

@@ -21,7 +21,7 @@ void send_and_recieve_message_to_client(){
         delay(500);
         while(holder != '\n'){
           holder = client.read();
-          //Serial.println("holder is" + holder);
+          Serial.println("holder is" + holder);
           rec_Message += holder;
         //Serial.println("FINAL MESSAGE ->> " + rec_Message);
         delay(200);
