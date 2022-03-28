@@ -67,8 +67,8 @@ unsigned int M2_PWM_VALUE = 0;  // extern
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
-float twinky_one_speed = 0.15; // extern
-float twinky_two_speed = 0.15; // extern                                  
+float twinky_one_speed = 0.3; // extern
+float twinky_two_speed = 0.3; // extern                                  
 
 float whl1_vl_PID_error = 0; // extern  
 float whl2_vl_PID_error = 0; // extern 
