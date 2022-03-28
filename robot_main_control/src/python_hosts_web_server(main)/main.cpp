@@ -131,7 +131,6 @@ void setup() {
     Serial.print(".");
   }
   */
-
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -187,6 +186,7 @@ void loop(){
     //if(rec_Message == "Right\n"){
     //  Serial.println("HEEEEEEEELLLLLO");
     //}
+
     //ADC_test();
     //Serial.println("SCOPE Check ");
     //Serial.print(adc1_buf[0]);
@@ -199,7 +199,7 @@ void loop(){
     //----------------------------------------------
     //-------------above is testing-------------------
 
-  
+    
     //Motor control PID loop
     current_time = millis();
     if((current_time - prev_twinky_time) > 20){
