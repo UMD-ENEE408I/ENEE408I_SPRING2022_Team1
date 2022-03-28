@@ -19,7 +19,7 @@ void M1_stop();
 void M2_backward();
 void M2_forward();
 void M2_stop();
-void pid_v1_control(int enc1_value, int enc2_value );
+void pid_v1_control(int enc1_value, int enc2_value);
 void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value);
 void motor_move();
 //#######################################################################
