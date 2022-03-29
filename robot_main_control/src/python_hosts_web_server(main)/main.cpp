@@ -32,8 +32,8 @@ const unsigned int M1_ENC_A = 39;
 const unsigned int M1_ENC_B = 38;                       // FOR ENCODER
 const unsigned int M2_ENC_A = 37;
 const unsigned int M2_ENC_B = 36;
-//long enc1_value = 0; // extern
-//long enc2_value = 0; // extern
+long enc1_value = 0; // extern
+long enc2_value = 0; // extern
 //################################
 
 
@@ -82,14 +82,14 @@ float whl2_vl_PID_I = 0; // extern
 float whl1_vl_PID_D = 0; // extern 
 float whl2_vl_PID_D = 0; // extern 
 
-float whl1_vl_PID_KP = 00.9500; // extern 
-float whl2_vl_PID_KP = 00.9500; // extern 
+float whl1_vl_PID_KP = 2.0; // extern 
+float whl2_vl_PID_KP = 2.0; // extern 
 
 float whl1_vl_PID_KI = 0.0026; // extern 
 float whl2_vl_PID_KI = 0.0026; // extern 
 
-float whl1_vl_PID_KD = 46; // extern 
-float whl2_vl_PID_KD = 46; // extern 
+float whl1_vl_PID_KD = 70; // extern 
+float whl2_vl_PID_KD = 70; // extern 
 
 float whl1_vl_PID_error_prev = 0; // extern 
 float whl2_vl_PID_error_prev = 0; // extern 
@@ -177,7 +177,7 @@ void setup() {
 
   pinMode(M1_I_SENSE, INPUT);
   pinMode(M2_I_SENSE, INPUT);
-
+  delay(2000); 
 }
 
 
@@ -194,9 +194,11 @@ void setup() {
 void loop(){
   Encoder enc1(M1_ENC_A, M1_ENC_B);
   Encoder enc2(M2_ENC_A, M2_ENC_B);
+  delay(2000); 
 
 
-
+  prev_twinky_time = millis();
+  prev_line_follow_time = millis();
   while(true){
     
     //send_and_recieve_message_to_client();
@@ -214,31 +216,34 @@ void loop(){
     //enc1_value = enc1.read();
     //enc2_value = enc2.read();
     //Encoder_Print();
-    //----------------------------------------------
-    //-------------above is testing-------------------
+    //-------------------------------------------------------------------
+    //-------------above is testing--------------------------------------
 
     
     //Motor control PID loop
     current_time = millis();
-    if((current_time - prev_twinky_time) > 20){
-      int enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
-      int enc2_value = enc2.read() * -1; // should be -1.
+    if((current_time - prev_twinky_time) > 0){
+      enc2_value = enc2.read()*-1; // should be -1.
+      enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+      
 
-      pid_v1_control(enc1_value, enc2_value);
-      Encoder_Print(enc1_value, enc2_value);
+      pid_v1_control();
+      Encoder_Print();
 
       prev_twinky_time = current_time;
     }
     
 
 
-
+/*
     //Line follow PID loop
     if((current_time - prev_line_follow_time) > 50){ // we desire to keep the middle three under 500, 
 
       pid_lf_control();
       prev_line_follow_time = current_time;
     }
+*/
+
 
 
 

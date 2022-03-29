@@ -15,7 +15,7 @@ beginFlag = False
 myDict = dict()
 
 
-SERVER_HOST = '192.168.0.14'
+SERVER_HOST = '10.105.220.241'
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

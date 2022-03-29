@@ -4,7 +4,7 @@
 
 
 
-void Encoder_Print(int enc1_value, int enc2_value){
+void Encoder_Print(){
   Serial.print(enc1_value);
   Serial.print("\t");
   Serial.print(enc2_value);
@@ -77,18 +77,18 @@ void M2_stop() {
 
 
 
-void pid_v1_control(int enc1_value, int enc2_value){
+void pid_v1_control(){
   //get desired input distance
   twinky_one = twinky_one + (current_time - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
   twinky_two = twinky_two + (current_time - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
 
   // COMPUTE PID VL OUTPUT
-  whl_1_2_vl_PID_calculation(enc1_value, enc2_value);
+  whl_1_2_vl_PID_calculation();
   motor_move();
 }
 
 
-void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value){
+void whl_1_2_vl_PID_calculation(){
   // ERROR for whl1 and whl2
   whl1_vl_PID_error = twinky_one - enc1_value; //this should be the desired - the current_read, twinky_one has been pushed up to a desired position.
   whl2_vl_PID_error = twinky_two - enc2_value;
@@ -125,7 +125,16 @@ void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value){
   whl2_vl_PID_out = whl2_vl_PID_P + whl2_vl_PID_I + whl2_vl_PID_D;
   if(whl2_vl_PID_out >= 255) whl2_vl_PID_out = 255;
   if(whl2_vl_PID_out <= -255) whl2_vl_PID_out = -255;    
-
+  Serial.print(whl2_vl_PID_error);
+  Serial.print(" ");
+  Serial.print(whl2_vl_PID_P);
+  Serial.print(" ");
+  Serial.print(whl2_vl_PID_I);
+  Serial.print(" ");
+  Serial.print(whl2_vl_PID_D);
+  Serial.print(" ");
+  Serial.print(whl2_vl_PID_out);
+  Serial.println();
 }
 
 
