@@ -89,16 +89,16 @@ void pid_v1_control(int enc1_value, int enc2_value){
 
 
 void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value){
-  // ERROR
+  // ERROR for whl1 and whl2
   whl1_vl_PID_error = twinky_one - enc1_value; //this should be the desired - the current_read, twinky_one has been pushed up to a desired position.
   whl2_vl_PID_error = twinky_two - enc2_value;
 
-  // PROPORTIONAL
+  // PROPORTIONAL for whl1 and whl2
   whl1_vl_PID_P = whl1_vl_PID_error * whl1_vl_PID_KP; // error times kP constant
   whl2_vl_PID_P = whl2_vl_PID_error * whl2_vl_PID_KP;
 
   
-  // INTEGRAL
+  // INTEGRAL for whl1 and whl2
   whl1_vl_PID_I +=  whl1_vl_PID_error * whl1_vl_PID_KI * (float)(current_time - whl1_vl_PID_D_time_prev); // I accumulates with the error times the kI constant
   if(whl1_vl_PID_I > 255) whl1_vl_PID_I = 255;               // cam this possibly go over 255?
   if(whl1_vl_PID_I < -255) whl1_vl_PID_I = -255;
@@ -108,7 +108,7 @@ void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value){
   if(whl2_vl_PID_I < -255) whl2_vl_PID_I = -255;
 
 
-  // DERIVATIVE
+  // DERIVATIVE for whl1 and whl2
   whl1_vl_PID_D = ( (whl1_vl_PID_error - whl1_vl_PID_error_prev)/(float)(current_time - whl1_vl_PID_D_time_prev) ) * whl1_vl_PID_KD;
   whl1_vl_PID_error_prev = whl1_vl_PID_error; // should this be whl1_vl_PID_error? not whl1_vl_PID_D
   whl1_vl_PID_D_time_prev = current_time;
@@ -117,28 +117,28 @@ void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value){
   whl2_vl_PID_error_prev = whl2_vl_PID_error;
   whl2_vl_PID_D_time_prev = current_time;
 
-  // SUMMATION
+  // SUMMATION for whl1 and whl2
   whl1_vl_PID_out = whl1_vl_PID_P + whl1_vl_PID_I + whl1_vl_PID_D;
-  if(whl1_vl_PID_out > 255) whl1_vl_PID_out = 255;
-  if(whl1_vl_PID_out < -255) whl1_vl_PID_out = -255;
+  if(whl1_vl_PID_out >= 255) whl1_vl_PID_out = 255;
+  if(whl1_vl_PID_out <= -255) whl1_vl_PID_out = -255;
 
   whl2_vl_PID_out = whl2_vl_PID_P + whl2_vl_PID_I + whl2_vl_PID_D;
-  if(whl2_vl_PID_out > 255) whl2_vl_PID_out = 255;
-  if(whl2_vl_PID_out < -255) whl2_vl_PID_out = -255;    
+  if(whl2_vl_PID_out >= 255) whl2_vl_PID_out = 255;
+  if(whl2_vl_PID_out <= -255) whl2_vl_PID_out = -255;    
 
 }
 
 
 void motor_move(){ 
-  M1_PWM_VALUE = whl1_vl_PID_out;
-  M2_PWM_VALUE = whl2_vl_PID_out;
+  M1_PWM_VALUE = static_cast<int>(whl1_vl_PID_out);
+  M2_PWM_VALUE = static_cast<int>(whl2_vl_PID_out);
 
   // IF PID_1 FORWARD    
   if(whl1_vl_PID_out >= 0){
     M1_forward();
 
   }else{  // IF PID_1 REVERSE
-    whl1_vl_PID_out = whl1_vl_PID_out * -1;
+    M1_PWM_VALUE = M1_PWM_VALUE * -1;
     M1_backward(); 
   }
 
@@ -147,7 +147,7 @@ void motor_move(){
     M2_forward();
 
   }else{ // IF PID_2 REVERSE
-    whl2_vl_PID_out = whl2_vl_PID_out * -1;
+    M2_PWM_VALUE = M2_PWM_VALUE * -1;
     M2_backward();
   }
 
@@ -157,7 +157,11 @@ void motor_move(){
 
 
 
+void pid_lf_control(){
 
+
+
+}
 
 
 

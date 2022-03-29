@@ -22,6 +22,8 @@ void M2_stop();
 void pid_v1_control(int enc1_value, int enc2_value);
 void whl_1_2_vl_PID_calculation(int enc1_value, int enc2_value);
 void motor_move();
+void pid_lf_control();
+
 //#######################################################################
 //#######################################################################
 extern WiFiClient client;
@@ -79,7 +81,6 @@ extern const unsigned int M2_I_SENSE;
 extern const float M_I_COUNTS_TO_A;
 extern unsigned int M1_PWM_VALUE; 
 extern unsigned int M2_PWM_VALUE; 
-
 //#######################################################################
 //#######################################################################
 
@@ -126,14 +127,18 @@ extern float whl1_vl_PID_out;
 extern float whl2_vl_PID_out;
 
 extern unsigned long current_time;
-
 //#######################################################################
 //#######################################################################
 
 
 
 
+//#######################################################################
+//#######################################################################
+extern unsigned long prev_line_follow_time;    //FOR LINE FOLLOW PID LOOP 
 
+//#######################################################################
+//#######################################################################
 
 
 

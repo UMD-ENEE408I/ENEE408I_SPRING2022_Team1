@@ -63,7 +63,7 @@ unsigned int M2_PWM_VALUE = 0;  // extern
 
 
 
-//################################
+//#################################
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
@@ -101,7 +101,25 @@ float whl1_vl_PID_out = 0; // extern
 float whl2_vl_PID_out = 0; // extern 
 
 unsigned long current_time = 0; // extern 
-//################################
+//#################################
+
+
+
+//#################################
+unsigned long prev_line_follow_time = 0; // extern 
+
+
+
+
+                                                          //FOR LINE FOLLOW PID LOOP 
+
+//#################################
+
+
+
+
+
+
 
 
 
@@ -216,12 +234,16 @@ void loop(){
 
 
     //Line follow PID loop
+    if((current_time - prev_line_follow_time) > 50){ // we desire to keep the middle three under 500, 
+
+      pid_lf_control();
+      prev_line_follow_time = current_time;
+    }
 
 
 
 
-
-
+    //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation.
 
 
 
