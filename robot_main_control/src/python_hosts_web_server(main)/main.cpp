@@ -23,6 +23,7 @@ const unsigned int ADC_1_CS = 2;
 const unsigned int ADC_2_CS = 17;
 int* adc1_buf = (int*) malloc(sizeof(int)*8); // extern  or could do "new int[8];"
 int adc2_buf[8]; // extern 
+int* adc_buf = (int*) malloc(sizeof(int)*12); //extern
 //################################
 
 
@@ -207,7 +208,7 @@ void loop(){
     //  Serial.println("HEEEEEEEELLLLLO");
     //}
 
-    //ADC_test();
+    //read_Light_bar();
     //Serial.println("SCOPE Check ");
     //Serial.print(adc1_buf[0]);
     //Serial.println(adc2_buf[0]);

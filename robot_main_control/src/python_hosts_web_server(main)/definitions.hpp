@@ -10,9 +10,9 @@
 
 //function prototypes
 void send_and_recieve_message_to_client();
-void Encoder_Print(); 
 
-void ADC_test();
+void Encoder_Print(); 
+void read_Light_bar();
 void M1_backward();
 void M1_forward();
 void M1_stop();
@@ -48,6 +48,7 @@ extern Adafruit_MCP3008 adc1;                   //FOR THE LIGHT BAR
 extern Adafruit_MCP3008 adc2;
 extern int* adc1_buf; // could change syntax back
 extern int adc2_buf[8];
+extern int* adc_buf;
 //#######################################################################
 //#######################################################################
 

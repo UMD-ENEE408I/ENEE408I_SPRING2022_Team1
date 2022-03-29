@@ -11,7 +11,7 @@ void Encoder_Print(){
   Serial.println();
 }
 
-void ADC_test(){
+void read_Light_bar(){
 
   //int adc1_buf[8]; // could make these extern, update: I did
   //int adc2_buf[8];
@@ -29,9 +29,25 @@ void ADC_test(){
     Serial.print(adc2_buf[i]); 
     Serial.print("\t");
   }
-
   Serial.print(t_end - t_start);
   Serial.println();
+
+
+  adc_buf[0] = adc1.readADC(0);
+  adc_buf[1] = adc2.readADC(0);
+  adc_buf[2] = adc1.readADC(1);
+  adc_buf[3] = adc2.readADC(1);
+  adc_buf[4] = adc1.readADC(2);
+  adc_buf[5] = adc2.readADC(2);
+  //adc_buf[6] = adc1.readADC(3);
+  adc_buf[6] = adc2.readADC(3);
+  adc_buf[7] = adc1.readADC(4);
+  adc_buf[8] = adc2.readADC(4);
+  adc_buf[9] = adc1.readADC(5);
+  adc_buf[10] = adc2.readADC(5);
+  adc_buf[11] = adc1.readADC(6);
+
+
 
   delay(100);
 
@@ -167,8 +183,8 @@ void motor_move(){
 
 
 void pid_lf_control(){
-
-
+  //find error
+  read_Light_bar();
 
 }
 
