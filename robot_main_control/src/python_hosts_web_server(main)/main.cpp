@@ -242,13 +242,14 @@ void loop(){
     */
 
 
-
+    /*
     //Line follow PID loop
     if((current_time - prev_line_follow_time) > 50){ // we desire to keep the middle three under 500, 
 
       pid_lf_control();
       prev_line_follow_time = current_time;
     }
+    */
 
 
 
