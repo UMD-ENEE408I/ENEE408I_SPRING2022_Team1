@@ -69,7 +69,7 @@ unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
 float twinky_one_speed = 0.3; // extern
-float twinky_two_speed = 0.3; // extern                                  
+float twinky_two_speed = twinky_one_speed; // extern                                  
 
 float whl1_vl_PID_error = 0; // extern  
 float whl2_vl_PID_error = 0; // extern 
@@ -108,12 +108,19 @@ unsigned long current_time = 0; // extern
 
 //#################################
 unsigned long prev_line_follow_time = 0; // extern 
-
-
-
-
-                                                          //FOR LINE FOLLOW PID LOOP 
-
+unsigned int LightBar_Left_Sum = 0; // extern 
+unsigned int LightBar_Right_Sum = 0; // extern 
+int line_PID_error = 0; // extern 
+float line_follow_PID_KP = 00.0005; // extern 
+float line_follow_PID_KI = 0; // extern 
+float line_follow_PID_KD = 0; // extern 
+float line_follow_PID_P = 0; // extern 
+float line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
+float line_follow_PID_D = 0; // extern 
+int line_PID_error_prev = 0; // extern 
+float line_follow_PID_out = 0;
+float twinky_max = twinky_one_speed ;
+float twinky_min = twinky_one_speed * -1 ;
 //#################################
 
 
@@ -218,10 +225,10 @@ void loop(){
     //Encoder_Print();
     //-------------------------------------------------------------------
     //-------------above is testing--------------------------------------
-
-    
-    //Motor control PID loop
     current_time = millis();
+
+    /*
+    //Motor control PID loop
     if((current_time - prev_twinky_time) > 0){
       enc2_value = enc2.read()*-1; // should be -1.
       enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
@@ -232,17 +239,17 @@ void loop(){
 
       prev_twinky_time = current_time;
     }
-    
+    */
 
 
-/*
+
     //Line follow PID loop
     if((current_time - prev_line_follow_time) > 50){ // we desire to keep the middle three under 500, 
 
       pid_lf_control();
       prev_line_follow_time = current_time;
     }
-*/
+
 
 
 

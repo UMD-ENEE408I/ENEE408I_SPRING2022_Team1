@@ -13,6 +13,7 @@ void Encoder_Print(){
 
 void read_Light_bar(){
 
+  /*
   //int adc1_buf[8]; // could make these extern, update: I did
   //int adc2_buf[8];
 
@@ -31,7 +32,7 @@ void read_Light_bar(){
   }
   Serial.print(t_end - t_start);
   Serial.println();
-
+  */
 
   adc_buf[0] = adc1.readADC(0);
   adc_buf[1] = adc2.readADC(0);
@@ -47,12 +48,23 @@ void read_Light_bar(){
   adc_buf[10] = adc2.readADC(5);
   adc_buf[11] = adc1.readADC(6);
 
+/*//Sanity check
+  for(int i = 0; i < 12; i++){
+    Serial.print(adc_buf[i]);
+    Serial.print('\t');
+  }
+  Serial.println();
+*/
+
+  for(int i = 0; i < 6; i++){
+    LightBar_Left_Sum += adc_buf[i];
+  }
+  for(int i = 6; i < 12; i++){
+    LightBar_Right_Sum += adc_buf[i];
+  }
 
 
   delay(100);
-
-
-
 }
 
 
@@ -141,6 +153,7 @@ void whl_1_2_vl_PID_calculation(){
   whl2_vl_PID_out = whl2_vl_PID_P + whl2_vl_PID_I + whl2_vl_PID_D;
   if(whl2_vl_PID_out >= 255) whl2_vl_PID_out = 255;
   if(whl2_vl_PID_out <= -255) whl2_vl_PID_out = -255;    
+
   Serial.print(whl2_vl_PID_error);
   Serial.print(" ");
   Serial.print(whl2_vl_PID_P);
@@ -184,7 +197,35 @@ void motor_move(){
 
 void pid_lf_control(){
   //find error
+  LightBar_Left_Sum = 0;
+  LightBar_Right_Sum =  0;
   read_Light_bar();
+
+  //find error, left minus right, want to keep them equal as possible
+  line_PID_error = LightBar_Left_Sum - LightBar_Right_Sum;
+  //PROPORTIONAL
+  line_follow_PID_P = line_PID_error * line_follow_PID_KP;
+  //INTEGRAL
+  line_follow_PID_I += (float)(line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI;
+  if(line_follow_PID_I > 255) line_follow_PID_I = 255;
+  if(line_follow_PID_I < -255) line_follow_PID_I = -255;
+
+  //DERIVATIVE
+  line_follow_PID_D = ((float)(line_PID_error - line_PID_error_prev) / (float)(current_time - prev_line_follow_time)) * line_follow_PID_KI;
+  line_PID_error_prev = line_PID_error;
+
+  // SUMMATION
+  line_follow_PID_out = line_follow_PID_P + line_follow_PID_I + line_follow_PID_D;
+  if(line_follow_PID_out > twinky_max) line_follow_PID_out = twinky_max;
+  if(line_follow_PID_out < twinky_min) line_follow_PID_out = twinky_min;
+
+
+  //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line?, slow down the left motor?
+  if(line_follow_PID_out >= 0){
+    twinky_two_speed = twinky_two_speed - line_follow_PID_out; //SHOW ERIK
+  }else{
+    twinky_one_speed = twinky_one_speed - (-1 * line_follow_PID_out); //SHOW ERIK
+  }
 
 }
 
