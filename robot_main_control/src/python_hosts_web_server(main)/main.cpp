@@ -178,7 +178,6 @@ void setup() {
 
   pinMode(M1_I_SENSE, INPUT);
   pinMode(M2_I_SENSE, INPUT);
-  delay(2000); 
 }
 
 
