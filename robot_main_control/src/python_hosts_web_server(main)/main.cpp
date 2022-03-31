@@ -68,7 +68,7 @@ unsigned int M2_PWM_VALUE = 0;  // extern
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
-float twinky_one_speed = 0.25; // extern -- .25 with 250 is nice
+float twinky_one_speed = 0.25; // extern -- .25 with 250 is nice, .95 is fast
 float twinky_two_speed = twinky_one_speed; // extern                                  
 
 float whl1_vl_PID_error = 0; // extern  
@@ -103,7 +103,7 @@ float whl2_vl_PID_out = 0; // extern
 
 unsigned long current_time = 0; // extern 
 
-bool foward_Flag = true;
+bool reverse_Flag = false;
 //#################################
 
 
@@ -113,8 +113,9 @@ unsigned long prev_line_follow_time = 0; // extern
 unsigned int LightBar_Left_Sum = 0; // extern 
 unsigned int LightBar_Right_Sum = 0; // extern 
 int line_PID_error = 0; // extern 
-//float line_follow_PID_KP = 00.0005; // extern 
-float line_follow_PID_KP = twinky_one_speed/250; // extern 250 seems right
+float twinky_max = twinky_one_speed; // extern 
+float twinky_min = twinky_one_speed * -1; // extern 
+float line_follow_PID_KP = twinky_max/250; // extern 250 seems right
 float line_follow_PID_KI = 0.0; // extern 
 float line_follow_PID_KD = 0; // extern 
 float line_follow_PID_P = 0; // extern 
@@ -122,8 +123,6 @@ float line_follow_PID_I = 0; // extern                                          
 float line_follow_PID_D = 0; // extern 
 int line_PID_error_prev = 0; // extern 
 float line_follow_PID_out = 0; // extern 
-float twinky_max = twinky_one_speed; // extern 
-float twinky_min = twinky_one_speed * -1; // extern 
 //#################################
 
 
@@ -289,22 +288,19 @@ void loop(){
 
     current_time = millis();
 
-    
-    //Line follow PID loop
+    //Line follow PID loop----
     if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
 
       pid_lf_control();
       prev_line_follow_time = current_time;
     }
     
-    
 
-    //Motor control PID loop
+    //Motor control PID loop----
     if((current_time - prev_twinky_time) > 20){
       enc2_value = enc2.read()*-1; // should be -1.
       enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
       
-
       pid_v1_control();
       //Encoder_Print();
 

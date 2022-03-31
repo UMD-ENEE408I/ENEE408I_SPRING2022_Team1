@@ -210,12 +210,13 @@ void pid_lf_control(){
 
   //find error, left minus right, want to keep them equal as possible
   line_PID_error = LightBar_Left_Sum - LightBar_Right_Sum;
-  //Serial.print(line_PID_error);
+  Serial.print("line_PID_error is ");
+  Serial.println(line_PID_error);
 
   //PROPORTIONAL
   line_follow_PID_P = line_PID_error * line_follow_PID_KP;
-  //Serial.print("line_follow_PID_KP is ");
-  //Serial.println(line_follow_PID_KP, 6);
+  Serial.print("line_follow_PID_P is ");
+  Serial.println(line_follow_PID_P, 3);
   
   //INTEGRAL
   line_follow_PID_I += (float)(line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI;
@@ -238,9 +239,31 @@ void pid_lf_control(){
 
   if(line_follow_PID_out >= 0){
     twinky_two_speed = twinky_max - line_follow_PID_out; 
+    //if(twinky_one_speed + line_follow_PID_out > twinky_max){
+    //  twinky_one_speed += line_follow_PID_out;
+    //}
+
   }else{
     twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
+    //if(twinky_two_speed + line_follow_PID_out > twinky_max){
+    //  twinky_two_speed += line_follow_PID_out;
+    //}
   }
+
+  /* For reverse
+  if(line_follow_PID_out >= 0){
+    twinky_one_speed = -1*(twinky_max - line_follow_PID_out); 
+    //if(twinky_one_speed + line_follow_PID_out > twinky_max){
+    //  twinky_one_speed += line_follow_PID_out;
+    //}
+
+  }else{
+    twinky_two_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
+    //if(twinky_two_speed + line_follow_PID_out > twinky_max){
+    //  twinky_two_speed += line_follow_PID_out;
+    //
+  }
+  */
 
 }
 
