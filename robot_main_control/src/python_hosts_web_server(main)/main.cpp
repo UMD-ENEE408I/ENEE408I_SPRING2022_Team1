@@ -68,7 +68,7 @@ unsigned int M2_PWM_VALUE = 0;  // extern
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
-float twinky_one_speed = 0.3; // extern
+float twinky_one_speed = 0.25; // extern -- .25 with 250 is nice
 float twinky_two_speed = twinky_one_speed; // extern                                  
 
 float whl1_vl_PID_error = 0; // extern  
@@ -114,7 +114,7 @@ unsigned int LightBar_Left_Sum = 0; // extern
 unsigned int LightBar_Right_Sum = 0; // extern 
 int line_PID_error = 0; // extern 
 //float line_follow_PID_KP = 00.0005; // extern 
-float line_follow_PID_KP = twinky_one_speed/125; // extern 
+float line_follow_PID_KP = twinky_one_speed/250; // extern 250 seems right
 float line_follow_PID_KI = 0.0; // extern 
 float line_follow_PID_KD = 0; // extern 
 float line_follow_PID_P = 0; // extern 
