@@ -83,14 +83,14 @@ float whl2_vl_PID_I = 0; // extern
 float whl1_vl_PID_D = 0; // extern 
 float whl2_vl_PID_D = 0; // extern 
 
-float whl1_vl_PID_KP =  .35; // extern .35
-float whl2_vl_PID_KP = .35; // extern 2
+float whl1_vl_PID_KP =  .35; // extern .35, .35?
+float whl2_vl_PID_KP = .35; // extern 
 
-float whl1_vl_PID_KI = 0.0002; // extern 0.0002
-float whl2_vl_PID_KI = 0.0002; // extern 
+float whl1_vl_PID_KI = 0.000152; // extern 0.0002, .000150?
+float whl2_vl_PID_KI = 0.000152; // extern 
 
-float whl1_vl_PID_KD = 40; // extern 40
-float whl2_vl_PID_KD = 40; // extern 
+float whl1_vl_PID_KD = 50.00; // extern 40, 50.00?
+float whl2_vl_PID_KD = 50.00; // extern 
 
 float whl1_vl_PID_error_prev = 0.0; // extern 
 float whl2_vl_PID_error_prev = 0.0; // extern 
@@ -114,7 +114,7 @@ unsigned int LightBar_Left_Sum = 0; // extern
 unsigned int LightBar_Right_Sum = 0; // extern 
 int line_PID_error = 0; // extern 
 //float line_follow_PID_KP = 00.0005; // extern 
-float line_follow_PID_KP = twinky_one_speed/250; // extern 
+float line_follow_PID_KP = twinky_one_speed/125; // extern 
 float line_follow_PID_KI = 0.0; // extern 
 float line_follow_PID_KD = 0; // extern 
 float line_follow_PID_P = 0; // extern 
@@ -289,9 +289,6 @@ void loop(){
 
     current_time = millis();
 
-
-
-
     
     //Line follow PID loop
     if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
@@ -313,7 +310,6 @@ void loop(){
 
       prev_twinky_time = current_time;
     }
-    
 
 
     

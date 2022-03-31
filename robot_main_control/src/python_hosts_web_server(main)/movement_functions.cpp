@@ -214,8 +214,9 @@ void pid_lf_control(){
 
   //PROPORTIONAL
   line_follow_PID_P = line_PID_error * line_follow_PID_KP;
-  Serial.print("line_follow_PID_KP is ");
-  Serial.println(line_follow_PID_KP, 6);
+  //Serial.print("line_follow_PID_KP is ");
+  //Serial.println(line_follow_PID_KP, 6);
+  
   //INTEGRAL
   line_follow_PID_I += (float)(line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI;
   if(line_follow_PID_I > 255) line_follow_PID_I = 255;
@@ -236,9 +237,9 @@ void pid_lf_control(){
   //Serial.println(line_follow_PID_out, 6);
 
   if(line_follow_PID_out >= 0){
-    twinky_two_speed = twinky_max - line_follow_PID_out; //SHOW ERIK
+    twinky_two_speed = twinky_max - line_follow_PID_out; 
   }else{
-    twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); //SHOW ERIK
+    twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
   }
 
 }
