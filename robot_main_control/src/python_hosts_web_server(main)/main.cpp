@@ -83,17 +83,17 @@ float whl2_vl_PID_I = 0; // extern
 float whl1_vl_PID_D = 0; // extern 
 float whl2_vl_PID_D = 0; // extern 
 
-float whl1_vl_PID_KP = 2.0; // extern 
-float whl2_vl_PID_KP = 2.0; // extern 
+float whl1_vl_PID_KP =  .35; // extern .35
+float whl2_vl_PID_KP = .35; // extern 2
 
-float whl1_vl_PID_KI = 0.0026; // extern 
-float whl2_vl_PID_KI = 0.0026; // extern 
+float whl1_vl_PID_KI = 0.0002; // extern 0.0002
+float whl2_vl_PID_KI = 0.0002; // extern 
 
-float whl1_vl_PID_KD = 70; // extern 
-float whl2_vl_PID_KD = 70; // extern 
+float whl1_vl_PID_KD = 40; // extern 40
+float whl2_vl_PID_KD = 40; // extern 
 
-float whl1_vl_PID_error_prev = 0; // extern 
-float whl2_vl_PID_error_prev = 0; // extern 
+float whl1_vl_PID_error_prev = 0.0; // extern 
+float whl2_vl_PID_error_prev = 0.0; // extern 
 
 unsigned long whl1_vl_PID_D_time_prev = 0; // extern 
 unsigned long whl2_vl_PID_D_time_prev = 0; // extern 
@@ -102,6 +102,8 @@ float whl1_vl_PID_out = 0; // extern
 float whl2_vl_PID_out = 0; // extern 
 
 unsigned long current_time = 0; // extern 
+
+bool foward_Flag = true;
 //#################################
 
 
@@ -111,16 +113,17 @@ unsigned long prev_line_follow_time = 0; // extern
 unsigned int LightBar_Left_Sum = 0; // extern 
 unsigned int LightBar_Right_Sum = 0; // extern 
 int line_PID_error = 0; // extern 
-float line_follow_PID_KP = 00.0005; // extern 
-float line_follow_PID_KI = 0; // extern 
+//float line_follow_PID_KP = 00.0005; // extern 
+float line_follow_PID_KP = twinky_one_speed/250; // extern 
+float line_follow_PID_KI = 0.0; // extern 
 float line_follow_PID_KD = 0; // extern 
 float line_follow_PID_P = 0; // extern 
 float line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
 float line_follow_PID_D = 0; // extern 
 int line_PID_error_prev = 0; // extern 
-float line_follow_PID_out = 0;
-float twinky_max = twinky_one_speed ;
-float twinky_min = twinky_one_speed * -1 ;
+float line_follow_PID_out = 0; // extern 
+float twinky_max = twinky_one_speed; // extern 
+float twinky_min = twinky_one_speed * -1; // extern 
 //#################################
 
 
@@ -199,9 +202,11 @@ void setup() {
 //##################################################################################################
 
 void loop(){
+  delay(2000);
   Encoder enc1(M1_ENC_A, M1_ENC_B);
   Encoder enc2(M2_ENC_A, M2_ENC_B);
-  delay(2000); 
+  //twinky_one_speed *= -1; //to reverse direction
+  //twinky_two_speed *= -1;
 
 
   prev_twinky_time = millis();
@@ -223,43 +228,101 @@ void loop(){
     //enc1_value = enc1.read();
     //enc2_value = enc2.read();
     //Encoder_Print();
+
+    if(Serial.available()){
+              // GRAB INCOMING CHARACTERS
+        char incomingCharacter = Serial.read();
+
+       // PICK ACTION ACORDING TO CHAR 
+       switch (incomingCharacter) 
+       {
+
+          // INCREASE Kp
+          case '1':
+              whl1_vl_PID_KP = whl1_vl_PID_KP + 0.005 ;
+              Serial.println(whl1_vl_PID_KP, 4);
+          break;
+
+          // DECREASE Kp
+          case '2':
+              whl1_vl_PID_KP = whl1_vl_PID_KP - 0.005 ;
+              Serial.println(whl1_vl_PID_KP, 4);
+          break;
+
+          // INCREASE Ki
+          case '3':
+              whl1_vl_PID_KI = whl1_vl_PID_KI + 0.00005 ;
+              Serial.println(whl1_vl_PID_KI, 6);
+          break;
+
+
+          // DECREASE Ki
+          case '4':
+              whl1_vl_PID_KI = whl1_vl_PID_KI - 0.00005 ;
+              Serial.println(whl1_vl_PID_KI, 6);
+          break;
+
+          // INCREASE Kd
+          case '5':
+              whl1_vl_PID_KD = whl1_vl_PID_KD + 2 ;
+              Serial.println(whl1_vl_PID_KD, 8);
+          break;
+
+
+          // DECREASE Kd
+          case '6':
+              whl1_vl_PID_KD = whl1_vl_PID_KD - 2 ;
+              Serial.println(whl1_vl_PID_KD, 8);
+          break;
+
+          
+        } // <-- switch ()
+    }
+
+
+
     //-------------------------------------------------------------------
     //-------------above is testing--------------------------------------
+    //-------------------------------------------------------------------
+
+
+
     current_time = millis();
 
-    /*
+
+
+
+    
+    //Line follow PID loop
+    if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
+
+      pid_lf_control();
+      prev_line_follow_time = current_time;
+    }
+    
+    
+
     //Motor control PID loop
-    if((current_time - prev_twinky_time) > 0){
+    if((current_time - prev_twinky_time) > 20){
       enc2_value = enc2.read()*-1; // should be -1.
       enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
       
 
       pid_v1_control();
-      Encoder_Print();
+      //Encoder_Print();
 
       prev_twinky_time = current_time;
     }
-    */
+    
 
+
+    
 
     /*
-    //Line follow PID loop
-    if((current_time - prev_line_follow_time) > 50){ // we desire to keep the middle three under 500, 
-
-      pid_lf_control();
-      prev_line_follow_time = current_time;
-    }
-    */
-
-
-
-
-
-
     //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation.
 
 
-
+    */
 
 
 

@@ -128,6 +128,8 @@ extern float whl1_vl_PID_out;
 extern float whl2_vl_PID_out;
 
 extern unsigned long current_time;
+
+extern bool foward_Flag;
 //#######################################################################
 //#######################################################################
 

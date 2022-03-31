@@ -34,19 +34,19 @@ void read_Light_bar(){
   Serial.println();
   */
 
-  adc_buf[0] = adc1.readADC(0);
-  adc_buf[1] = adc2.readADC(0);
-  adc_buf[2] = adc1.readADC(1);
-  adc_buf[3] = adc2.readADC(1);
-  adc_buf[4] = adc1.readADC(2);
-  adc_buf[5] = adc2.readADC(2);
+  adc_buf[11] = adc1.readADC(0);
+  adc_buf[10] = adc2.readADC(0);
+  adc_buf[9] = adc1.readADC(1);
+  adc_buf[8] = adc2.readADC(1);
+  adc_buf[7] = adc1.readADC(2);
+  adc_buf[6] = adc2.readADC(2);
   //adc_buf[6] = adc1.readADC(3);
-  adc_buf[6] = adc2.readADC(3);
-  adc_buf[7] = adc1.readADC(4);
-  adc_buf[8] = adc2.readADC(4);
-  adc_buf[9] = adc1.readADC(5);
-  adc_buf[10] = adc2.readADC(5);
-  adc_buf[11] = adc1.readADC(6);
+  adc_buf[5] = adc2.readADC(3);
+  adc_buf[4] = adc1.readADC(4);
+  adc_buf[3] = adc2.readADC(4);
+  adc_buf[2] = adc1.readADC(5);
+  adc_buf[1] = adc2.readADC(5);
+  adc_buf[0] = adc1.readADC(6);
 
 /*//Sanity check
   for(int i = 0; i < 12; i++){
@@ -64,7 +64,7 @@ void read_Light_bar(){
   }
 
 
-  delay(100);
+  
 }
 
 
@@ -107,8 +107,14 @@ void M2_stop() {
 
 void pid_v1_control(){
   //get desired input distance
+
   twinky_one = twinky_one + (current_time - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
   twinky_two = twinky_two + (current_time - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
+  //Serial.print(twinky_one);
+  //Serial.print(" ");
+  //Serial.print(enc1_value);
+  //Serial.print(" ");
+  //Serial.println(whl1_vl_PID_out);
 
   // COMPUTE PID VL OUTPUT
   whl_1_2_vl_PID_calculation();
@@ -153,7 +159,7 @@ void whl_1_2_vl_PID_calculation(){
   whl2_vl_PID_out = whl2_vl_PID_P + whl2_vl_PID_I + whl2_vl_PID_D;
   if(whl2_vl_PID_out >= 255) whl2_vl_PID_out = 255;
   if(whl2_vl_PID_out <= -255) whl2_vl_PID_out = -255;    
-
+  /*
   Serial.print(whl2_vl_PID_error);
   Serial.print(" ");
   Serial.print(whl2_vl_PID_P);
@@ -164,6 +170,7 @@ void whl_1_2_vl_PID_calculation(){
   Serial.print(" ");
   Serial.print(whl2_vl_PID_out);
   Serial.println();
+  */
 }
 
 
@@ -203,15 +210,19 @@ void pid_lf_control(){
 
   //find error, left minus right, want to keep them equal as possible
   line_PID_error = LightBar_Left_Sum - LightBar_Right_Sum;
+  //Serial.print(line_PID_error);
+
   //PROPORTIONAL
   line_follow_PID_P = line_PID_error * line_follow_PID_KP;
+  Serial.print("line_follow_PID_KP is ");
+  Serial.println(line_follow_PID_KP, 6);
   //INTEGRAL
   line_follow_PID_I += (float)(line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI;
   if(line_follow_PID_I > 255) line_follow_PID_I = 255;
   if(line_follow_PID_I < -255) line_follow_PID_I = -255;
 
   //DERIVATIVE
-  line_follow_PID_D = ((float)(line_PID_error - line_PID_error_prev) / (float)(current_time - prev_line_follow_time)) * line_follow_PID_KI;
+  line_follow_PID_D = ((float)(line_PID_error - line_PID_error_prev) / (float)(current_time - prev_line_follow_time)) * line_follow_PID_KD;
   line_PID_error_prev = line_PID_error;
 
   // SUMMATION
@@ -221,10 +232,13 @@ void pid_lf_control(){
 
 
   //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line?, slow down the left motor?
+  //Serial.print("line_follow_PID_out is ");
+  //Serial.println(line_follow_PID_out, 6);
+
   if(line_follow_PID_out >= 0){
-    twinky_two_speed = twinky_two_speed - line_follow_PID_out; //SHOW ERIK
+    twinky_two_speed = twinky_max - line_follow_PID_out; //SHOW ERIK
   }else{
-    twinky_one_speed = twinky_one_speed - (-1 * line_follow_PID_out); //SHOW ERIK
+    twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); //SHOW ERIK
   }
 
 }
