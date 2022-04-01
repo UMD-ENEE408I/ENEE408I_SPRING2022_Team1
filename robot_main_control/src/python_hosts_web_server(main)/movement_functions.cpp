@@ -238,19 +238,23 @@ void pid_lf_control(){
   //Serial.println(line_follow_PID_out, 6);
 
   if(line_follow_PID_out >= 0){
-    twinky_two_speed = twinky_max - line_follow_PID_out; 
-    //if(twinky_one_speed + line_follow_PID_out > twinky_max){
-    //  twinky_one_speed += line_follow_PID_out;
-    //}
+    twinky_two_speed = twinky_max - line_follow_PID_out;
+
+    /* //OR THIS?
+    twinky_two_speed = twinky_max - line_follow_PID_out/2;
+    twinky_one_speed = twinky_max + line_follow_PID_out/2;
+    */
 
   }else{
     twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
-    //if(twinky_two_speed + line_follow_PID_out > twinky_max){
-    //  twinky_two_speed += line_follow_PID_out;
-    //}
+
+    /* //OR THIS?
+    twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
+    twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 
+    */
   }
 
-  /* For reverse
+  /* For reverse direction, maybe dont need to do this.
   if(line_follow_PID_out >= 0){
     twinky_one_speed = -1*(twinky_max - line_follow_PID_out); 
     //if(twinky_one_speed + line_follow_PID_out > twinky_max){
