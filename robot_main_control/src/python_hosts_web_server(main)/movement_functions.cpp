@@ -48,13 +48,13 @@ void read_Light_bar(){
   adc_buf[1] = adc2.readADC(5);
   adc_buf[0] = adc1.readADC(6);
 
-/*//Sanity check
+  //Sanity check
   for(int i = 0; i < 12; i++){
     Serial.print(adc_buf[i]);
     Serial.print('\t');
   }
   Serial.println();
-*/
+
 
   for(int i = 0; i < 6; i++){
     LightBar_Left_Sum += adc_buf[i];
