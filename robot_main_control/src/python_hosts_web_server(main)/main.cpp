@@ -323,16 +323,21 @@ void loop(){
       twinky_one_speed = twinky_min; //to reverse direction
       twinky_two_speed = twinky_min;
       prev_twinky_time = millis();
-      while(true){
+      //do reverse
+      while(enc2_value > desired_enc2_value && enc1_value > desired_enc1_value){ // should i also do reverse line_following?
         current_time = millis();
-        while(current_time - prev_twinky_time > 20 && (enc2_value > desired_enc2_value || enc1_value > desired_enc1_value)){
+        while(current_time - prev_twinky_time > 20){
           enc2_value = enc2.read()*-1;
           enc1_value = enc1.read();
           pid_v1_control();
-          //maybe delay by 20 milliseconds
-          delay(20);
         }
       }
+
+
+
+
+
+
 
       twinky_one_speed = .25; //to make it foward again
       twinky_two_speed = .25;
@@ -351,7 +356,7 @@ void loop(){
       desired_enc1_value = enc1_value - 118;
       desired_enc2_value = enc2_value - 118;
 
-      
+      //do reverse
       while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
