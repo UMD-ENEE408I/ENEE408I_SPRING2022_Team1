@@ -23,7 +23,7 @@ void send_and_recieve_message_to_client(){
           holder = client.read();
           //Serial.println("holder is" + holder);
           rec_Message += holder;
-        //Serial.println("FINAL MESSAGE ->> " + rec_Message);
+        
         delay(200);
         }
         client.flush();

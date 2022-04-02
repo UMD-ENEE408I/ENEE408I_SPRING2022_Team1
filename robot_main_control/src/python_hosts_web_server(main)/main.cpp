@@ -57,8 +57,8 @@ const int ledChannel = 0;
 const int resolution = 8;  // we can write PWM wave with max of 2^8 - 1 = 255
 
 const float M_I_COUNTS_TO_A = (3.3 / 1024.0) / 0.120; // extern
-unsigned int M1_PWM_VALUE = 0;  // extern
-unsigned int M2_PWM_VALUE = 0;  // extern
+int M1_PWM_VALUE = 0;  // extern
+int M2_PWM_VALUE = 0;  // extern
 //################################
 
 
@@ -86,7 +86,7 @@ float whl2_vl_PID_D = 0; // extern
 float whl1_vl_PID_KP =  .35; // extern .35, .35?
 float whl2_vl_PID_KP = .35; // extern 
 
-float whl1_vl_PID_KI = 0.000152; // extern 0.0002, .000150?
+float whl1_vl_PID_KI = 0.000152; // extern 0.0002, .000152?
 float whl2_vl_PID_KI = 0.000152; // extern 
 
 float whl1_vl_PID_KD = 50.00; // extern 40, 50.00?
@@ -103,7 +103,7 @@ float whl2_vl_PID_out = 0; // extern
 
 unsigned long current_time = 0; // extern 
 
-bool reverse_Flag = false;
+bool foward_Flag = true;
 //#################################
 
 
@@ -129,10 +129,10 @@ float line_follow_PID_out = 0; // extern
 
 
 
-
-
-
-
+//#################################
+long desired_enc1_value = 0;
+long desired_enc2_value = 0;                 //FOR Intersection Logic
+//#################################
 
 
 
@@ -287,7 +287,7 @@ void loop(){
 
 
     current_time = millis();
-
+    
     //Line follow PID loop----
     if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
 
@@ -310,13 +310,159 @@ void loop(){
 
     
 
+    //PID method
+    //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation. Back up by 109 ticks seems good
+    
+    if((adc1.readADC(6) < 690 && adc2.readADC(5) < 690 && adc1.readADC(5) < 690) || (adc1.readADC(0) < 690 && adc2.readADC(0) < 690 && adc1.readADC(1) < 690)){
+      M1_stop();
+      M2_stop();
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value - 118;
+      desired_enc2_value = enc2_value - 118;
+      twinky_one_speed = twinky_min; //to reverse direction
+      twinky_two_speed = twinky_min;
+      prev_twinky_time = millis();
+      while(true){
+        current_time = millis();
+        while(current_time - prev_twinky_time > 20 && (enc2_value > desired_enc2_value || enc1_value > desired_enc1_value)){
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+          pid_v1_control();
+          //maybe delay by 20 milliseconds
+          delay(20);
+        }
+      }
+
+      twinky_one_speed = .25; //to make it foward again
+      twinky_two_speed = .25;
+      Serial.println("hello");
+      delay(20000);
+    }
+    
+    
+    //Constants method
     /*
-    //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation.
+    if((adc1.readADC(6) < 690 && adc2.readADC(5) < 690 && adc1.readADC(5) < 690) || (adc1.readADC(0) < 690 && adc2.readADC(0) < 690 && adc1.readADC(1) < 690)){
+      M1_stop();
+      M2_stop();
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value - 118;
+      desired_enc2_value = enc2_value - 118;
+
+      
+      while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        ledcWrite(M1_IN_1_CHANNEL, 90);
+        ledcWrite(M2_IN_1_CHANNEL, 90);
+
+      }
+      M1_stop();
+      M2_stop();
+      client_Flag = false; // should be true
+      send_and_recieve_message_to_client();
+      client_Flag = false;
+      Serial.println("FINAL MESSAGE ->> " + rec_Message);
+
+      //----------
+      //Test and keep code to find constant to push up by
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value + 320;
+      desired_enc2_value = enc2_value + 320;
+      
+      while(enc2_value < desired_enc2_value || enc1_value < desired_enc1_value){
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        ledcWrite(M1_IN_2_CHANNEL, 95); // forward
+        ledcWrite(M2_IN_2_CHANNEL, 95); // forward
+      }
+      M1_stop();
+      M2_stop();
+      /*
+      //test right turn
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value + 72;
+      desired_enc2_value = enc2_value - 148;
+      
+      while(enc2_value > desired_enc2_value || enc1_value < desired_enc1_value){
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        ledcWrite(M1_IN_2_CHANNEL, 95); // forward
+        ledcWrite(M2_IN_1_CHANNEL, 95); // reverse
+      }
+      M1_stop();
+      M2_stop();
+      */
+      /*
+      //test left turn
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value - 90;
+      desired_enc2_value = enc2_value + 170;
+      
+      while(enc2_value < desired_enc2_value || enc1_value > desired_enc1_value){
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        ledcWrite(M1_IN_1_CHANNEL, 95); // reverse
+        ledcWrite(M2_IN_2_CHANNEL, 95); // forward
+      }
+      M1_stop();
+      M2_stop();
+      
+      //----------
 
 
+
+
+      if(rec_Message == "Foward\n"){
+        //reset values for both PID and continue;
+      }else if(rec_Message == "Left\n"){
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value - 90;
+        desired_enc2_value = enc2_value + 170;
+        
+        while(enc2_value < desired_enc2_value || enc1_value > desired_enc1_value){
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+          ledcWrite(M1_IN_1_CHANNEL, 95); // reverse
+          ledcWrite(M2_IN_2_CHANNEL, 95); // forward
+        }
+        M1_stop();
+        M2_stop();
+
+      }else if(rec_Message == "Right\n"){
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value + 72;
+        desired_enc2_value = enc2_value - 148;
+        
+        while(enc2_value > desired_enc2_value || enc1_value < desired_enc1_value){
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+          ledcWrite(M1_IN_2_CHANNEL, 95); // forward
+          ledcWrite(M2_IN_1_CHANNEL, 95); // reverse
+        }
+        M1_stop();
+        M2_stop();
+
+      }else if(rec_Message == "WINNER\n"){
+        exit(1);
+
+      }else{
+        Serial.println("Not good");
+      }
+
+
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+    }
     */
-
-
 
 
     //delay(6000);

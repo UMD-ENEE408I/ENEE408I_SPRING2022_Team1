@@ -11,6 +11,7 @@
 //function prototypes
 void send_and_recieve_message_to_client();
 
+void reset_variables();
 void Encoder_Print(); 
 void read_Light_bar();
 void M1_backward();
@@ -80,8 +81,8 @@ extern const unsigned int M1_I_SENSE;
 extern const unsigned int M2_I_SENSE;
 
 extern const float M_I_COUNTS_TO_A;
-extern unsigned int M1_PWM_VALUE; 
-extern unsigned int M2_PWM_VALUE; 
+extern int M1_PWM_VALUE; 
+extern int M2_PWM_VALUE; 
 //#######################################################################
 //#######################################################################
 
@@ -161,6 +162,12 @@ extern float twinky_min;
 
 
 
+//#######################################################################
+//#######################################################################
+extern long desired_enc1_value;
+extern long desired_enc2_value;                                                               //FOR Intersection Logic
+//#######################################################################
+//#######################################################################
 
 
 #endif

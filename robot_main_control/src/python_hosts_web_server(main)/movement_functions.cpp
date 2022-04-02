@@ -1,7 +1,70 @@
 #include "definitions.hpp"
 
 
+void reset_variables(){
 
+  //#################################
+  prev_twinky_time = millis(); // extern
+  twinky_one = 0; // extern
+  twinky_two = 0; // extern
+  twinky_one_speed = 0.25; // extern
+  twinky_two_speed = twinky_one_speed; // extern                                  
+
+  whl1_vl_PID_error = 0; // extern  
+  whl2_vl_PID_error = 0; // extern 
+
+  whl1_vl_PID_P = 0; // extern 
+  whl2_vl_PID_P = 0; // extern 
+
+  whl1_vl_PID_I = 0; // extern                    //For Motors PID Control Loop
+  whl2_vl_PID_I = 0; // extern 
+
+  whl1_vl_PID_D = 0; // extern 
+  whl2_vl_PID_D = 0; // extern 
+
+  whl1_vl_PID_KP =  .35; // extern
+  whl2_vl_PID_KP = .35; // extern 
+
+  whl1_vl_PID_KI = 0.000152; // extern
+  whl2_vl_PID_KI = 0.000152; // extern 
+
+  whl1_vl_PID_KD = 50.00; // extern
+  whl2_vl_PID_KD = 50.00; // extern 
+
+  whl1_vl_PID_error_prev = 0.0; // extern 
+  whl2_vl_PID_error_prev = 0.0; // extern 
+
+  whl1_vl_PID_D_time_prev = millis(); // extern 
+  whl2_vl_PID_D_time_prev = millis(); // extern 
+
+  whl1_vl_PID_out = 0; // extern 
+  whl2_vl_PID_out = 0; // extern 
+
+  current_time = 0; // extern 
+  //#################################
+
+
+
+  //#################################
+  prev_line_follow_time = millis(); // extern 
+  LightBar_Left_Sum = 0; // extern 
+  LightBar_Right_Sum = 0; // extern 
+  line_PID_error = 0; // extern 
+  twinky_max = twinky_one_speed; // extern 
+  twinky_min = twinky_one_speed * -1; // extern 
+  line_follow_PID_KP = twinky_max/250; // extern
+  line_follow_PID_KI = 0.0; // extern 
+  line_follow_PID_KD = 0; // extern 
+  line_follow_PID_P = 0; // extern 
+  line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
+  line_follow_PID_D = 0; // extern 
+  line_PID_error_prev = 0; // extern 
+  line_follow_PID_out = 0; // extern 
+  //#################################
+
+
+
+}
 
 
 void Encoder_Print(){
@@ -48,13 +111,14 @@ void read_Light_bar(){
   adc_buf[1] = adc2.readADC(5);
   adc_buf[0] = adc1.readADC(6);
 
+  /*
   //Sanity check
   for(int i = 0; i < 12; i++){
     Serial.print(adc_buf[i]);
     Serial.print('\t');
   }
   Serial.println();
-
+  */
 
   for(int i = 0; i < 6; i++){
     LightBar_Left_Sum += adc_buf[i];
@@ -110,7 +174,7 @@ void pid_v1_control(){
 
   twinky_one = twinky_one + (current_time - prev_twinky_time)*twinky_one_speed; // multiply by some constant to keep pushing up the twinky_one distance
   twinky_two = twinky_two + (current_time - prev_twinky_time)*twinky_two_speed; // multiply by some constant to keep pushing up the twinky_one distance 
-  //Serial.print(twinky_one);
+  //Serial.println(twinky_one);
   //Serial.print(" ");
   //Serial.print(enc1_value);
   //Serial.print(" ");
@@ -210,13 +274,13 @@ void pid_lf_control(){
 
   //find error, left minus right, want to keep them equal as possible
   line_PID_error = LightBar_Left_Sum - LightBar_Right_Sum;
-  Serial.print("line_PID_error is ");
-  Serial.println(line_PID_error);
+  //Serial.print("line_PID_error is ");
+  //Serial.println(line_PID_error);
 
   //PROPORTIONAL
-  line_follow_PID_P = line_PID_error * line_follow_PID_KP;
-  Serial.print("line_follow_PID_P is ");
-  Serial.println(line_follow_PID_P, 3);
+  line_follow_PID_P = ((float) line_PID_error) * line_follow_PID_KP;
+  //Serial.print("line_follow_PID_P is ");
+  //Serial.println(line_follow_PID_P, 3);
   
   //INTEGRAL
   line_follow_PID_I += (float)(line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI;
@@ -231,43 +295,39 @@ void pid_lf_control(){
   line_follow_PID_out = line_follow_PID_P + line_follow_PID_I + line_follow_PID_D;
   if(line_follow_PID_out > twinky_max) line_follow_PID_out = twinky_max;
   if(line_follow_PID_out < twinky_min) line_follow_PID_out = twinky_min;
-
-
-  //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line?, slow down the left motor?
   //Serial.print("line_follow_PID_out is ");
   //Serial.println(line_follow_PID_out, 6);
 
-  if(line_follow_PID_out >= 0){
-    twinky_two_speed = twinky_max - line_follow_PID_out;
 
-    /* //OR THIS?
-    twinky_two_speed = twinky_max - line_follow_PID_out/2;
-    twinky_one_speed = twinky_max + line_follow_PID_out/2;
-    */
+  //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line, slow down the left motor
+  if(foward_Flag == true){
+    if(line_follow_PID_out >= 0){
+      twinky_two_speed = twinky_max - line_follow_PID_out;
 
-  }else{
-    twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
+      /* //OR THIS?
+      twinky_two_speed = twinky_max - line_follow_PID_out/2;
+      twinky_one_speed = twinky_max + line_follow_PID_out/2;
+      */
 
-    /* //OR THIS?
-    twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
-    twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 
-    */
-  }
+    }else{
+      twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
 
-  /* For reverse direction, maybe dont need to do this.
-  if(line_follow_PID_out >= 0){
-    twinky_one_speed = -1*(twinky_max - line_follow_PID_out); 
-    //if(twinky_one_speed + line_follow_PID_out > twinky_max){
-    //  twinky_one_speed += line_follow_PID_out;
-    //}
+      /* //OR THIS?
+      twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
+      twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 
+      */
+    }
 
   }else{
-    twinky_two_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
-    //if(twinky_two_speed + line_follow_PID_out > twinky_max){
-    //  twinky_two_speed += line_follow_PID_out;
-    //
+    //For reverse direction, maybe dont need to do this.
+    if(line_follow_PID_out >= 0){
+      twinky_one_speed = -1*(twinky_max - line_follow_PID_out); 
+
+    }else{
+      twinky_two_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
+
+    }
   }
-  */
 
 }
 
