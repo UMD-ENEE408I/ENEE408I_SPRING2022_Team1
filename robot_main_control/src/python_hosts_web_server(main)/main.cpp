@@ -638,7 +638,9 @@ void loop(){
     */
 
 
-    //delay(6000);
-    //client_Flag = true;
+
+    //now check if we are at dead end with light bar and 180
+
+
   }
 }
