@@ -11,6 +11,8 @@
 //function prototypes
 void send_and_recieve_message_to_client();
 
+void reset_motor_PID_variables();
+void reset_lf_PID_variables();
 void reset_variables();
 void Encoder_Print(); 
 void read_Light_bar();

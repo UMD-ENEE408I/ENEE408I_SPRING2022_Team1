@@ -1,5 +1,65 @@
 #include "definitions.hpp"
 
+void reset_motor_PID_variables(){
+//#################################
+  prev_twinky_time = millis(); // extern
+  twinky_one = 0; // extern
+  twinky_two = 0; // extern
+  twinky_one_speed = 0.25; // extern
+  twinky_two_speed = twinky_one_speed; // extern                                  
+
+  whl1_vl_PID_error = 0; // extern  
+  whl2_vl_PID_error = 0; // extern 
+
+  whl1_vl_PID_P = 0; // extern 
+  whl2_vl_PID_P = 0; // extern 
+
+  whl1_vl_PID_I = 0; // extern                    //For Motors PID Control Loop
+  whl2_vl_PID_I = 0; // extern 
+
+  whl1_vl_PID_D = 0; // extern 
+  whl2_vl_PID_D = 0; // extern 
+
+  whl1_vl_PID_KP =  .35; // extern
+  whl2_vl_PID_KP = .35; // extern 
+
+  whl1_vl_PID_KI = 0.000152; // extern
+  whl2_vl_PID_KI = 0.000152; // extern 
+
+  whl1_vl_PID_KD = 50.00; // extern
+  whl2_vl_PID_KD = 50.00; // extern 
+
+  whl1_vl_PID_error_prev = 0.0; // extern 
+  whl2_vl_PID_error_prev = 0.0; // extern 
+
+  whl1_vl_PID_D_time_prev = millis(); // extern 
+  whl2_vl_PID_D_time_prev = millis(); // extern 
+
+  whl1_vl_PID_out = 0; // extern 
+  whl2_vl_PID_out = 0; // extern 
+
+  current_time = 0; // extern 
+  //#################################
+}
+
+void reset_lf_PID_variables(){
+//#################################
+  prev_line_follow_time = millis(); // extern 
+  LightBar_Left_Sum = 0; // extern 
+  LightBar_Right_Sum = 0; // extern 
+  line_PID_error = 0; // extern 
+  twinky_max = twinky_one_speed; // extern 
+  twinky_min = twinky_one_speed * -1; // extern 
+  line_follow_PID_KP = twinky_max/250; // extern
+  line_follow_PID_KI = 0.0; // extern 
+  line_follow_PID_KD = 0; // extern 
+  line_follow_PID_P = 0; // extern 
+  line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
+  line_follow_PID_D = 0; // extern 
+  line_PID_error_prev = 0; // extern 
+  line_follow_PID_out = 0; // extern 
+  //#################################
+}
 
 void reset_variables(){
 
