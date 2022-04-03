@@ -21,7 +21,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind((SERVER_HOST, SERVER_PORT))
 s.listen(0)
-s.settimeout(2)
+s.settimeout(3)
 
 # s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 # # s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)

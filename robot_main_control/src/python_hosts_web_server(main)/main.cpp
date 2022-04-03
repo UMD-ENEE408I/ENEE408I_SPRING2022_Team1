@@ -8,10 +8,10 @@ WiFiClient client; // extern
 String rec_Message = ""; // extern
 char holder; // extern                                   // FOR WIFI
 bool client_Flag = false; // extern
-const char* ssid = "ARRIS-93FA"; // extern
-const char* password = "BSY89A602856"; // extern
+const char* ssid = "ARRIS-93FA"; // extern ARRIS-93FA
+const char* password = "BSY89A602856"; // extern BSY89A602856
 const uint16_t port = 8000; // extern
-const char* host = "192.168.0.14"; // extern
+const char* host = "192.168.0.14"; // extern 172.20.10.3
 //################################
 
 
@@ -472,8 +472,8 @@ void loop(){
 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value - 110;
-        desired_enc2_value = enc2_value + 140;
+        desired_enc1_value = enc1_value - 100;
+        desired_enc2_value = enc2_value + 108;
         twinky_one_speed = twinky_min; // left motor reverse
         twinky_two_speed = twinky_max; // right motor forward
         prev_twinky_time = millis();
