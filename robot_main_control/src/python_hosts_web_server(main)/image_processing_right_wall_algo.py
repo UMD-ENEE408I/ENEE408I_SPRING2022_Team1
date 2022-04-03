@@ -49,34 +49,42 @@ def send_message(type_of_intersec, the_client_connection):
     if type_of_intersec == "Left_and_Forward":
         MESSAGE = "Forward\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Right_and_Forward":
         MESSAGE = "Right\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "T":
         MESSAGE = "Right\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Left":
         MESSAGE = "Left\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Right":
         MESSAGE = "Right\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Three_Way":
         MESSAGE = "Right\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Dead_End":
         MESSAGE = "Dead End?\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Middle_of_Maze":
         MESSAGE = "WINNER\n"
         the_client_connection.send(MESSAGE.encode())
+        time.sleep(.1)
         the_client_connection.close()
 
 #Idea should be to get the binary mask
