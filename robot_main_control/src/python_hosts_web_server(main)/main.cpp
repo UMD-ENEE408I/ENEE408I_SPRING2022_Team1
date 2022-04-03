@@ -103,7 +103,7 @@ float whl2_vl_PID_out = 0; // extern
 
 unsigned long current_time = 0; // extern 
 
-bool foward_Flag = true;
+bool foward_Flag = true; // extern 
 //#################################
 
 
@@ -130,8 +130,8 @@ float line_follow_PID_out = 0; // extern
 
 
 //#################################
-long desired_enc1_value = 0;
-long desired_enc2_value = 0;                 //FOR Intersection Logic
+long desired_enc1_value = 0; // extern 
+long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
 //#################################
 
 
@@ -147,7 +147,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  ///*
+  /*
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -158,7 +158,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  //*/
+  */
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -321,14 +321,14 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 118;
-      desired_enc2_value = enc2_value - 118;
+      desired_enc1_value = enc1_value - 125;
+      desired_enc2_value = enc2_value - 125;
       twinky_one_speed = twinky_min; //to reverse direction
       twinky_two_speed = twinky_min;
       prev_twinky_time = millis();
       //do reverse
       foward_Flag = false; // this only affects the line follow
-      while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following?
+      while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following? should be ||.
         current_time = millis();
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
@@ -342,7 +342,7 @@ void loop(){
       M2_stop();
 
       //send and recieve message
-      client_Flag = true; // should be true
+      client_Flag = false; // should be true
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
@@ -392,7 +392,7 @@ void loop(){
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 110;
-      desired_enc2_value = enc2_value + 170;
+      desired_enc2_value = enc2_value + 150;
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
       prev_twinky_time = millis();
@@ -444,6 +444,7 @@ void loop(){
       //now check rec_message and do turn
       if(rec_Message == "Foward\n"){
         //reset values for both PID and continue;
+
       }else if(rec_Message == "Left\n"){
         enc2_value = enc2.readAndReset()*-1;
         enc1_value = enc1.readAndReset();
@@ -452,7 +453,7 @@ void loop(){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
         desired_enc1_value = enc1_value - 110;
-        desired_enc2_value = enc2_value + 170;
+        desired_enc2_value = enc2_value + 150;
         twinky_one_speed = twinky_min; // left motor reverse
         twinky_two_speed = twinky_max; // right motor forward
         prev_twinky_time = millis();
@@ -506,7 +507,7 @@ void loop(){
 
 
 
-
+      
       Serial.println("hello");
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
@@ -639,8 +640,16 @@ void loop(){
 
 
 
-    //now check if we are at dead end with light bar and 180
+    //now check if we are at dead end with light bar and 180 turn
+    if(adc1.readADC(0) > 700 && adc2.readADC(0) > 700 && adc1.readADC(1) > 700 && adc2.readADC(1) > 700 && adc1.readADC(2)  > 700 &&
+      adc2.readADC(2) > 700 && adc1.readADC(3) > 700 && adc2.readADC(3) > 700 && adc1.readADC(4) > 700 && adc2.readADC(4) > 700 &&
+      adc1.readADC(5) > 700 && adc2.readADC(5) > 700 && adc1.readADC(6) > 700){
+        
+        M1_stop();
+        M2_stop();
+        
 
+      }
 
   }
 }
