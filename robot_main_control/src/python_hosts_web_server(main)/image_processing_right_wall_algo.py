@@ -27,7 +27,7 @@ s.settimeout(2)
 # # s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 # s2.bind((SERVER_HOST, 8001))
 # s2.listen(0)
-# s2.settimeout(5)
+# s2.settimeout(2)
 
 
 def get_message1():

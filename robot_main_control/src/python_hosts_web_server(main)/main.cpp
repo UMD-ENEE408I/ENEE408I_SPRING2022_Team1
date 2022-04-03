@@ -312,7 +312,7 @@ void loop(){
     //PID method
     //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation. Back up by 109 ticks seems good
     
-    if((adc1.readADC(6) < 690 && adc2.readADC(5) < 690 && adc1.readADC(5) < 690) || (adc1.readADC(0) < 690 && adc2.readADC(0) < 690 && adc1.readADC(1) < 690)){
+    if((adc1.readADC(6) < 690 && adc2.readADC(5) < 690 && adc1.readADC(5) < 690 && adc2.readADC(4) < 690) || (adc1.readADC(0) < 690 && adc2.readADC(0) < 690 && adc1.readADC(1) < 690 && adc2.readADC(1) < 690)){
       M1_stop();
       M2_stop();
       enc2_value = enc2.readAndReset()*-1;
@@ -356,21 +356,21 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 350;
-      desired_enc2_value = enc2_value + 350;
+      desired_enc1_value = enc1_value + 340;
+      desired_enc2_value = enc2_value + 340;
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
       twinky_one_speed = twinky_max;
       twinky_two_speed = twinky_max;
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
         current_time = millis();
-        
+        /*
         //Line follow PID loop---- maybe dont use this to push back up
         if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
           pid_lf_control();
           prev_line_follow_time = current_time;
         }
-        
+        */
         //Motor control PID loop----
         if((current_time - prev_twinky_time) > 20){
           enc2_value = enc2.read()*-1; // should be -1.
@@ -392,7 +392,7 @@ void loop(){
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 110;
-      desired_enc2_value = enc2_value + 190;
+      desired_enc2_value = enc2_value + 170;
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
       prev_twinky_time = millis();
@@ -452,7 +452,7 @@ void loop(){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
         desired_enc1_value = enc1_value - 110;
-        desired_enc2_value = enc2_value + 190;
+        desired_enc2_value = enc2_value + 170;
         twinky_one_speed = twinky_min; // left motor reverse
         twinky_two_speed = twinky_max; // right motor forward
         prev_twinky_time = millis();
