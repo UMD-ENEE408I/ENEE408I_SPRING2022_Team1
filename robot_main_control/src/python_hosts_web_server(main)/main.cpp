@@ -147,7 +147,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  /*
+  ///*
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -158,7 +158,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  */
+  //*/
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -204,9 +204,8 @@ void loop(){
   delay(2000);
   Encoder enc1(M1_ENC_A, M1_ENC_B);
   Encoder enc2(M2_ENC_A, M2_ENC_B);
-  //twinky_one_speed *= -1; //to reverse direction
-  //twinky_two_speed *= -1;
 
+  foward_Flag = true; //to reverse direction
 
   prev_twinky_time = millis();
   prev_line_follow_time = millis();
@@ -316,6 +315,10 @@ void loop(){
     if((adc1.readADC(6) < 690 && adc2.readADC(5) < 690 && adc1.readADC(5) < 690) || (adc1.readADC(0) < 690 && adc2.readADC(0) < 690 && adc1.readADC(1) < 690)){
       M1_stop();
       M2_stop();
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 118;
@@ -324,25 +327,190 @@ void loop(){
       twinky_two_speed = twinky_min;
       prev_twinky_time = millis();
       //do reverse
-      while(enc2_value > desired_enc2_value && enc1_value > desired_enc1_value){ // should i also do reverse line_following?
+      foward_Flag = false; // this only affects the line follow
+      while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following?
         current_time = millis();
-        while(current_time - prev_twinky_time > 20){
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        //Motor control PID loop----
+        if(current_time - prev_twinky_time > 20){
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        }
+      }
+      M1_stop();
+      M2_stop();
+
+      //send and recieve message
+      client_Flag = true; // should be true
+      send_and_recieve_message_to_client();
+      client_Flag = false;
+      Serial.println("FINAL MESSAGE ->> " + rec_Message);
+
+
+      //now lets reset values and line follow back up
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+
+      foward_Flag = true;
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value + 350;
+      desired_enc2_value = enc2_value + 350;
+      prev_twinky_time = millis();
+      prev_line_follow_time = millis();
+      twinky_one_speed = twinky_max;
+      twinky_two_speed = twinky_max;
+      while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
+        current_time = millis();
+        
+        //Line follow PID loop---- maybe dont use this to push back up
+        if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
+          pid_lf_control();
+          prev_line_follow_time = current_time;
+        }
+        
+        //Motor control PID loop----
+        if((current_time - prev_twinky_time) > 20){
+          enc2_value = enc2.read()*-1; // should be -1.
+          enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        }
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+      }
+      M1_stop();
+      M2_stop();
+      /*
+      //testing left turn 
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value - 110;
+      desired_enc2_value = enc2_value + 190;
+      twinky_one_speed = twinky_min; // left motor reverse
+      twinky_two_speed = twinky_max; // right motor forward
+      prev_twinky_time = millis();
+      while(enc1_value > desired_enc1_value || enc2_value < desired_enc2_value){
+        current_time = millis();
+        if((current_time - prev_twinky_time) > 20){
+          enc2_value = enc2.read()*-1; // should be -1.
+          enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        }
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+
+      }
+      M1_stop();
+      M2_stop();
+      */
+      //testing right turn 
+      /*
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value + 290;
+      desired_enc2_value = enc2_value - 130;
+      twinky_one_speed = twinky_max; // left motor reverse
+      twinky_two_speed = twinky_min; // right motor forward
+      prev_twinky_time = millis();
+      while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+        current_time = millis();
+        if((current_time - prev_twinky_time) > 20){
+          enc2_value = enc2.read()*-1; // should be -1.
+          enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        }
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+
+      }
+      M1_stop();
+      M2_stop();
+      */
+
+
+      //now check rec_message and do turn
+      if(rec_Message == "Foward\n"){
+        //reset values for both PID and continue;
+      }else if(rec_Message == "Left\n"){
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value - 110;
+        desired_enc2_value = enc2_value + 190;
+        twinky_one_speed = twinky_min; // left motor reverse
+        twinky_two_speed = twinky_max; // right motor forward
+        prev_twinky_time = millis();
+        while(enc1_value > desired_enc1_value || enc2_value < desired_enc2_value){
+          current_time = millis();
+          if((current_time - prev_twinky_time) > 20){
+            enc2_value = enc2.read()*-1; // should be -1.
+            enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+            pid_v1_control();
+            prev_twinky_time = current_time;
+          }
           enc2_value = enc2.read()*-1;
           enc1_value = enc1.read();
-          pid_v1_control();
         }
+      M1_stop();
+      M2_stop();
+
+      }else if(rec_Message == "Right\n"){
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value + 290;
+        desired_enc2_value = enc2_value - 130;
+        twinky_one_speed = twinky_max; // left motor reverse
+        twinky_two_speed = twinky_min; // right motor forward
+        prev_twinky_time = millis();
+        while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+          current_time = millis();
+          if((current_time - prev_twinky_time) > 20){
+            enc2_value = enc2.read()*-1; // should be -1.
+            enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+            pid_v1_control();
+            prev_twinky_time = current_time;
+          }
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+        }
+        M1_stop();
+        M2_stop();
+
+      }else if(rec_Message == "WINNER\n"){
+        exit(1);
+
+      }else{
+        Serial.println("Not good");
       }
 
 
 
 
 
-
-
-      twinky_one_speed = .25; //to make it foward again
-      twinky_two_speed = .25;
       Serial.println("hello");
-      delay(20000);
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
     }
     
     
@@ -361,7 +529,7 @@ void loop(){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
         ledcWrite(M1_IN_1_CHANNEL, 90);
-        ledcWrite(M2_IN_1_CHANNEL, 90);
+        ledcWrite(M2_IN_1_CHANNEL, 108);
 
       }
       M1_stop();
@@ -382,11 +550,11 @@ void loop(){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
         ledcWrite(M1_IN_2_CHANNEL, 95); // forward
-        ledcWrite(M2_IN_2_CHANNEL, 95); // forward
+        ledcWrite(M2_IN_2_CHANNEL, 108); // forward
       }
       M1_stop();
       M2_stop();
-      /*
+      
       //test right turn
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
@@ -396,8 +564,8 @@ void loop(){
       while(enc2_value > desired_enc2_value || enc1_value < desired_enc1_value){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        ledcWrite(M1_IN_2_CHANNEL, 95); // forward
-        ledcWrite(M2_IN_1_CHANNEL, 95); // reverse
+        ledcWrite(M1_IN_2_CHANNEL, 105); // forward
+        ledcWrite(M2_IN_1_CHANNEL, 105); // reverse
       }
       M1_stop();
       M2_stop();

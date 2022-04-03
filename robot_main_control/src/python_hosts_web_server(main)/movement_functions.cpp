@@ -322,9 +322,11 @@ void pid_lf_control(){
     //For reverse direction, maybe dont need to do this.
     if(line_follow_PID_out >= 0){
       twinky_one_speed = -1*(twinky_max - line_follow_PID_out); 
+      //twinky_two_speed = -1*(twinky_max -  line_follow_PID_out); 
 
     }else{
       twinky_two_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
+      //twinky_one_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
 
     }
   }
