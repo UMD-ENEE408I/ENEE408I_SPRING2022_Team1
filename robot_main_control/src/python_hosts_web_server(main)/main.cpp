@@ -132,6 +132,7 @@ float line_follow_PID_out = 0; // extern
 //#################################
 long desired_enc1_value = 0; // extern 
 long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
+int dead_end_thresh = 700;
 //#################################
 
 
@@ -330,12 +331,22 @@ void loop(){
       foward_Flag = false; // this only affects the line follow
       while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following? should be ||.
         current_time = millis();
-        enc2_value = enc2.read()*-1;
-        enc1_value = enc1.read();
         //Motor control PID loop----
         if(current_time - prev_twinky_time > 20){
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
           pid_v1_control();
           prev_twinky_time = current_time;
+        }
+
+        //check if satisfied and stop movement
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        if(enc1_value < desired_enc1_value){
+          twinky_one_speed = 0;
+        }
+        if(enc2_value < desired_enc2_value){
+          twinky_two_speed = 0;
         }
       }
       M1_stop();
@@ -377,9 +388,18 @@ void loop(){
           enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
           pid_v1_control();
           prev_twinky_time = current_time;
-        }
+        } 
+        //check if satisfied and stop movement
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
+        /*
+        if(enc1_value > desired_enc1_value){
+          twinky_one_speed = 0;
+        }
+        if(enc2_value > desired_enc2_value){
+          twinky_two_speed = 0;
+        }
+        */
       }
       M1_stop();
       M2_stop();
@@ -639,17 +659,51 @@ void loop(){
     */
 
 
-
+    
     //now check if we are at dead end with light bar and 180 turn
-    if(adc1.readADC(0) > 700 && adc2.readADC(0) > 700 && adc1.readADC(1) > 700 && adc2.readADC(1) > 700 && adc1.readADC(2)  > 700 &&
-      adc2.readADC(2) > 700 && adc1.readADC(3) > 700 && adc2.readADC(3) > 700 && adc1.readADC(4) > 700 && adc2.readADC(4) > 700 &&
-      adc1.readADC(5) > 700 && adc2.readADC(5) > 700 && adc1.readADC(6) > 700){
+    if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
+      adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
+      adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
         
         M1_stop();
         M2_stop();
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value + 470;
+        desired_enc2_value = enc2_value - 470;
+        twinky_one_speed = twinky_max; // left motor reverse
+        twinky_two_speed = twinky_min; // right motor forward
+        prev_twinky_time = millis();
+        while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+          current_time = millis();
+          if((current_time - prev_twinky_time) > 20){
+            enc2_value = enc2.read()*-1; // should be -1.
+            enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+            pid_v1_control();
+            prev_twinky_time = current_time;
+          }
+          //check if satisfied and stop movement
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
         
+          if(enc1_value > desired_enc1_value){
+            twinky_one_speed = 0;
+          }
+          if(enc2_value < desired_enc2_value){
+            twinky_two_speed = 0;
+          }
 
+        }// END OF WHILE
+        M1_stop();
+        M2_stop();
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
       }
-
+    
   }
 }
