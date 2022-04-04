@@ -67,7 +67,7 @@ void reset_variables(){
   prev_twinky_time = millis(); // extern
   twinky_one = 0; // extern
   twinky_two = 0; // extern
-  twinky_one_speed = 0.25; // extern
+  twinky_one_speed = 0.24; // extern maybe .2 is better
   twinky_two_speed = twinky_one_speed; // extern                                  
 
   whl1_vl_PID_error = 0; // extern  

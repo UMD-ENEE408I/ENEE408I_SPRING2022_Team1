@@ -68,7 +68,7 @@ int M2_PWM_VALUE = 0;  // extern
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
-float twinky_one_speed = 0.25; // extern -- .25 with 250 is nice, .95 is fast
+float twinky_one_speed = 0.24; // extern -- .25 with 250 is nice, .20 might be better
 float twinky_two_speed = twinky_one_speed; // extern                                  
 
 float whl1_vl_PID_error = 0; // extern  
@@ -289,7 +289,7 @@ void loop(){
     current_time = millis();
     
     //Line follow PID loop----
-    if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
+    if((current_time - prev_line_follow_time) > 10){ // we desire to keep the middle three under 500, 40 is better?
 
       pid_lf_control();
       prev_line_follow_time = current_time;
@@ -313,7 +313,8 @@ void loop(){
     //PID method
     //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation. Back up by 109 ticks seems good
     
-    if((adc1.readADC(6) < 690 && adc2.readADC(5) < 690 && adc1.readADC(5) < 690 && adc2.readADC(4) < 690) || (adc1.readADC(0) < 690 && adc2.readADC(0) < 690 && adc1.readADC(1) < 690 && adc2.readADC(1) < 690)){
+    if((adc1.readADC(6) < 690 && adc2.readADC(5) < 690 && adc1.readADC(5) < 690 && adc2.readADC(4) < 690 && adc1.readADC(4) < 690) || 
+       (adc1.readADC(0) < 690 && adc2.readADC(0) < 690 && adc1.readADC(1) < 690 && adc2.readADC(1) < 690 && adc1.readADC(2) < 690)){
       M1_stop();
       M2_stop();
       enc2_value = enc2.readAndReset()*-1;
@@ -411,8 +412,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 110;
-      desired_enc2_value = enc2_value + 150;
+      desired_enc1_value = enc1_value - 100;
+      desired_enc2_value = enc2_value + 107;
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
       prev_twinky_time = millis();
@@ -439,7 +440,7 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 290;
+      desired_enc1_value = enc1_value + 300;
       desired_enc2_value = enc2_value - 130;
       twinky_one_speed = twinky_max; // left motor reverse
       twinky_two_speed = twinky_min; // right motor forward
@@ -473,7 +474,7 @@ void loop(){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
         desired_enc1_value = enc1_value - 100;
-        desired_enc2_value = enc2_value + 108;
+        desired_enc2_value = enc2_value + 107;
         twinky_one_speed = twinky_min; // left motor reverse
         twinky_two_speed = twinky_max; // right motor forward
         prev_twinky_time = millis();
@@ -485,8 +486,17 @@ void loop(){
             pid_v1_control();
             prev_twinky_time = current_time;
           }
+          //check if satisfied and stop movement
           enc2_value = enc2.read()*-1;
           enc1_value = enc1.read();
+          /*
+          if(enc1_value < desired_enc1_value){
+            twinky_one_speed = 0;
+          }
+          if(enc2_value > desired_enc2_value){
+            twinky_two_speed = 0;
+          }
+          */
         }
       M1_stop();
       M2_stop();
@@ -498,7 +508,7 @@ void loop(){
 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value + 290;
+        desired_enc1_value = enc1_value + 300;
         desired_enc2_value = enc2_value - 130;
         twinky_one_speed = twinky_max; // left motor reverse
         twinky_two_speed = twinky_min; // right motor forward
@@ -511,8 +521,17 @@ void loop(){
             pid_v1_control();
             prev_twinky_time = current_time;
           }
+          //check if satisfied and stop movement
           enc2_value = enc2.read()*-1;
           enc1_value = enc1.read();
+          /*
+          if(enc1_value > desired_enc1_value){
+            twinky_one_speed = 0;
+          }
+          if(enc2_value < desired_enc2_value){
+            twinky_two_speed = 0;
+          }
+          */
         }
         M1_stop();
         M2_stop();
