@@ -289,7 +289,7 @@ void loop(){
     current_time = millis();
     
     //Line follow PID loop----
-    if((current_time - prev_line_follow_time) > 10){ // we desire to keep the middle three under 500, 40 is better?
+    if((current_time - prev_line_follow_time) > 10){ //40 is better?
 
       pid_lf_control();
       prev_line_follow_time = current_time;
