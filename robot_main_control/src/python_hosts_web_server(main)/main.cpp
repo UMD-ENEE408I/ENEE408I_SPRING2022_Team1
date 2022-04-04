@@ -374,6 +374,7 @@ void loop(){
       prev_line_follow_time = millis();
       twinky_one_speed = twinky_max;
       twinky_two_speed = twinky_max;
+      //twinky_one = twinky_one + 50; // this is to get left wheel up to speed ask levi
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
         current_time = millis();
         /*
