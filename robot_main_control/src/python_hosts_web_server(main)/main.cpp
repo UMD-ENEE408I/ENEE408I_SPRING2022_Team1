@@ -323,8 +323,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 125;
-      desired_enc2_value = enc2_value - 125;
+      desired_enc1_value = enc1_value - 115;
+      desired_enc2_value = enc2_value - 115;
       twinky_one_speed = twinky_min; //to reverse direction
       twinky_two_speed = twinky_min;
       prev_twinky_time = millis();
