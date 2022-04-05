@@ -122,9 +122,8 @@ void reset_variables(){
   line_follow_PID_out = 0; // extern 
   //#################################
 
-
-
 }
+
 
 
 void Encoder_Print(){

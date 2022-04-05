@@ -328,6 +328,8 @@ void loop(){
       twinky_one_speed = twinky_min; //to reverse direction
       twinky_two_speed = twinky_min;
       prev_twinky_time = millis();
+      //twinky_one -= 20; // this is to get left wheel up to boost back, ask levi
+      twinky_two -= 50;
       //do reverse
       foward_Flag = false; // this only affects the line follow
       while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following? should be ||.
@@ -358,7 +360,7 @@ void loop(){
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
-
+      delay(2000);//debug
 
       //now lets reset values and line follow back up
       enc2_value = enc2.readAndReset()*-1;
@@ -368,13 +370,13 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 340;
-      desired_enc2_value = enc2_value + 340;
+      desired_enc1_value = enc1_value + 300; //+340 without boost
+      desired_enc2_value = enc2_value + 300; //+340 without boost
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
       twinky_one_speed = twinky_max;
       twinky_two_speed = twinky_max;
-      //twinky_one = twinky_one + 50; // this is to get left wheel up to speed ask levi
+      twinky_one = twinky_one + 80; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
         current_time = millis();
         /*
@@ -413,8 +415,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 100;
-      desired_enc2_value = enc2_value + 107;
+      desired_enc1_value = enc1_value - 100; // -100 without boost
+      desired_enc2_value = enc2_value + 167; // +107 without boost
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
       prev_twinky_time = millis();
@@ -448,8 +450,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 300;
-      desired_enc2_value = enc2_value - 130;
+      desired_enc1_value = enc1_value + 300; // +300 without boost
+      desired_enc2_value = enc2_value - 130; // -130 without boost
       twinky_one_speed = twinky_max; // left motor reverse
       twinky_two_speed = twinky_min; // right motor forward
       prev_twinky_time = millis();
