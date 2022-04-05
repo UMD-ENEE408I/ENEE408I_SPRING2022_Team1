@@ -52,6 +52,8 @@ extern Adafruit_MCP3008 adc2;
 extern int* adc1_buf; // could change syntax back
 extern int adc2_buf[8];
 extern int* adc_buf;
+extern short b;
+extern float adjustment;
 //#######################################################################
 //#######################################################################
 

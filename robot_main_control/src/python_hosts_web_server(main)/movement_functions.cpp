@@ -50,7 +50,7 @@ void reset_lf_PID_variables(){
   line_PID_error = 0; // extern 
   twinky_max = twinky_one_speed; // extern 
   twinky_min = twinky_one_speed * -1; // extern 
-  line_follow_PID_KP = twinky_max/250; // extern
+  line_follow_PID_KP = twinky_max/15000; // extern
   line_follow_PID_KI = 0.0; // extern 
   line_follow_PID_KD = 0; // extern 
   line_follow_PID_P = 0; // extern 
@@ -67,7 +67,7 @@ void reset_variables(){
   prev_twinky_time = millis(); // extern
   twinky_one = 0; // extern
   twinky_two = 0; // extern
-  twinky_one_speed = 0.24; // extern maybe .2 is better
+  twinky_one_speed = 0.4; // extern maybe .2 is better
   twinky_two_speed = twinky_one_speed; // extern                                  
 
   whl1_vl_PID_error = 0; // extern  
@@ -82,14 +82,14 @@ void reset_variables(){
   whl1_vl_PID_D = 0; // extern 
   whl2_vl_PID_D = 0; // extern 
 
-  whl1_vl_PID_KP =  .35; // extern
-  whl2_vl_PID_KP = .35; // extern 
+  whl1_vl_PID_KP =  .95; // extern .35
+  whl2_vl_PID_KP = .95; // extern 
 
-  whl1_vl_PID_KI = 0.000152; // extern
-  whl2_vl_PID_KI = 0.000152; // extern 
+  whl1_vl_PID_KI = 0.0026; // extern 0.000152
+  whl2_vl_PID_KI = 0.0026; // extern 
 
-  whl1_vl_PID_KD = 50.00; // extern
-  whl2_vl_PID_KD = 50.00; // extern 
+  whl1_vl_PID_KD = 46.00; // extern 50.00
+  whl2_vl_PID_KD = 46.00; // extern 
 
   whl1_vl_PID_error_prev = 0.0; // extern 
   whl2_vl_PID_error_prev = 0.0; // extern 
@@ -112,7 +112,7 @@ void reset_variables(){
   line_PID_error = 0; // extern 
   twinky_max = twinky_one_speed; // extern 
   twinky_min = twinky_one_speed * -1; // extern 
-  line_follow_PID_KP = twinky_max/250; // extern
+  line_follow_PID_KP = twinky_max/22000; // extern
   line_follow_PID_KI = 0.0; // extern 
   line_follow_PID_KD = 0; // extern 
   line_follow_PID_P = 0; // extern 
@@ -170,14 +170,34 @@ void read_Light_bar(){
   adc_buf[1] = adc2.readADC(5);
   adc_buf[0] = adc1.readADC(6);
 
-  
+  /*
   //Sanity check
   for(int i = 0; i < 12; i++){
     Serial.print(adc_buf[i]);
     Serial.print('\t');
   }
   Serial.println();
-  
+  */
+
+ for(int i = 0; i < 12; i++){
+   if(i == 0) b = 6;
+   if(i == 1) b = 5;
+   if(i == 2) b = 4;
+   if(i == 3) b = 3;
+   if(i == 4) b = 2;
+   if(i == 5) b = 1;
+   if(i == 6) b = 1;
+   if(i == 7) b = 2;
+   if(i == 8) b = 3;
+   if(i == 9) b = 4;
+   if(i == 10) b = 5;
+   if(i == 11) b = 6;
+
+    adjustment = (1.00/.90) * (float)pow(b,2) + 1.00; //1/3 standard
+
+    adc_buf[i] *= adjustment;
+
+  }
 
   for(int i = 0; i < 6; i++){
     LightBar_Left_Sum += adc_buf[i];
@@ -185,8 +205,6 @@ void read_Light_bar(){
   for(int i = 6; i < 12; i++){
     LightBar_Right_Sum += adc_buf[i];
   }
-
-
   
 }
 

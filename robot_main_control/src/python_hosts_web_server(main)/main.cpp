@@ -68,7 +68,7 @@ int M2_PWM_VALUE = 0;  // extern
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
-float twinky_one_speed = 0.24; // extern -- .24 with 250 is nice, .20 might be better
+float twinky_one_speed = 0.4; // extern -- .24 with 250 is nice, .20 might be better
 float twinky_two_speed = twinky_one_speed;  // extern                                  
 
 float whl1_vl_PID_error = 0; // extern  
@@ -83,14 +83,14 @@ float whl2_vl_PID_I = 0; // extern
 float whl1_vl_PID_D = 0; // extern 
 float whl2_vl_PID_D = 0; // extern 
 
-float whl1_vl_PID_KP =  .35; // extern .35, .35?
-float whl2_vl_PID_KP = .35; // extern 
+float whl1_vl_PID_KP =  .95; // extern  .35
+float whl2_vl_PID_KP = .95; // extern 
 
-float whl1_vl_PID_KI = 0.000152; // extern 0.0002, .000152?
-float whl2_vl_PID_KI = 0.000152; // extern 
+float whl1_vl_PID_KI = 0.0026; // extern 0.000152
+float whl2_vl_PID_KI = 0.0026; // extern 
 
-float whl1_vl_PID_KD = 50.00; // extern 40, 50.00?
-float whl2_vl_PID_KD = 50.00; // extern 
+float whl1_vl_PID_KD = 46.00; // extern 50.00
+float whl2_vl_PID_KD = 46.00; // extern 
 
 float whl1_vl_PID_error_prev = 0.0; // extern 
 float whl2_vl_PID_error_prev = 0.0; // extern 
@@ -115,14 +115,16 @@ unsigned int LightBar_Right_Sum = 0; // extern
 int line_PID_error = 0; // extern 
 float twinky_max = twinky_one_speed; // extern 
 float twinky_min = twinky_one_speed * -1; // extern 
-float line_follow_PID_KP = twinky_max/250; // extern 250 seems right, max error
+float line_follow_PID_KP = twinky_max/22000; // extern 250 seems right, max error
 float line_follow_PID_KI = 0.0; // extern 
 float line_follow_PID_KD = 0; // extern 
 float line_follow_PID_P = 0; // extern 
 float line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
 float line_follow_PID_D = 0; // extern 
 int line_PID_error_prev = 0; // extern 
-float line_follow_PID_out = 0; // extern 
+float line_follow_PID_out = 0; // extern
+short b; // extern 
+float adjustment; // extern
 //#################################
 
 
@@ -132,7 +134,7 @@ float line_follow_PID_out = 0; // extern
 //#################################
 long desired_enc1_value = 0; // extern 
 long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
-int dead_end_thresh = 700;
+int dead_end_thresh = 690;
 //#################################
 
 
@@ -289,7 +291,7 @@ void loop(){
     current_time = millis();
     
     //Line follow PID loop----
-    if((current_time - prev_line_follow_time) > 10){ //40 is better?
+    if((current_time - prev_line_follow_time) > 0){ 
 
       pid_lf_control();
       prev_line_follow_time = current_time;
@@ -323,13 +325,12 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 115;
-      desired_enc2_value = enc2_value - 115;
+      desired_enc1_value = enc1_value - 101;
+      desired_enc2_value = enc2_value - 101;
       twinky_one_speed = twinky_min; //to reverse direction
-      twinky_two_speed = twinky_min;
+      twinky_two_speed = twinky_min - .069;
       prev_twinky_time = millis();
-      //twinky_one -= 20; // this is to get left wheel up to boost back, ask levi
-      twinky_two -= 50;
+      //twinky_two -= 40;
       //do reverse
       foward_Flag = false; // this only affects the line follow
       while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following? should be ||.
@@ -370,22 +371,15 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 185; //+340 without boost
-      desired_enc2_value = enc2_value + 185; //+340 without boost
+      desired_enc1_value = enc1_value + 360; //+340 without boost
+      desired_enc2_value = enc2_value + 360; //+340 without boost
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
-      twinky_one_speed = twinky_max + .06;
+      twinky_one_speed = twinky_max + .13;
       twinky_two_speed = twinky_max;
       //twinky_one = twinky_one + 80; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
         current_time = millis();
-        /*
-        //Line follow PID loop---- maybe dont use this to push back up
-        if((current_time - prev_line_follow_time) > 40){ // we desire to keep the middle three under 500, 
-          pid_lf_control();
-          prev_line_follow_time = current_time;
-        }
-        */
         //Motor control PID loop----
         if((current_time - prev_twinky_time) > 20){
           enc2_value = enc2.read()*-1; // should be -1.
@@ -415,8 +409,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 0; // -100 without boost
-      desired_enc2_value = enc2_value + 340; // +107 without boost
+      desired_enc1_value = enc1_value - 205; // -100 without boost
+      desired_enc2_value = enc2_value + 205; // +107 without boost
       twinky_one_speed = 0; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
       prev_twinky_time = millis();
@@ -451,8 +445,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 300; // +300 without boost
-      desired_enc2_value = enc2_value - 130; // -130 without boost
+      desired_enc1_value = enc1_value + 205; // +300 without boost
+      desired_enc2_value = enc2_value - 205; // -130 without boost
       twinky_one_speed = twinky_max; // left motor reverse
       twinky_two_speed = twinky_min; // right motor forward
       prev_twinky_time = millis();
