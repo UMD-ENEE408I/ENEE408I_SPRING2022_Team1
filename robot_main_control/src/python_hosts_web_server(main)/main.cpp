@@ -148,7 +148,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  ///*
+  /*
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -159,7 +159,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  //*/
+  */
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -354,7 +354,7 @@ void loop(){
       M2_stop();
 
       //send and recieve message
-      client_Flag = true; // should be true
+      client_Flag = false; // should be true
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
@@ -405,7 +405,7 @@ void loop(){
       }
       M1_stop();
       M2_stop();
-      /*
+      ///*
       //testing left turn 
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
@@ -428,11 +428,18 @@ void loop(){
         }
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-
+        /*
+        if(enc1_value < desired_enc1_value){
+          twinky_one_speed = 0;
+        }
+        if(enc2_value > desired_enc2_value){
+          twinky_two_speed = 0;
+        }
+        */
       }
       M1_stop();
       M2_stop();
-      */
+      //*/
       //testing right turn 
       /*
       enc2_value = enc2.readAndReset()*-1;
@@ -461,6 +468,7 @@ void loop(){
       M1_stop();
       M2_stop();
       */
+
 
 
       //now check rec_message and do turn
@@ -681,6 +689,7 @@ void loop(){
 
     
     //now check if we are at dead end with light bar and 180 turn
+    
     if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
@@ -724,6 +733,7 @@ void loop(){
         enc1_value = enc1.readAndReset();
         reset_variables();
       }
+      
     
   }
 }
