@@ -153,9 +153,11 @@ void read_Light_bar(){
   for(int i = 6; i < 12; i++){
     LightBar_Right_Sum += adc_buf[i];
   }
+  /*
   Serial.print("line_PID_error is ");
   Serial.print(LightBar_Left_Sum - LightBar_Right_Sum);
   Serial.println();
+  */
 }
 
 

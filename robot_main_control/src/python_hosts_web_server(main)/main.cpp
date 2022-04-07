@@ -303,7 +303,7 @@ void loop(){
       enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
       
       pid_v1_control();
-      Encoder_Print();
+      //Encoder_Print();
 
       prev_twinky_time = current_time;
     }
@@ -313,7 +313,7 @@ void loop(){
     Serial.print("line_PID_error is ");
     Serial.print(line_PID_error);
     Serial.print("  ");
-    Serial.print("line_follow_PID_out is ");
+    Serial.print("line_follow_PID_out is "); // line_PID_error * line_follow_PID_KP;
     Serial.print(line_follow_PID_out, 6);
     Serial.print("  ");
     Serial.print("twinky_one_speed is ");
