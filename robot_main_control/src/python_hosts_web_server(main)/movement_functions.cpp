@@ -115,28 +115,37 @@ void read_Light_bar(){
     Serial.print(adc_buf[i]);
     Serial.print('\t');
   }
-  Serial.print("   ");
+  Serial.println("   ");
   */
 
  for(int i = 0; i < 12; i++){
-   if(i == 0) b = 6;
-   if(i == 1) b = 5;
-   if(i == 2) b = 4;
-   if(i == 3) b = 3;
-   if(i == 4) b = 2;
-   if(i == 5) b = 1;
-   if(i == 6) b = 1;
-   if(i == 7) b = 2;
-   if(i == 8) b = 3;
-   if(i == 9) b = 4;
-   if(i == 10) b = 5;
-   if(i == 11) b = 6;
-    ///*
+    if(i == 0) b = 6;
+    if(i == 1) b = 5;
+    if(i == 2) b = 4;
+    if(i == 3) b = 3;
+    if(i == 4) b = 2;
+    if(i == 5) b = 1;
+    if(i == 6) b = 1;
+    if(i == 7) b = 2;
+    if(i == 8) b = 3;
+    if(i == 9) b = 4;
+    if(i == 10) b = 5;
+    if(i == 11) b = 6;
+    /*
     adjustment = (1.00/3.00) * (float)pow(b,2) + 1.00; //1/3 standard
     adjustment = static_cast<int>(adjustment);
     adc_buf[i] *= adjustment;
-    //*/
+    */
   }
+
+  for(int i = 0; i < 12; i++){
+    Serial.print(adc_buf[i]);
+    Serial.print('\t');
+  }
+  Serial.print("   ");
+
+
+
 
   for(int i = 0; i < 6; i++){
     LightBar_Left_Sum += adc_buf[i];
@@ -144,7 +153,9 @@ void read_Light_bar(){
   for(int i = 6; i < 12; i++){
     LightBar_Right_Sum += adc_buf[i];
   }
-  
+  Serial.print("line_PID_error is ");
+  Serial.print(LightBar_Left_Sum - LightBar_Right_Sum);
+  Serial.println();
 }
 
 
@@ -257,12 +268,12 @@ void whl_1_2_vl_PID_calculation(){
 void motor_move(){ 
   M1_PWM_VALUE = static_cast<int>(whl1_vl_PID_out);
   M2_PWM_VALUE = static_cast<int>(whl2_vl_PID_out);
-  Serial.print("M1_PWM -->> ");
-  Serial.print(M1_PWM_VALUE);
-  Serial.print("  ");
-  Serial.print("M2_PWM -->> ");
-  Serial.println(M2_PWM_VALUE);
-  
+  //Serial.print("M1_PWM -->> ");
+  //Serial.print(M1_PWM_VALUE);
+  //Serial.print("  ");
+  //Serial.print("M2_PWM -->> ");
+  //Serial.println(M2_PWM_VALUE);
+
   // IF PID_1 FORWARD    
   if(whl1_vl_PID_out >= 0){
     M1_forward();
@@ -295,9 +306,9 @@ void pid_lf_control(){
 
   //find error, left minus right, want to keep them equal as possible
   line_PID_error = LightBar_Left_Sum - LightBar_Right_Sum;
-  Serial.print("line_PID_error is ");
-  Serial.print(line_PID_error);
-  Serial.print("  ");
+  //Serial.print("line_PID_error is ");
+  //Serial.print(line_PID_error);
+  //Serial.print("  ");
 
   //PROPORTIONAL
   line_follow_PID_P = ((float) line_PID_error) * line_follow_PID_KP;
@@ -317,21 +328,21 @@ void pid_lf_control(){
   line_follow_PID_out = line_follow_PID_P + line_follow_PID_I + line_follow_PID_D;
   if(line_follow_PID_out > twinky_max) line_follow_PID_out = twinky_max;
   if(line_follow_PID_out < twinky_min) line_follow_PID_out = twinky_min;
-  Serial.print("line_follow_PID_out is ");
-  Serial.print(line_follow_PID_out, 6);
-  Serial.print("  ");
+  //Serial.print("line_follow_PID_out is ");
+  //Serial.print(line_follow_PID_out, 6);
+  //Serial.print("  ");
 
 
   //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line, slow down the left motor
   if(foward_Flag == true){
     if(line_follow_PID_out >= 0){
       twinky_two_speed = twinky_max - line_follow_PID_out;
-      Serial.print("twinky_one_speed is ");
-      Serial.print(twinky_one_speed, 6);
-      Serial.print("  ");
-      Serial.print("twinky_two_speed is ");
-      Serial.print(twinky_two_speed, 6);
-      Serial.println();
+      //Serial.print("twinky_one_speed is ");
+      //Serial.print(twinky_one_speed, 6);
+      //Serial.print("  ");
+      //Serial.print("twinky_two_speed is ");
+      //Serial.print(twinky_two_speed, 6);
+      //Serial.print("  |||||| ");
       /* //OR THIS?
       twinky_two_speed = twinky_max - line_follow_PID_out/2;
       twinky_one_speed = twinky_max + line_follow_PID_out/2;
@@ -339,12 +350,12 @@ void pid_lf_control(){
 
     }else{
       twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
-      Serial.print("twinky_one_speed is ");
-      Serial.print(twinky_one_speed, 6);
-      Serial.print("  ");
-      Serial.print("twinky_two_speed is ");
-      Serial.print(twinky_two_speed, 6);
-      Serial.print("  |||||| ");
+      //Serial.print("twinky_one_speed is ");
+      //Serial.print(twinky_one_speed, 6);
+      //Serial.print("  ");
+      //Serial.print("twinky_two_speed is ");
+      //Serial.print(twinky_two_speed, 6);
+      //Serial.print("  |||||| ");
       /* //OR THIS?
       twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
       twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 

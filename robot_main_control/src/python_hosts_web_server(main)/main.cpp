@@ -68,7 +68,7 @@ int M2_PWM_VALUE = 0;  // extern
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0; // extern
 float twinky_two = 0; // extern
-float twinky_one_speed = 0.35; // extern -- .24 with 250 is nice, .20 might be better
+float twinky_one_speed = 0.35; // extern -- .35 with 1100 is nice, 
 float twinky_two_speed = twinky_one_speed;  // extern                                  
 
 float whl1_vl_PID_error = 0; // extern  
@@ -110,12 +110,12 @@ bool foward_Flag = true; // extern
 
 //#################################
 unsigned long prev_line_follow_time = 0; // extern 
-unsigned int LightBar_Left_Sum = 0; // extern 
-unsigned int LightBar_Right_Sum = 0; // extern 
+int LightBar_Left_Sum = 0; // extern 
+int LightBar_Right_Sum = 0; // extern 
 int line_PID_error = 0; // extern 
 float twinky_max = twinky_one_speed; // extern 
 float twinky_min = twinky_one_speed * -1; // extern 
-float line_follow_PID_KP = twinky_max/(8000.00); // extern 250 seems right, max error
+float line_follow_PID_KP = twinky_max/(1100.00); // extern 250 seems right, max error
 float line_follow_PID_KI = 0.0; // extern 
 float line_follow_PID_KD = 0; // extern 
 float line_follow_PID_P = 0; // extern 
@@ -296,23 +296,37 @@ void loop(){
       pid_lf_control();
       prev_line_follow_time = current_time;
     }
-    
-
+   
     //Motor control PID loop----
     if((current_time - prev_twinky_time) > 20){
       enc2_value = enc2.read()*-1; // should be -1.
       enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
       
       pid_v1_control();
-      //Encoder_Print();
+      Encoder_Print();
 
       prev_twinky_time = current_time;
     }
-
-
     
 
-    
-    
+    /*
+    Serial.print("line_PID_error is ");
+    Serial.print(line_PID_error);
+    Serial.print("  ");
+    Serial.print("line_follow_PID_out is ");
+    Serial.print(line_follow_PID_out, 6);
+    Serial.print("  ");
+    Serial.print("twinky_one_speed is ");
+    Serial.print(twinky_one_speed, 6);
+    Serial.print("  ");
+    Serial.print("twinky_two_speed is ");
+    Serial.print(twinky_two_speed, 6);
+    Serial.print("  |||||| ");
+    Serial.print("M1_PWM -->> ");
+    Serial.print(M1_PWM_VALUE);
+    Serial.print("  ");
+    Serial.print("M2_PWM -->> ");
+    Serial.println(M2_PWM_VALUE);
+    */
   }
 }

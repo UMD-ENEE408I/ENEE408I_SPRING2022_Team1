@@ -142,8 +142,8 @@ extern bool foward_Flag;
 //#######################################################################
 //#######################################################################
 extern unsigned long prev_line_follow_time;    
-extern unsigned int LightBar_Left_Sum;
-extern unsigned int LightBar_Right_Sum;
+extern int LightBar_Left_Sum;
+extern int LightBar_Right_Sum;
 extern int line_PID_error;
 extern float line_follow_PID_KP;
 extern float line_follow_PID_KI;   
