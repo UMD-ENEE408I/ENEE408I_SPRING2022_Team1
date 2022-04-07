@@ -1,11 +1,12 @@
 #include "definitions.hpp"
 
-void reset_motor_PID_variables(){
-//#################################
+void reset_variables(){
+
+  //#################################
   prev_twinky_time = millis(); // extern
   twinky_one = 0; // extern
   twinky_two = 0; // extern
-  twinky_one_speed = 0.25; // extern
+  twinky_one_speed = 0.36; // extern maybe .2 is better
   twinky_two_speed = twinky_one_speed; // extern                                  
 
   whl1_vl_PID_error = 0; // extern  
@@ -20,13 +21,13 @@ void reset_motor_PID_variables(){
   whl1_vl_PID_D = 0; // extern 
   whl2_vl_PID_D = 0; // extern 
 
-  whl1_vl_PID_KP =  .35; // extern
+  whl1_vl_PID_KP =  .35; // extern .35, 
   whl2_vl_PID_KP = .35; // extern 
 
-  whl1_vl_PID_KI = 0.000152; // extern
+  whl1_vl_PID_KI = 0.000152; // extern 0.000152, 
   whl2_vl_PID_KI = 0.000152; // extern 
 
-  whl1_vl_PID_KD = 50.00; // extern
+  whl1_vl_PID_KD = 50.00; // extern 50.00, 
   whl2_vl_PID_KD = 50.00; // extern 
 
   whl1_vl_PID_error_prev = 0.0; // extern 
@@ -40,68 +41,6 @@ void reset_motor_PID_variables(){
 
   current_time = 0; // extern 
   //#################################
-}
-
-void reset_lf_PID_variables(){
-//#################################
-  prev_line_follow_time = millis(); // extern 
-  LightBar_Left_Sum = 0; // extern 
-  LightBar_Right_Sum = 0; // extern 
-  line_PID_error = 0; // extern 
-  twinky_max = twinky_one_speed; // extern 
-  twinky_min = twinky_one_speed * -1; // extern 
-  line_follow_PID_KP = twinky_max/15000; // extern
-  line_follow_PID_KI = 0.0; // extern 
-  line_follow_PID_KD = 0; // extern 
-  line_follow_PID_P = 0; // extern 
-  line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
-  line_follow_PID_D = 0; // extern 
-  line_PID_error_prev = 0; // extern 
-  line_follow_PID_out = 0; // extern 
-  //#################################
-}
-
-void reset_variables(){
-
-  //#################################
-  prev_twinky_time = millis(); // extern
-  twinky_one = 0; // extern
-  twinky_two = 0; // extern
-  twinky_one_speed = 0.4; // extern maybe .2 is better
-  twinky_two_speed = twinky_one_speed; // extern                                  
-
-  whl1_vl_PID_error = 0; // extern  
-  whl2_vl_PID_error = 0; // extern 
-
-  whl1_vl_PID_P = 0; // extern 
-  whl2_vl_PID_P = 0; // extern 
-
-  whl1_vl_PID_I = 0; // extern                    //For Motors PID Control Loop
-  whl2_vl_PID_I = 0; // extern 
-
-  whl1_vl_PID_D = 0; // extern 
-  whl2_vl_PID_D = 0; // extern 
-
-  whl1_vl_PID_KP =  .95; // extern .35
-  whl2_vl_PID_KP = .95; // extern 
-
-  whl1_vl_PID_KI = 0.0026; // extern 0.000152
-  whl2_vl_PID_KI = 0.0026; // extern 
-
-  whl1_vl_PID_KD = 46.00; // extern 50.00
-  whl2_vl_PID_KD = 46.00; // extern 
-
-  whl1_vl_PID_error_prev = 0.0; // extern 
-  whl2_vl_PID_error_prev = 0.0; // extern 
-
-  whl1_vl_PID_D_time_prev = millis(); // extern 
-  whl2_vl_PID_D_time_prev = millis(); // extern 
-
-  whl1_vl_PID_out = 0; // extern 
-  whl2_vl_PID_out = 0; // extern 
-
-  current_time = 0; // extern 
-  //#################################
 
 
 
@@ -112,7 +51,7 @@ void reset_variables(){
   line_PID_error = 0; // extern 
   twinky_max = twinky_one_speed; // extern 
   twinky_min = twinky_one_speed * -1; // extern 
-  line_follow_PID_KP = twinky_max/22000; // extern
+  line_follow_PID_KP = twinky_max/250; // extern 250
   line_follow_PID_KI = 0.0; // extern 
   line_follow_PID_KD = 0; // extern 
   line_follow_PID_P = 0; // extern 
@@ -176,7 +115,7 @@ void read_Light_bar(){
     Serial.print(adc_buf[i]);
     Serial.print('\t');
   }
-  Serial.println();
+  Serial.print("   ");
   */
 
  for(int i = 0; i < 12; i++){
@@ -192,11 +131,11 @@ void read_Light_bar(){
    if(i == 9) b = 4;
    if(i == 10) b = 5;
    if(i == 11) b = 6;
-
-    adjustment = (1.00/.90) * (float)pow(b,2) + 1.00; //1/3 standard
-
+    ///*
+    adjustment = (1.00/3.00) * (float)pow(b,2) + 1.00; //1/3 standard
+    adjustment = static_cast<int>(adjustment);
     adc_buf[i] *= adjustment;
-
+    //*/
   }
 
   for(int i = 0; i < 6; i++){
@@ -318,7 +257,12 @@ void whl_1_2_vl_PID_calculation(){
 void motor_move(){ 
   M1_PWM_VALUE = static_cast<int>(whl1_vl_PID_out);
   M2_PWM_VALUE = static_cast<int>(whl2_vl_PID_out);
-
+  Serial.print("M1_PWM -->> ");
+  Serial.print(M1_PWM_VALUE);
+  Serial.print("  ");
+  Serial.print("M2_PWM -->> ");
+  Serial.println(M2_PWM_VALUE);
+  
   // IF PID_1 FORWARD    
   if(whl1_vl_PID_out >= 0){
     M1_forward();
@@ -351,8 +295,9 @@ void pid_lf_control(){
 
   //find error, left minus right, want to keep them equal as possible
   line_PID_error = LightBar_Left_Sum - LightBar_Right_Sum;
-  //Serial.print("line_PID_error is ");
-  //Serial.println(line_PID_error);
+  Serial.print("line_PID_error is ");
+  Serial.print(line_PID_error);
+  Serial.print("  ");
 
   //PROPORTIONAL
   line_follow_PID_P = ((float) line_PID_error) * line_follow_PID_KP;
@@ -372,15 +317,21 @@ void pid_lf_control(){
   line_follow_PID_out = line_follow_PID_P + line_follow_PID_I + line_follow_PID_D;
   if(line_follow_PID_out > twinky_max) line_follow_PID_out = twinky_max;
   if(line_follow_PID_out < twinky_min) line_follow_PID_out = twinky_min;
-  //Serial.print("line_follow_PID_out is ");
-  //Serial.println(line_follow_PID_out, 6);
+  Serial.print("line_follow_PID_out is ");
+  Serial.print(line_follow_PID_out, 6);
+  Serial.print("  ");
 
 
   //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line, slow down the left motor
   if(foward_Flag == true){
     if(line_follow_PID_out >= 0){
       twinky_two_speed = twinky_max - line_follow_PID_out;
-
+      Serial.print("twinky_one_speed is ");
+      Serial.print(twinky_one_speed, 6);
+      Serial.print("  ");
+      Serial.print("twinky_two_speed is ");
+      Serial.print(twinky_two_speed, 6);
+      Serial.println();
       /* //OR THIS?
       twinky_two_speed = twinky_max - line_follow_PID_out/2;
       twinky_one_speed = twinky_max + line_follow_PID_out/2;
@@ -388,7 +339,12 @@ void pid_lf_control(){
 
     }else{
       twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
-
+      Serial.print("twinky_one_speed is ");
+      Serial.print(twinky_one_speed, 6);
+      Serial.print("  ");
+      Serial.print("twinky_two_speed is ");
+      Serial.print(twinky_two_speed, 6);
+      Serial.print("  |||||| ");
       /* //OR THIS?
       twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
       twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 
