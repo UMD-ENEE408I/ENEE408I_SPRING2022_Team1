@@ -24,7 +24,8 @@ void pid_v1_control();
 void whl_1_2_vl_PID_calculation();
 void motor_move();
 void pid_lf_control();
-
+void read_Light_bar2();
+void pid_lf2_control();
 //#######################################################################
 //#######################################################################
 extern WiFiClient client;
@@ -50,8 +51,8 @@ extern Adafruit_MCP3008 adc2;
 extern int* adc1_buf; // could change syntax back
 extern int adc2_buf[8];
 extern int* adc_buf;
-extern short b;
-extern float adjustment;
+extern int* adc_buf2;
+
 //#######################################################################
 //#######################################################################
 
@@ -155,6 +156,16 @@ extern float line_PID_error_prev;
 extern float line_follow_PID_out;
 extern float twinky_max;
 extern float twinky_min;
+
+extern float average;
+extern short b;
+extern float adjustment;
+extern float position;
+extern float acc;
+extern float line_follow_PID_KP2;
+extern float line_follow_PID_KI2;
+extern float line_follow_PID_KD2;
+extern float kp2_divider;
 //#######################################################################
 //#######################################################################
 
@@ -168,6 +179,7 @@ extern float twinky_min;
 //#######################################################################
 extern long desired_enc1_value;
 extern long desired_enc2_value;                                                               //FOR Intersection Logic
+extern float dead_end_thresh;
 //#######################################################################
 //#######################################################################
 

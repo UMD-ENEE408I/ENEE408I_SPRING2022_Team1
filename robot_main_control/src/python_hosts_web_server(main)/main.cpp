@@ -24,6 +24,8 @@ const unsigned int ADC_2_CS = 17;
 int* adc1_buf = (int*) malloc(sizeof(int)*8); // extern  or could do "new int[8];"
 int adc2_buf[8]; // extern 
 int* adc_buf = (int*) malloc(sizeof(int)*12); //extern
+int* adc_buf2 = (int*) malloc(sizeof(int)*13); //extern
+
 //################################
 
 
@@ -68,7 +70,7 @@ int M2_PWM_VALUE = 0;  // extern
 unsigned long prev_twinky_time = 0; // extern
 float twinky_one = 0.0; // extern
 float twinky_two = 0.0; // extern
-float twinky_one_speed = 0.2; // extern -- .35 with 1100 is nice, 
+float twinky_one_speed = 0.35; // extern -- .35 with 1100 is nice, 
 float twinky_two_speed = twinky_one_speed;  // extern                                  
 
 float whl1_vl_PID_error = 0.0; // extern  
@@ -115,7 +117,7 @@ int LightBar_Right_Sum = 0; // extern
 float line_PID_error = 0.0; // extern 
 float twinky_max = twinky_one_speed; // extern 
 float twinky_min = twinky_one_speed * -1.00; // extern 
-float line_follow_PID_KP = twinky_max/(1100.00); // extern 250 seems right, max error
+float line_follow_PID_KP = twinky_max/(3800.00); // extern 250 seems right, max error
 float line_follow_PID_KI = 0.0; // extern 
 float line_follow_PID_KD = 0.0; // extern 
 float line_follow_PID_P = 0.0; // extern 
@@ -124,7 +126,15 @@ float line_follow_PID_D = 0.0; // extern
 float line_PID_error_prev = 0.0; // extern 
 float line_follow_PID_out = 0.0; // extern
 short b = 0; // extern 
+
 float adjustment = 0.0; // extern
+float average = 0.0; // extern
+float position = 0.0; // extern
+float acc = 0.0; // extern
+float kp2_divider = 1.00;
+float line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern 250 seems right, max error
+float line_follow_PID_KI2 = 0.0001; // extern 
+float line_follow_PID_KD2 = 70.0; // extern
 //#################################
 
 
@@ -132,9 +142,9 @@ float adjustment = 0.0; // extern
 
 
 //#################################
-long desired_enc1_value = 0; // extern 
+long desired_enc1_value = 0; // extern
 long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
-int dead_end_thresh = 500;
+float dead_end_thresh = 500.00; // extern
 //#################################
 
 
@@ -240,40 +250,42 @@ void loop(){
 
           // INCREASE Kp
           case '1':
-              whl1_vl_PID_KP = whl1_vl_PID_KP + 0.005 ;
-              Serial.println(whl1_vl_PID_KP, 4);
+              kp2_divider = kp2_divider + 0.005;
+              line_follow_PID_KP2 = twinky_max/(kp2_divider);
+              Serial.println(kp2_divider, 4);
           break;
 
           // DECREASE Kp
           case '2':
-              whl1_vl_PID_KP = whl1_vl_PID_KP - 0.005 ;
-              Serial.println(whl1_vl_PID_KP, 4);
+              kp2_divider = kp2_divider - 0.005;
+              line_follow_PID_KP2 = twinky_max/(kp2_divider);
+              Serial.println(kp2_divider, 4);
           break;
 
           // INCREASE Ki
           case '3':
-              whl1_vl_PID_KI = whl1_vl_PID_KI + 0.00005 ;
-              Serial.println(whl1_vl_PID_KI, 6);
+              line_follow_PID_KI2 = line_follow_PID_KI2 + 0.00005;
+              Serial.println(line_follow_PID_KI2, 6);
           break;
 
 
           // DECREASE Ki
           case '4':
-              whl1_vl_PID_KI = whl1_vl_PID_KI - 0.00005 ;
-              Serial.println(whl1_vl_PID_KI, 6);
+              line_follow_PID_KI2 = line_follow_PID_KI2 - 0.00005;
+              Serial.println(line_follow_PID_KI2, 6);
           break;
 
           // INCREASE Kd
           case '5':
-              whl1_vl_PID_KD = whl1_vl_PID_KD + 2 ;
-              Serial.println(whl1_vl_PID_KD, 8);
+              line_follow_PID_KD2 = line_follow_PID_KD2 + 2;
+              Serial.println(line_follow_PID_KD2, 8);
           break;
 
 
           // DECREASE Kd
           case '6':
-              whl1_vl_PID_KD = whl1_vl_PID_KD - 2 ;
-              Serial.println(whl1_vl_PID_KD, 8);
+              line_follow_PID_KD2 = line_follow_PID_KD2 - 2;
+              Serial.println(line_follow_PID_KD2, 8);
           break;
 
           
@@ -289,14 +301,22 @@ void loop(){
 
 
     current_time = millis();
-    
-    //Line follow PID loop----
+    /*
+    //Line follow PID loop---- This is with raw ADC values
     if((current_time - prev_line_follow_time) > 40){ 
 
       pid_lf_control();
       prev_line_follow_time = current_time;
     }
-   
+    */
+    
+    //Line follow PID loop---- This is positional
+    if((current_time - prev_line_follow_time) > 40){ 
+
+      pid_lf2_control();
+      prev_line_follow_time = current_time;
+    }
+    
     //Motor control PID loop----
     if((current_time - prev_twinky_time) > 20){
       enc2_value = enc2.read()*-1; // should be -1.
@@ -309,7 +329,7 @@ void loop(){
     }
     
 
-    
+    /*
     Serial.print("line_PID_error is ");
     Serial.print(line_PID_error);
     Serial.print("  ");
@@ -327,6 +347,6 @@ void loop(){
     Serial.print("  ");
     Serial.print("M2_PWM -->> ");
     Serial.println(M2_PWM_VALUE);
-    
+    */
   }
 }

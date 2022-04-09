@@ -50,19 +50,28 @@ foward_Flag = true; // extern
 prev_line_follow_time = millis(); // extern 
 LightBar_Left_Sum = 0; // extern 
 LightBar_Right_Sum = 0; // extern 
-line_PID_error = 0; // extern 
+line_PID_error = 0.0; // extern 
 twinky_max = twinky_one_speed; // extern 
-twinky_min = twinky_one_speed * -1; // extern 
-line_follow_PID_KP = twinky_max/250.00; // extern 250
+twinky_min = twinky_one_speed * -1.00; // extern 
+line_follow_PID_KP = twinky_max/(3800.00); // extern 250 seems right, max error
 line_follow_PID_KI = 0.0; // extern 
-line_follow_PID_KD = 0; // extern 
-line_follow_PID_P = 0; // extern 
-line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
-line_follow_PID_D = 0; // extern 
-line_PID_error_prev = 0; // extern 
-line_follow_PID_out = 0; // extern 
-//#################################
+line_follow_PID_KD = 0.0; // extern 
+line_follow_PID_P = 0.0; // extern 
+line_follow_PID_I = 0.0; // extern                                           //FOR LINE FOLLOW PID LOOP 
+line_follow_PID_D = 0.0; // extern 
+line_PID_error_prev = 0.0; // extern 
+line_follow_PID_out = 0.0; // extern
+b = 0; // extern 
 
+adjustment = 0.0; // extern
+average = 0.0; // extern
+position = 0.0; // extern
+acc = 0.0; // extern
+kp2_divider = 1.00;
+line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern 250 seems right, max error
+line_follow_PID_KI2 = 0.0001; // extern 
+line_follow_PID_KD2 = 70.0; // extern
+//#################################
 }
 
 
@@ -135,7 +144,7 @@ void read_Light_bar(){
     if(i == 11) b = 6;
     /*
     adjustment = (1.00/3.00) * (float)pow(b,2) + 1.00; //1/3 standard
-    adjustment = static_cast<int>(adjustment);
+    //adjustment = static_cast<int>(adjustment);
     adc_buf[i] *= adjustment;
     */
   }
@@ -219,8 +228,8 @@ void pid_v1_control(){
 
 void whl_1_2_vl_PID_calculation(){
   // ERROR for whl1 and whl2
-  whl1_vl_PID_error = twinky_one - enc1_value; //this should be the desired - the current_read, twinky_one has been pushed up to a desired position.
-  whl2_vl_PID_error = twinky_two - enc2_value;
+  whl1_vl_PID_error = twinky_one - (float) enc1_value; //this should be the desired - the current_read, twinky_one has been pushed up to a desired position.
+  whl2_vl_PID_error = twinky_two - (float) enc2_value;
 
   // PROPORTIONAL for whl1 and whl2
   whl1_vl_PID_P = whl1_vl_PID_error * whl1_vl_PID_KP; // error times kP constant
@@ -309,7 +318,7 @@ void pid_lf_control(){
   read_Light_bar();
 
   //find error, left minus right, want to keep them equal as possible
-  line_PID_error = LightBar_Left_Sum - LightBar_Right_Sum;
+  line_PID_error = (float)LightBar_Left_Sum - (float)LightBar_Right_Sum;
   //Serial.print("line_PID_error is ");
   //Serial.print(line_PID_error);
   //Serial.print("  ");
@@ -340,30 +349,30 @@ void pid_lf_control(){
   //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line, slow down the left motor
   if(foward_Flag == true){
     if(line_follow_PID_out >= 0){
-      twinky_two_speed = twinky_max - line_follow_PID_out;
+      //twinky_two_speed = twinky_max - line_follow_PID_out;
       //Serial.print("twinky_one_speed is ");
       //Serial.print(twinky_one_speed, 6);
       //Serial.print("  ");
       //Serial.print("twinky_two_speed is ");
       //Serial.print(twinky_two_speed, 6);
       //Serial.print("  |||||| ");
-      /* //OR THIS?
+      //OR THIS?
       twinky_two_speed = twinky_max - line_follow_PID_out/2;
       twinky_one_speed = twinky_max + line_follow_PID_out/2;
-      */
+      
 
     }else{
-      twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
+      //twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
       //Serial.print("twinky_one_speed is ");
       //Serial.print(twinky_one_speed, 6);
       //Serial.print("  ");
       //Serial.print("twinky_two_speed is ");
       //Serial.print(twinky_two_speed, 6);
       //Serial.print("  |||||| ");
-      /* //OR THIS?
+      //OR THIS?
       twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
       twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 
-      */
+      
     }
 
   }else{
@@ -383,6 +392,187 @@ void pid_lf_control(){
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+void read_Light_bar2(){
+  adc_buf2[12] = adc1.readADC(0);
+  adc_buf2[11] = adc2.readADC(0);
+  adc_buf2[10] = adc1.readADC(1);
+  adc_buf2[9] = adc2.readADC(1);
+  adc_buf2[8] = adc1.readADC(2);
+  adc_buf2[7] = adc2.readADC(2);
+  adc_buf2[6] = adc1.readADC(3);
+  adc_buf2[5] = adc2.readADC(3);
+  adc_buf2[4] = adc1.readADC(4);
+  adc_buf2[3] = adc2.readADC(4);
+  adc_buf2[2] = adc1.readADC(5);
+  adc_buf2[1] = adc2.readADC(5);
+  adc_buf2[0] = adc1.readADC(6);
+
+
+ average = 0.00;
+ position = -6.00;
+ acc = 0.0;
+ for(int i = 0; i < 13; i++){
+   if(adc_buf2[i]< dead_end_thresh){
+     average += position;
+     acc = acc + 1.00;
+   }
+ 
+   position++;
+ }
+  if(acc != 0.00){
+  average = average/acc;
+  }else{
+    Serial.print("NOT GOOD");
+  }
+  /*
+  for(int i = 0; i < 13; i++){
+    Serial.print(adc_buf2[i]);
+    Serial.print('\t');
+  }
+  Serial.println();
+  */
+
+
+
+}
+
+
+void pid_lf2_control(){
+  //find error
+
+  read_Light_bar2();
+
+  //find error, left minus right, want to keep them equal as possible
+  line_PID_error = average;
+  //Serial.print("line_PID_error is ");
+  //Serial.print(line_PID_error);
+  //Serial.print("  ");
+
+  //PROPORTIONAL
+  line_follow_PID_P = (line_PID_error) * line_follow_PID_KP2;
+  //Serial.print("line_follow_PID_P is ");
+  //Serial.println(line_follow_PID_P, 3);
+  
+  //INTEGRAL
+  line_follow_PID_I += (line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI2;
+  if(line_follow_PID_I > 255) line_follow_PID_I = 255;
+  if(line_follow_PID_I < -255) line_follow_PID_I = -255;
+
+  //DERIVATIVE
+  line_follow_PID_D = ((line_PID_error - line_PID_error_prev) / (float)(current_time - prev_line_follow_time)) * line_follow_PID_KD2;
+  line_PID_error_prev = line_PID_error;
+
+  // SUMMATION
+  line_follow_PID_out = line_follow_PID_P + line_follow_PID_I + line_follow_PID_D;
+  if(line_follow_PID_out > twinky_max) line_follow_PID_out = twinky_max;
+  if(line_follow_PID_out < twinky_min) line_follow_PID_out = twinky_min;
+  //Serial.print("line_follow_PID_out is ");
+  //Serial.print(line_follow_PID_out, 6);
+  //Serial.print("  ");
+
+
+  //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line, slow down the left motor
+  if(foward_Flag == true){
+    if(line_follow_PID_out >= 0){
+      //twinky_two_speed = twinky_max - line_follow_PID_out;
+      //Serial.print("twinky_one_speed is ");
+      //Serial.print(twinky_one_speed, 6);
+      //Serial.print("  ");
+      //Serial.print("twinky_two_speed is ");
+      //Serial.print(twinky_two_speed, 6);
+      //Serial.print("  |||||| ");
+
+      //OR THIS?
+      twinky_two_speed = twinky_max - line_follow_PID_out/2;
+      twinky_one_speed = twinky_max + line_follow_PID_out/2;
+      
+
+    }else{
+      //twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
+      //Serial.print("twinky_one_speed is ");
+      //Serial.print(twinky_one_speed, 6);
+      //Serial.print("  ");
+      //Serial.print("twinky_two_speed is ");
+      //Serial.print(twinky_two_speed, 6);
+      //Serial.print("  |||||| ");
+
+      //OR THIS?
+      twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
+      twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 
+      
+    }
+
+  }else{
+    //For reverse direction, maybe dont need to do this.
+    if(line_follow_PID_out >= 0){
+      twinky_one_speed = -1*(twinky_max - line_follow_PID_out); 
+      //twinky_two_speed = -1*(twinky_max -  line_follow_PID_out); 
+
+    }else{
+      twinky_two_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
+      //twinky_one_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
+
+    }
+  }
+}
 
 
 
