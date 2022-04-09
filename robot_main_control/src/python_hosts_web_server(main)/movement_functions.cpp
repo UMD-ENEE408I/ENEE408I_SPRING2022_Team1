@@ -3,63 +3,65 @@
 void reset_variables(){
 
   //#################################
-  prev_twinky_time = millis(); // extern
-  twinky_one = 0; // extern
-  twinky_two = 0; // extern
-  twinky_one_speed = 0.36; // extern maybe .2 is better
-  twinky_two_speed = twinky_one_speed; // extern                                  
+prev_twinky_time = millis(); // extern
+twinky_one = 0.0; // extern
+twinky_two = 0.0; // extern
+twinky_one_speed = 0.35; // extern -- .35 with 1100 is nice, 
+twinky_two_speed = twinky_one_speed;  // extern                                  
 
-  whl1_vl_PID_error = 0; // extern  
-  whl2_vl_PID_error = 0; // extern 
+whl1_vl_PID_error = 0.0; // extern  
+whl2_vl_PID_error = 0.0; // extern 
 
-  whl1_vl_PID_P = 0; // extern 
-  whl2_vl_PID_P = 0; // extern 
+whl1_vl_PID_P = 0.0; // extern 
+whl2_vl_PID_P = 0.0; // extern 
 
-  whl1_vl_PID_I = 0; // extern                    //For Motors PID Control Loop
-  whl2_vl_PID_I = 0; // extern 
+whl1_vl_PID_I = 0.0; // extern                    //For Motors PID Control Loop
+whl2_vl_PID_I = 0.0; // extern 
 
-  whl1_vl_PID_D = 0; // extern 
-  whl2_vl_PID_D = 0; // extern 
+whl1_vl_PID_D = 0.0; // extern 
+whl2_vl_PID_D = 0.0; // extern 
 
-  whl1_vl_PID_KP =  .35; // extern .35, 
-  whl2_vl_PID_KP = .35; // extern 
+whl1_vl_PID_KP = .35; // extern  .35, .95, .90
+whl2_vl_PID_KP = .35; // extern 
 
-  whl1_vl_PID_KI = 0.000152; // extern 0.000152, 
-  whl2_vl_PID_KI = 0.000152; // extern 
+whl1_vl_PID_KI = .000152; // extern 0.000152, 0.0026, .00235
+whl2_vl_PID_KI = .000152; // extern 
 
-  whl1_vl_PID_KD = 50.00; // extern 50.00, 
-  whl2_vl_PID_KD = 50.00; // extern 
+whl1_vl_PID_KD = 50.00; // extern 50.00,  46.00, 128.00
+whl2_vl_PID_KD = 50.00; // extern 
 
-  whl1_vl_PID_error_prev = 0.0; // extern 
-  whl2_vl_PID_error_prev = 0.0; // extern 
+whl1_vl_PID_error_prev = 0.0; // extern 
+whl2_vl_PID_error_prev = 0.0; // extern 
 
-  whl1_vl_PID_D_time_prev = millis(); // extern 
-  whl2_vl_PID_D_time_prev = millis(); // extern 
+whl1_vl_PID_D_time_prev = millis(); // extern 
+whl2_vl_PID_D_time_prev = millis(); // extern 
 
-  whl1_vl_PID_out = 0; // extern 
-  whl2_vl_PID_out = 0; // extern 
+whl1_vl_PID_out = 0.0; // extern 
+whl2_vl_PID_out = 0.0; // extern 
 
-  current_time = 0; // extern 
-  //#################################
+current_time = millis(); // extern 
+
+foward_Flag = true; // extern 
+//#################################
 
 
 
-  //#################################
-  prev_line_follow_time = millis(); // extern 
-  LightBar_Left_Sum = 0; // extern 
-  LightBar_Right_Sum = 0; // extern 
-  line_PID_error = 0; // extern 
-  twinky_max = twinky_one_speed; // extern 
-  twinky_min = twinky_one_speed * -1; // extern 
-  line_follow_PID_KP = twinky_max/250; // extern 250
-  line_follow_PID_KI = 0.0; // extern 
-  line_follow_PID_KD = 0; // extern 
-  line_follow_PID_P = 0; // extern 
-  line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
-  line_follow_PID_D = 0; // extern 
-  line_PID_error_prev = 0; // extern 
-  line_follow_PID_out = 0; // extern 
-  //#################################
+//#################################
+prev_line_follow_time = millis(); // extern 
+LightBar_Left_Sum = 0; // extern 
+LightBar_Right_Sum = 0; // extern 
+line_PID_error = 0; // extern 
+twinky_max = twinky_one_speed; // extern 
+twinky_min = twinky_one_speed * -1; // extern 
+line_follow_PID_KP = twinky_max/250.00; // extern 250
+line_follow_PID_KI = 0.0; // extern 
+line_follow_PID_KD = 0; // extern 
+line_follow_PID_P = 0; // extern 
+line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
+line_follow_PID_D = 0; // extern 
+line_PID_error_prev = 0; // extern 
+line_follow_PID_out = 0; // extern 
+//#################################
 
 }
 
@@ -137,13 +139,13 @@ void read_Light_bar(){
     adc_buf[i] *= adjustment;
     */
   }
-
+  /*
   for(int i = 0; i < 12; i++){
     Serial.print(adc_buf[i]);
     Serial.print('\t');
   }
   Serial.print("   ");
-
+  */
 
 
 
@@ -313,17 +315,17 @@ void pid_lf_control(){
   //Serial.print("  ");
 
   //PROPORTIONAL
-  line_follow_PID_P = ((float) line_PID_error) * line_follow_PID_KP;
+  line_follow_PID_P = (line_PID_error) * line_follow_PID_KP;
   //Serial.print("line_follow_PID_P is ");
   //Serial.println(line_follow_PID_P, 3);
   
   //INTEGRAL
-  line_follow_PID_I += (float)(line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI;
+  line_follow_PID_I += (line_PID_error) * (float)(current_time - prev_line_follow_time) * line_follow_PID_KI;
   if(line_follow_PID_I > 255) line_follow_PID_I = 255;
   if(line_follow_PID_I < -255) line_follow_PID_I = -255;
 
   //DERIVATIVE
-  line_follow_PID_D = ((float)(line_PID_error - line_PID_error_prev) / (float)(current_time - prev_line_follow_time)) * line_follow_PID_KD;
+  line_follow_PID_D = ((line_PID_error - line_PID_error_prev) / (float)(current_time - prev_line_follow_time)) * line_follow_PID_KD;
   line_PID_error_prev = line_PID_error;
 
   // SUMMATION

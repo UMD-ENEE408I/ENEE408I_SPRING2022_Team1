@@ -66,22 +66,22 @@ int M2_PWM_VALUE = 0;  // extern
 
 //#################################
 unsigned long prev_twinky_time = 0; // extern
-float twinky_one = 0; // extern
-float twinky_two = 0; // extern
-float twinky_one_speed = 0.35; // extern -- .35 with 1100 is nice, 
+float twinky_one = 0.0; // extern
+float twinky_two = 0.0; // extern
+float twinky_one_speed = 0.2; // extern -- .35 with 1100 is nice, 
 float twinky_two_speed = twinky_one_speed;  // extern                                  
 
-float whl1_vl_PID_error = 0; // extern  
-float whl2_vl_PID_error = 0; // extern 
+float whl1_vl_PID_error = 0.0; // extern  
+float whl2_vl_PID_error = 0.0; // extern 
 
-float whl1_vl_PID_P = 0; // extern 
-float whl2_vl_PID_P = 0; // extern 
+float whl1_vl_PID_P = 0.0; // extern 
+float whl2_vl_PID_P = 0.0; // extern 
 
-float whl1_vl_PID_I = 0; // extern                    //For Motors PID Control Loop
-float whl2_vl_PID_I = 0; // extern 
+float whl1_vl_PID_I = 0.0; // extern                    //For Motors PID Control Loop
+float whl2_vl_PID_I = 0.0; // extern 
 
-float whl1_vl_PID_D = 0; // extern 
-float whl2_vl_PID_D = 0; // extern 
+float whl1_vl_PID_D = 0.0; // extern 
+float whl2_vl_PID_D = 0.0; // extern 
 
 float whl1_vl_PID_KP = .35; // extern  .35, .95, .90
 float whl2_vl_PID_KP = .35; // extern 
@@ -98,8 +98,8 @@ float whl2_vl_PID_error_prev = 0.0; // extern
 unsigned long whl1_vl_PID_D_time_prev = 0; // extern 
 unsigned long whl2_vl_PID_D_time_prev = 0; // extern 
 
-float whl1_vl_PID_out = 0; // extern 
-float whl2_vl_PID_out = 0; // extern 
+float whl1_vl_PID_out = 0.0; // extern 
+float whl2_vl_PID_out = 0.0; // extern 
 
 unsigned long current_time = 0; // extern 
 
@@ -112,19 +112,19 @@ bool foward_Flag = true; // extern
 unsigned long prev_line_follow_time = 0; // extern 
 int LightBar_Left_Sum = 0; // extern 
 int LightBar_Right_Sum = 0; // extern 
-int line_PID_error = 0; // extern 
+float line_PID_error = 0.0; // extern 
 float twinky_max = twinky_one_speed; // extern 
-float twinky_min = twinky_one_speed * -1; // extern 
+float twinky_min = twinky_one_speed * -1.00; // extern 
 float line_follow_PID_KP = twinky_max/(1100.00); // extern 250 seems right, max error
 float line_follow_PID_KI = 0.0; // extern 
-float line_follow_PID_KD = 0; // extern 
-float line_follow_PID_P = 0; // extern 
-float line_follow_PID_I = 0; // extern                                           //FOR LINE FOLLOW PID LOOP 
-float line_follow_PID_D = 0; // extern 
-int line_PID_error_prev = 0; // extern 
-float line_follow_PID_out = 0; // extern
+float line_follow_PID_KD = 0.0; // extern 
+float line_follow_PID_P = 0.0; // extern 
+float line_follow_PID_I = 0.0; // extern                                           //FOR LINE FOLLOW PID LOOP 
+float line_follow_PID_D = 0.0; // extern 
+float line_PID_error_prev = 0.0; // extern 
+float line_follow_PID_out = 0.0; // extern
 short b = 0; // extern 
-float adjustment = 0; // extern
+float adjustment = 0.0; // extern
 //#################################
 
 
@@ -291,7 +291,7 @@ void loop(){
     current_time = millis();
     
     //Line follow PID loop----
-    if((current_time - prev_line_follow_time) > 0){ 
+    if((current_time - prev_line_follow_time) > 40){ 
 
       pid_lf_control();
       prev_line_follow_time = current_time;
@@ -309,7 +309,7 @@ void loop(){
     }
     
 
-    /*
+    
     Serial.print("line_PID_error is ");
     Serial.print(line_PID_error);
     Serial.print("  ");
@@ -327,6 +327,6 @@ void loop(){
     Serial.print("  ");
     Serial.print("M2_PWM -->> ");
     Serial.println(M2_PWM_VALUE);
-    */
+    
   }
 }

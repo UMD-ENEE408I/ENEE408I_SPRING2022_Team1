@@ -144,14 +144,14 @@ extern bool foward_Flag;
 extern unsigned long prev_line_follow_time;    
 extern int LightBar_Left_Sum;
 extern int LightBar_Right_Sum;
-extern int line_PID_error;
+extern float line_PID_error;
 extern float line_follow_PID_KP;
 extern float line_follow_PID_KI;   
 extern float line_follow_PID_KD;                               //FOR LINE FOLLOW PID LOOP 
 extern float line_follow_PID_P;                                                            
 extern float line_follow_PID_I; 
 extern float line_follow_PID_D;
-extern int line_PID_error_prev;
+extern float line_PID_error_prev;
 extern float line_follow_PID_out;
 extern float twinky_max;
 extern float twinky_min;
