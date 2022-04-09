@@ -480,7 +480,7 @@ void read_Light_bar2(){
   if(acc != 0.00){
   average = average/acc;
   }else{
-    Serial.print("NOT GOOD");
+    Serial.print(" ");
   }
   /*
   for(int i = 0; i < 13; i++){
@@ -532,21 +532,21 @@ void pid_lf2_control(){
   //Now check if line_follow_PID_out, if negative then mouse has gone to the right of white line, slow down the left motor
   if(foward_Flag == true){
     if(line_follow_PID_out >= 0){
-      //twinky_two_speed = twinky_max - line_follow_PID_out;
+      //twinky_two_speed = twinky_max - line_follow_PID_out; //this would need different kp2 ki2 and kd2 values
       //Serial.print("twinky_one_speed is ");
       //Serial.print(twinky_one_speed, 6);
       //Serial.print("  ");
       //Serial.print("twinky_two_speed is ");
       //Serial.print(twinky_two_speed, 6);
       //Serial.print("  |||||| ");
-
+      
       //OR THIS?
       twinky_two_speed = twinky_max - line_follow_PID_out/2;
       twinky_one_speed = twinky_max + line_follow_PID_out/2;
       
 
     }else{
-      //twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); 
+      //twinky_one_speed = twinky_max - (-1 * line_follow_PID_out); //this would need different kp2 ki2 and kd2 values
       //Serial.print("twinky_one_speed is ");
       //Serial.print(twinky_one_speed, 6);
       //Serial.print("  ");
