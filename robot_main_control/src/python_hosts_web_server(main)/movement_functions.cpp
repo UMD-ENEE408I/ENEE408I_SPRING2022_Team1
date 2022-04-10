@@ -486,13 +486,13 @@ void read_Light_bar2(){
   }else{
     Serial.print(" ");
   }
-  
+  /*
   for(int i = 0; i < 13; i++){
     Serial.print(adc_buf2[i]);
     Serial.print('\t');
   }
   Serial.println();
-  
+  */
 
 
 

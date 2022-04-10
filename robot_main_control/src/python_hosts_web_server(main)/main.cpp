@@ -133,8 +133,8 @@ float average = 0.0; // extern
 float position = 0.0; // extern
 float acc = 0.0; // extern
 float kp2_divider = 1.00; // extern 
-float line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern 250 seems right, max error
-float line_follow_PID_KI2 = 0.0001; // extern 
+float line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern
+float line_follow_PID_KI2 = 0.00005; // extern 
 float line_follow_PID_KD2 = 70.0; // extern
 //#################################
 
@@ -145,7 +145,7 @@ float line_follow_PID_KD2 = 70.0; // extern
 //#################################
 long desired_enc1_value = 0; // extern
 long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
-float dead_end_thresh = 400.00; // extern
+float dead_end_thresh = 410.00; // extern
 //#################################
 
 
@@ -289,6 +289,18 @@ void loop(){
               Serial.println(line_follow_PID_KD2, 8);
           break;
 
+          // INCREASE dead_end_thresh
+          case '7':
+              dead_end_thresh = dead_end_thresh + 2;
+              Serial.println(dead_end_thresh, 4);
+          break;
+
+          // DECREASE dead_end_thresh
+          case '8':
+              dead_end_thresh = dead_end_thresh - 2;
+              Serial.println(dead_end_thresh, 4);
+          break;
+          
           
         } // <-- switch ()
     }
@@ -606,7 +618,7 @@ void loop(){
 
     
     //now check if we are at dead end with light bar and 180 turn
-    
+    /*
     if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
@@ -650,7 +662,7 @@ void loop(){
         enc1_value = enc1.readAndReset();
         reset_variables();
       }
-      
+      */
 
 
 
