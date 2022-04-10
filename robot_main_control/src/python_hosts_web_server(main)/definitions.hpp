@@ -146,6 +146,7 @@ extern unsigned long prev_line_follow_time;
 extern int LightBar_Left_Sum;
 extern int LightBar_Right_Sum;
 extern float line_PID_error;
+extern float kp1_divider;
 extern float line_follow_PID_KP;
 extern float line_follow_PID_KI;   
 extern float line_follow_PID_KD;                               //FOR LINE FOLLOW PID LOOP 

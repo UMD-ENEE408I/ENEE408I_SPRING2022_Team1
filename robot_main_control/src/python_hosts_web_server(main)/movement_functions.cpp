@@ -53,7 +53,8 @@ LightBar_Right_Sum = 0; // extern
 line_PID_error = 0.0; // extern 
 twinky_max = twinky_one_speed; // extern 
 twinky_min = twinky_one_speed * -1.00; // extern 
-line_follow_PID_KP = twinky_max/(3800.00); // extern 250 seems right, max error
+kp1_divider = 1.00; // extern 
+line_follow_PID_KP = twinky_max/(kp1_divider); // extern 250 seems right, max error
 line_follow_PID_KI = 0.0; // extern 
 line_follow_PID_KD = 0.0; // extern 
 line_follow_PID_P = 0.0; // extern 
@@ -129,6 +130,7 @@ void read_Light_bar(){
   Serial.println("   ");
   */
 
+ /*
  for(int i = 0; i < 12; i++){
     if(i == 0) b = 6;
     if(i == 1) b = 5;
@@ -142,12 +144,14 @@ void read_Light_bar(){
     if(i == 9) b = 4;
     if(i == 10) b = 5;
     if(i == 11) b = 6;
-    /*
+    
     adjustment = (1.00/3.00) * (float)pow(b,2) + 1.00; //1/3 standard
     //adjustment = static_cast<int>(adjustment);
     adc_buf[i] *= adjustment;
-    */
+    
   }
+  */
+ 
   /*
   for(int i = 0; i < 12; i++){
     Serial.print(adc_buf[i]);
@@ -482,13 +486,13 @@ void read_Light_bar2(){
   }else{
     Serial.print(" ");
   }
-  /*
+  
   for(int i = 0; i < 13; i++){
     Serial.print(adc_buf2[i]);
     Serial.print('\t');
   }
   Serial.println();
-  */
+  
 
 
 
@@ -573,36 +577,6 @@ void pid_lf2_control(){
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
