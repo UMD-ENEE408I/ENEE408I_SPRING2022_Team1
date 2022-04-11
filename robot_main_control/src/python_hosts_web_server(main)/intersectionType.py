@@ -14,16 +14,16 @@ class intersectionType(Enum):
     Middle_of_Maze = 8
 
 
-def setDict(dict):
-    dict.clear
-    dict[intersectionType.Left_and_Forward.name] = 0
-    dict[intersectionType.Right_and_Forward.name] = 0
-    dict[intersectionType.T.name] = 0
-    dict[intersectionType.Left.name] = 0
-    dict[intersectionType.Right.name] = 0
-    dict[intersectionType.Three_Way.name] = 0
-    dict[intersectionType.Dead_End.name] = 0
-    dict[intersectionType.Middle_of_Maze.name] = 0
+def setDict(mydict):
+    mydict.clear
+    mydict[intersectionType.Left_and_Forward.name] = 0
+    mydict[intersectionType.Right_and_Forward.name] = 0
+    mydict[intersectionType.T.name] = 0
+    mydict[intersectionType.Left.name] = 0
+    mydict[intersectionType.Right.name] = 0
+    mydict[intersectionType.Three_Way.name] = 0
+    mydict[intersectionType.Dead_End.name] = 0
+    mydict[intersectionType.Middle_of_Maze.name] = 0
     
 
 def decrease_brightness(img, value):

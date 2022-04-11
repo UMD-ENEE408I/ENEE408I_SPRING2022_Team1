@@ -172,7 +172,7 @@ while True:
         # print(img.shape) # img is a numpy matrix 480 x 640 x 3
         acc = 0
         setDict(myDict)
-
+        #print("this is myDict", myDict)
         while acc < 100:
             ret, img = cap.read()
             img = img[0:380, :]
