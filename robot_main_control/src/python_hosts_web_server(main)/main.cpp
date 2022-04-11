@@ -380,7 +380,7 @@ void loop(){
       desired_enc1_value = enc1_value - 101;
       desired_enc2_value = enc2_value - 101;
       twinky_one_speed = twinky_min; //to reverse direction
-      twinky_two_speed = twinky_min - .1;
+      twinky_two_speed = twinky_min - .09;
       prev_twinky_time = millis();
       //twinky_two -= 40;
       //do reverse
@@ -427,8 +427,8 @@ void loop(){
       desired_enc2_value = enc2_value + 290; //+340 without boost
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
-      twinky_one_speed = twinky_max + .08;
-      twinky_two_speed = twinky_max;
+      twinky_one_speed = twinky_max*5; // twinky_max + .061;
+      twinky_two_speed = twinky_max*5;
       //twinky_one = twinky_one + 80; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
         current_time = millis();
@@ -442,14 +442,16 @@ void loop(){
         //check if satisfied and stop movement
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        /*
+        
         if(enc1_value > desired_enc1_value){
           twinky_one_speed = 0;
+          M1_stop();
         }
         if(enc2_value > desired_enc2_value){
           twinky_two_speed = 0;
+          M2_stop();
         }
-        */
+        
       }
       M1_stop();
       M2_stop();
@@ -462,12 +464,12 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 200; // -100 without boost
-      desired_enc2_value = enc2_value + 200; // +107 without boost
+      desired_enc1_value = enc1_value - 180; // -100 without boost
+      desired_enc2_value = enc2_value + 180; // +107 without boost
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
       prev_twinky_time = millis();
-      while(/*enc1_value > desired_enc1_value || */enc2_value < desired_enc2_value){
+      while(enc1_value > desired_enc1_value || enc2_value < desired_enc2_value){
         current_time = millis();
         if((current_time - prev_twinky_time) > 20){
           enc2_value = enc2.read()*-1; // should be -1.
