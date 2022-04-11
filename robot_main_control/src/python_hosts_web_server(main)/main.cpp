@@ -219,7 +219,9 @@ void loop(){
   Encoder enc1(M1_ENC_A, M1_ENC_B);
   Encoder enc2(M2_ENC_A, M2_ENC_B);
 
-  foward_Flag = true; //to reverse direction
+  //foward_Flag = false; //to reverse direction
+  //twinky_one_speed *= -1.00;
+  //twinky_two_speed *= -1.00;
 
   prev_twinky_time = millis();
   prev_line_follow_time = millis();
@@ -377,10 +379,10 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 101;
-      desired_enc2_value = enc2_value - 101;
+      desired_enc1_value = enc1_value - 105;
+      desired_enc2_value = enc2_value - 105;
       twinky_one_speed = twinky_min; //to reverse direction
-      twinky_two_speed = twinky_min - .09;
+      twinky_two_speed = twinky_min - .07;
       prev_twinky_time = millis();
       //twinky_two -= 40;
       //do reverse
@@ -400,9 +402,11 @@ void loop(){
         enc1_value = enc1.read();
         if(enc1_value < desired_enc1_value){
           twinky_one_speed = 0;
+          M1_stop();
         }
         if(enc2_value < desired_enc2_value){
           twinky_two_speed = 0;
+          M2_stop();
         }
       }
       M1_stop();
@@ -423,11 +427,11 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 290; //+340 without boost
-      desired_enc2_value = enc2_value + 290; //+340 without boost
+      desired_enc1_value = enc1_value + 286; //+340 without boost
+      desired_enc2_value = enc2_value + 286; //+340 without boost
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
-      twinky_one_speed = twinky_max*5; // twinky_max + .061;
+      twinky_one_speed = twinky_max*5.5; // twinky_max + .061;
       twinky_two_speed = twinky_max*5;
       //twinky_one = twinky_one + 80; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
@@ -559,8 +563,8 @@ void loop(){
           }
           */
         }
-      M1_stop();
-      M2_stop();
+        M1_stop();
+        M2_stop();
 
       }else if(rec_Message == "Right\n"){
         enc2_value = enc2.readAndReset()*-1;
@@ -594,8 +598,8 @@ void loop(){
           }
           */
         }
-        M1_stop();
-        M2_stop();
+          M1_stop();
+          M2_stop();
 
       }else if(rec_Message == "WINNER\n"){
         exit(1);
