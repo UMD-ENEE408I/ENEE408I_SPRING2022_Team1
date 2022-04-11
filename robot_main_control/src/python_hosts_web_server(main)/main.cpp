@@ -145,7 +145,7 @@ float line_follow_PID_KD2 = 70.0; // extern
 //#################################
 long desired_enc1_value = 0; // extern
 long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
-float dead_end_thresh = 410.00; // extern
+float dead_end_thresh = 410.00; // extern 410, 300
 //#################################
 
 
@@ -380,7 +380,7 @@ void loop(){
       desired_enc1_value = enc1_value - 101;
       desired_enc2_value = enc2_value - 101;
       twinky_one_speed = twinky_min; //to reverse direction
-      twinky_two_speed = twinky_min - .02;
+      twinky_two_speed = twinky_min - .1;
       prev_twinky_time = millis();
       //twinky_two -= 40;
       //do reverse
@@ -427,7 +427,7 @@ void loop(){
       desired_enc2_value = enc2_value + 290; //+340 without boost
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
-      twinky_one_speed = twinky_max + .10;
+      twinky_one_speed = twinky_max + .08;
       twinky_two_speed = twinky_max;
       //twinky_one = twinky_one + 80; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
