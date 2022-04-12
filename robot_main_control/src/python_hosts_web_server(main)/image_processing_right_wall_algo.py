@@ -104,8 +104,8 @@ def find_type_of_intersection(img):
 
 
     top_crop = thresh_mask[0:40, :] #maybe get more rows.
-    left_crop = thresh_mask[:, 110:160]
-    right_crop = thresh_mask[:, 480:530]
+    left_crop = thresh_mask[:, 90:140]
+    right_crop = thresh_mask[:, 500:550]
 
     #FOR DEBUGGING AND FINDING GOOD THRESHOLD VALUES
     ##############################################################
@@ -126,7 +126,7 @@ def find_type_of_intersection(img):
     mask_sum = thresh_mask.sum()
 
     topThreshold = 200000
-    LRThreshold = 300000
+    LRThreshold = 400000
     winThreshold = 30000000
 
     if mask_sum > winThreshold: # WE ARE AT MIDDLE

@@ -161,7 +161,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  /*
+  ///*
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -172,7 +172,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  */
+  //*/
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -381,8 +381,8 @@ void loop(){
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 105;
       desired_enc2_value = enc2_value - 105;
-      twinky_one_speed = twinky_min; //to reverse direction
-      twinky_two_speed = twinky_min - .07;
+      twinky_one_speed = twinky_min;//twinky_min; //to reverse direction
+      twinky_two_speed = twinky_min - .07;;//twinky_min - .07;
       prev_twinky_time = millis();
       //twinky_two -= 40;
       //do reverse
@@ -413,7 +413,7 @@ void loop(){
       M2_stop();
 
       //send and recieve message
-      client_Flag = false; // should be true
+      client_Flag = true; // should be true
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
@@ -427,11 +427,11 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 286; //+340 without boost
-      desired_enc2_value = enc2_value + 286; //+340 without boost
+      desired_enc1_value = enc1_value + 288; //+340 without boost
+      desired_enc2_value = enc2_value + 288; //+340 without boost
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
-      twinky_one_speed = twinky_max*5.5; // twinky_max + .061;
+      twinky_one_speed = twinky_max*6.3; // twinky_max + .061;
       twinky_two_speed = twinky_max*5;
       //twinky_one = twinky_one + 80; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
@@ -461,14 +461,14 @@ void loop(){
       M2_stop();
 
       //testing left turn 
-      ///*
+      /*
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
       reset_variables();
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 180; // -100 without boost
+      desired_enc1_value = enc1_value - 170; // -100 without boost
       desired_enc2_value = enc2_value + 180; // +107 without boost
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
@@ -483,18 +483,20 @@ void loop(){
         }
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        ///*
+        
         if(enc1_value < desired_enc1_value){
           twinky_one_speed = 0;
+          M1_stop();
         }
         if(enc2_value > desired_enc2_value){
           twinky_two_speed = 0;
+          M2_stop();
         }
-        //*/
+        
       }
       M1_stop();
       M2_stop();
-      //*/
+      */
 
       //testing right turn
       /*

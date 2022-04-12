@@ -29,12 +29,12 @@ def find_type_of_intersection(img):
 
 
     top_crop = thresh_mask[0:40, :] #maybe get more rows.
-    left_crop = thresh_mask[:, 110:160]
-    right_crop = thresh_mask[:, 480:530]
+    left_crop = thresh_mask[:, 90:140]
+    right_crop = thresh_mask[:, 500:550]
 
     #FOR DEBUGGING AND FINDING GOOD THRESHOLD VALUES
     ##############################################################
-    #For  0:30, 110:160 and 480:530 ->  80000 seems to work
+    #For  0:30, 110:160 and 480:530 ->
     cv.imshow('top cropped feed', top_crop)
     cv.imshow('left cropped feed', left_crop)
     cv.imshow('right cropped feed', right_crop)
@@ -42,7 +42,7 @@ def find_type_of_intersection(img):
     print(left_crop.sum())
     print(right_crop.sum())
     print(thresh_mask.sum())
-    time.sleep(.2)  
+    time.sleep(.002)
     ###############################################################
 
     top_crop_sum = top_crop.sum()
@@ -51,25 +51,25 @@ def find_type_of_intersection(img):
     mask_sum = thresh_mask.sum()
 
     topThreshold = 200000
-    LRThreshold = 300000
+    LRThreshold = 400000
     winThreshold = 30000000
 
-    if top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Top Left and Right
-        return (intersectionType.Three_Way)
-    elif left_crop_sum > LRThreshold and right_crop_sum > LRThreshold: #Left and Right
-        return (intersectionType.T)
-    elif top_crop_sum > topThreshold and left_crop_sum > LRThreshold: #Top and Left
-        return (intersectionType.Left_and_Forward)
-    elif top_crop_sum > topThreshold and right_crop_sum > LRThreshold: #Top and Right
-        return (intersectionType.Right_and_Forward)
-    elif left_crop_sum > LRThreshold: # Left
-        return (intersectionType.Left)
-    elif right_crop_sum > LRThreshold: # Right
-        return (intersectionType.Right)
-    elif mask_sum > winThreshold: # WE ARE AT MIDDLE
+    if mask_sum > winThreshold:  # WE ARE AT MIDDLE
         return (intersectionType.Middle_of_Maze)
+    elif top_crop_sum > topThreshold and left_crop_sum > LRThreshold and right_crop_sum > LRThreshold:  # Top Left and Right
+        return (intersectionType.Three_Way)
+    elif left_crop_sum > LRThreshold and right_crop_sum > LRThreshold:  # Left and Right
+        return (intersectionType.T)
+    elif top_crop_sum > topThreshold and left_crop_sum > LRThreshold:  # Top and Left
+        return (intersectionType.Left_and_Forward)
+    elif top_crop_sum > topThreshold and right_crop_sum > LRThreshold:  # Top and Right
+        return (intersectionType.Right_and_Forward)
+    elif left_crop_sum > LRThreshold:  # Left
+        return (intersectionType.Left)
+    elif right_crop_sum > LRThreshold:  # Right
+        return (intersectionType.Right)
     else:
-        return (intersectionType.Dead_End) #It is a dead end
+        return (intersectionType.Dead_End)  # It is a dead end
 
 
 
