@@ -135,7 +135,7 @@ float acc = 0.0; // extern
 float kp2_divider = 1.00; // extern 
 float line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern
 float line_follow_PID_KI2 = 0.0000; // extern 
-float line_follow_PID_KD2 = 0.0; // extern
+float line_follow_PID_KD2 = 78.0; // extern
 //#################################
 
 
@@ -225,6 +225,7 @@ void loop(){
 
   prev_twinky_time = millis();
   prev_line_follow_time = millis();
+  //twinky_one_speed = .385;
   while(true){
     
     //send_and_recieve_message_to_client();
@@ -245,7 +246,7 @@ void loop(){
 
     if(Serial.available()){
               // GRAB INCOMING CHARACTERS
-        char incomingCharacter = Serial.read();
+      char incomingCharacter = Serial.read();
 
        // PICK ACTION ACORDING TO CHAR 
        switch (incomingCharacter) 
@@ -303,7 +304,15 @@ void loop(){
               Serial.println(dead_end_thresh, 4);
           break;
           
-          
+          case 'a':
+            twinky_one_speed += .01;
+            Serial.println(twinky_one_speed, 4);
+          break;
+
+          case 's':
+            twinky_two_speed += .01;
+            Serial.println(twinky_two_speed, 4);
+          break;
         } // <-- switch ()
     }
 
@@ -345,6 +354,8 @@ void loop(){
     }
     
 
+    
+
     /*
     Serial.print("line_PID_error is ");
     Serial.print(line_PID_error);
@@ -370,7 +381,7 @@ void loop(){
     //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation. Back up by 109 ticks seems good
     
     if((adc1.readADC(6) < 500 && adc2.readADC(5) < 500 && adc1.readADC(5) < 500 && adc2.readADC(4) < 500 && adc1.readADC(4) < 500) || 
-       (adc1.readADC(0) < 500 && adc2.readADC(0) < 500 && adc1.readADC(1) < 500 && adc2.readADC(1) < 500 && adc1.readADC(2) < 500)){ 
+       (adc1.readADC(0) < 500 && adc2.readADC(0) < 500 && adc1.readADC(1) < 500 && adc2.readADC(1) < 500 && adc1.readADC(2) < 500)){
       M1_stop();
       M2_stop();
       enc2_value = enc2.readAndReset()*-1;
@@ -380,10 +391,10 @@ void loop(){
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 105;
-      desired_enc2_value = enc2_value - 135;
+      desired_enc2_value = enc2_value - 137;
       twinky_one_speed = twinky_min;//twinky_min; //to reverse direction
       twinky_two_speed = twinky_min;//twinky_min - .07;
-      prev_twinky_time = millis();
+      //prev_twinky_time = millis();
       //twinky_two -= 40;
       //do reverse
       foward_Flag = false; // this only affects the line follow
@@ -427,14 +438,12 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 150; 
-      desired_enc2_value = enc2_value + 150;
-      prev_twinky_time = millis();
-      prev_line_follow_time = millis();
-      twinky_one_speed = twinky_max*6.3; // twinky_max + .061;
-      twinky_two_speed = twinky_max*5;
-      //twinky_one = twinky_one + 80; // this is to get left wheel to boost up, ask levi
-      while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
+      desired_enc1_value = enc1_value + 450; 
+      desired_enc2_value = enc2_value + 450;
+      twinky_one_speed = twinky_max*1.193; // twinky_max + .061;
+      twinky_two_speed = twinky_max;
+      twinky_one = twinky_one + 30; // this is to get left wheel to boost up, ask levi
+      while(enc1_value < desired_enc1_value && enc2_value < desired_enc2_value){
         current_time = millis();
         //Motor control PID loop----
         if((current_time - prev_twinky_time) > 20){
@@ -468,7 +477,7 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 170; // -100 without boost
+      desired_enc1_value = enc1_value - 180; // -100 without boost
       desired_enc2_value = enc2_value + 180; // +107 without boost
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
@@ -499,19 +508,19 @@ void loop(){
       */
 
       //testing right turn
-      /*
+      
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
       reset_variables();
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 205; // +300 without boost
-      desired_enc2_value = enc2_value - 205; // -130 without boost
-      twinky_one_speed = twinky_max; // left motor reverse
-      twinky_two_speed = twinky_min; // right motor forward
-      prev_twinky_time = millis();
+      desired_enc1_value = enc1_value + 250; // +300 without boost
+      desired_enc2_value = enc2_value - 250; // -130 without boost
+      twinky_one_speed = twinky_max; // left motor 
+      twinky_two_speed = twinky_min; // right motor 
       while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+
         current_time = millis();
         if((current_time - prev_twinky_time) > 20){
           enc2_value = enc2.read()*-1; // should be -1.
@@ -519,13 +528,22 @@ void loop(){
           pid_v1_control();
           prev_twinky_time = current_time;
         }
+
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
+        if(enc1_value > desired_enc1_value){
+          twinky_one_speed = 0;
+          M1_stop();
+        }
+        if(enc2_value < desired_enc2_value){
+          twinky_two_speed = 0;
+          M2_stop();
+        }
 
       }
       M1_stop();
       M2_stop();
-      */
+      
 
 
 
@@ -540,8 +558,8 @@ void loop(){
 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value - 100;
-        desired_enc2_value = enc2_value + 107;
+        desired_enc1_value = enc1_value - 180; // -100 without boost
+        desired_enc2_value = enc2_value + 180; // +107 without boost
         twinky_one_speed = twinky_min; // left motor reverse
         twinky_two_speed = twinky_max; // right motor forward
         prev_twinky_time = millis();
@@ -553,17 +571,18 @@ void loop(){
             pid_v1_control();
             prev_twinky_time = current_time;
           }
-          //check if satisfied and stop movement
           enc2_value = enc2.read()*-1;
           enc1_value = enc1.read();
-          /*
+          
           if(enc1_value < desired_enc1_value){
             twinky_one_speed = 0;
+            M1_stop();
           }
           if(enc2_value > desired_enc2_value){
             twinky_two_speed = 0;
+            M2_stop();
           }
-          */
+          
         }
         M1_stop();
         M2_stop();
@@ -575,12 +594,12 @@ void loop(){
 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value + 300;
-        desired_enc2_value = enc2_value - 130;
-        twinky_one_speed = twinky_max; // left motor reverse
-        twinky_two_speed = twinky_min; // right motor forward
-        prev_twinky_time = millis();
+        desired_enc1_value = enc1_value + 250; // +300 without boost
+        desired_enc2_value = enc2_value - 250; // -130 without boost
+        twinky_one_speed = twinky_max; // left motor 
+        twinky_two_speed = twinky_min; // right motor 
         while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+
           current_time = millis();
           if((current_time - prev_twinky_time) > 20){
             enc2_value = enc2.read()*-1; // should be -1.
@@ -588,20 +607,21 @@ void loop(){
             pid_v1_control();
             prev_twinky_time = current_time;
           }
-          //check if satisfied and stop movement
+
           enc2_value = enc2.read()*-1;
           enc1_value = enc1.read();
-          /*
           if(enc1_value > desired_enc1_value){
             twinky_one_speed = 0;
+            M1_stop();
           }
           if(enc2_value < desired_enc2_value){
             twinky_two_speed = 0;
+            M2_stop();
           }
-          */
+
         }
-          M1_stop();
-          M2_stop();
+        M1_stop();
+        M2_stop();
 
       }else if(rec_Message == "WINNER\n"){
         exit(1);
@@ -621,12 +641,25 @@ void loop(){
     }
     
     
-    
 
 
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     //now check if we are at dead end with light bar and 180 turn
-    /*
+    
     if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
@@ -670,7 +703,7 @@ void loop(){
         enc1_value = enc1.readAndReset();
         reset_variables();
       }
-      */
+      
 
 
 

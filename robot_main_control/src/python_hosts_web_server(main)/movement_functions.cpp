@@ -1,78 +1,77 @@
 #include "definitions.hpp"
 
 void reset_variables(){
+  //#################################
+  prev_twinky_time = millis(); // extern
+  twinky_one = 0.0; // extern
+  twinky_two = 0.0; // extern
+  twinky_one_speed = 0.35; // extern -- .35 with 1100 is nice, 
+  twinky_two_speed = twinky_one_speed;  // extern                                  
+
+  whl1_vl_PID_error = 0.0; // extern  
+  whl2_vl_PID_error = 0.0; // extern 
+
+  whl1_vl_PID_P = 0.0; // extern 
+  whl2_vl_PID_P = 0.0; // extern 
+
+  whl1_vl_PID_I = 0.0; // extern                    //For Motors PID Control Loop
+  whl2_vl_PID_I = 0.0; // extern 
+
+  whl1_vl_PID_D = 0.0; // extern 
+  whl2_vl_PID_D = 0.0; // extern 
+
+  whl1_vl_PID_KP = .35; // extern  .35, .95, .90
+  whl2_vl_PID_KP = .35; // extern 
+
+  whl1_vl_PID_KI = .000152; // extern 0.000152, 0.0026, .00235
+  whl2_vl_PID_KI = .000152; // extern 
+
+  whl1_vl_PID_KD = 50.00; // extern 50.00,  46.00, 128.00
+  whl2_vl_PID_KD = 50.00; // extern 
+
+  whl1_vl_PID_error_prev = 0.0; // extern 
+  whl2_vl_PID_error_prev = 0.0; // extern 
+
+  whl1_vl_PID_D_time_prev = millis(); // extern 
+  whl2_vl_PID_D_time_prev = millis(); // extern 
+
+  whl1_vl_PID_out = 0.0; // extern 
+  whl2_vl_PID_out = 0.0; // extern 
+
+  current_time = millis(); // extern 
+
+  foward_Flag = true; // extern 
+  //#################################
+
+
 
   //#################################
-prev_twinky_time = millis(); // extern
-twinky_one = 0.0; // extern
-twinky_two = 0.0; // extern
-twinky_one_speed = 0.35; // extern -- .35 with 1100 is nice, 
-twinky_two_speed = twinky_one_speed;  // extern                                  
+  prev_line_follow_time = millis(); // extern 
+  LightBar_Left_Sum = 0; // extern 
+  LightBar_Right_Sum = 0; // extern 
+  line_PID_error = 0.0; // extern 
+  twinky_max = twinky_one_speed; // extern 
+  twinky_min = twinky_one_speed * -1.00; // extern 
+  kp1_divider = 1.00; // extern 
+  line_follow_PID_KP = twinky_max/(kp1_divider); // extern 250 seems right, max error
+  line_follow_PID_KI = 0.0; // extern 
+  line_follow_PID_KD = 0.0; // extern 
+  line_follow_PID_P = 0.0; // extern 
+  line_follow_PID_I = 0.0; // extern                                           //FOR LINE FOLLOW PID LOOP 
+  line_follow_PID_D = 0.0; // extern 
+  line_PID_error_prev = 0.0; // extern 
+  line_follow_PID_out = 0.0; // extern
+  b = 0; // extern 
 
-whl1_vl_PID_error = 0.0; // extern  
-whl2_vl_PID_error = 0.0; // extern 
-
-whl1_vl_PID_P = 0.0; // extern 
-whl2_vl_PID_P = 0.0; // extern 
-
-whl1_vl_PID_I = 0.0; // extern                    //For Motors PID Control Loop
-whl2_vl_PID_I = 0.0; // extern 
-
-whl1_vl_PID_D = 0.0; // extern 
-whl2_vl_PID_D = 0.0; // extern 
-
-whl1_vl_PID_KP = .35; // extern  .35, .95, .90
-whl2_vl_PID_KP = .35; // extern 
-
-whl1_vl_PID_KI = .000152; // extern 0.000152, 0.0026, .00235
-whl2_vl_PID_KI = .000152; // extern 
-
-whl1_vl_PID_KD = 50.00; // extern 50.00,  46.00, 128.00
-whl2_vl_PID_KD = 50.00; // extern 
-
-whl1_vl_PID_error_prev = 0.0; // extern 
-whl2_vl_PID_error_prev = 0.0; // extern 
-
-whl1_vl_PID_D_time_prev = millis(); // extern 
-whl2_vl_PID_D_time_prev = millis(); // extern 
-
-whl1_vl_PID_out = 0.0; // extern 
-whl2_vl_PID_out = 0.0; // extern 
-
-current_time = millis(); // extern 
-
-foward_Flag = true; // extern 
-//#################################
-
-
-
-//#################################
-prev_line_follow_time = millis(); // extern 
-LightBar_Left_Sum = 0; // extern 
-LightBar_Right_Sum = 0; // extern 
-line_PID_error = 0.0; // extern 
-twinky_max = twinky_one_speed; // extern 
-twinky_min = twinky_one_speed * -1.00; // extern 
-kp1_divider = 1.00; // extern 
-line_follow_PID_KP = twinky_max/(kp1_divider); // extern 250 seems right, max error
-line_follow_PID_KI = 0.0; // extern 
-line_follow_PID_KD = 0.0; // extern 
-line_follow_PID_P = 0.0; // extern 
-line_follow_PID_I = 0.0; // extern                                           //FOR LINE FOLLOW PID LOOP 
-line_follow_PID_D = 0.0; // extern 
-line_PID_error_prev = 0.0; // extern 
-line_follow_PID_out = 0.0; // extern
-b = 0; // extern 
-
-adjustment = 0.0; // extern
-average = 0.0; // extern
-position = 0.0; // extern
-acc = 0.0; // extern
-kp2_divider = 1.00;
-line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern 250 seems right, max error
-line_follow_PID_KI2 = 0.000; // extern 
-line_follow_PID_KD2 = 40.0; // extern
-//#################################
+  adjustment = 0.0; // extern
+  average = 0.0; // extern
+  position = 0.0; // extern
+  acc = 0.0; // extern
+  kp2_divider = 1.00;
+  line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern 250 seems right, max error
+  line_follow_PID_KI2 = 0.000; // extern 
+  line_follow_PID_KD2 = 78.0; // extern
+  //#################################
 }
 
 
