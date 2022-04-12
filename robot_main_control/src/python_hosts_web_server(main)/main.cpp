@@ -134,8 +134,8 @@ float position = 0.0; // extern
 float acc = 0.0; // extern
 float kp2_divider = 1.00; // extern 
 float line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern
-float line_follow_PID_KI2 = 0.00005; // extern 
-float line_follow_PID_KD2 = 70.0; // extern
+float line_follow_PID_KI2 = 0.0000; // extern 
+float line_follow_PID_KD2 = 0.0; // extern
 //#################################
 
 
@@ -161,7 +161,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  ///*
+  /*
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -172,7 +172,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  //*/
+  */
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -261,20 +261,20 @@ void loop(){
           // DECREASE Kp
           case '2':
               kp2_divider = kp2_divider - 0.005;
-              line_follow_PID_KP = twinky_max/(kp2_divider);
+              line_follow_PID_KP2 = twinky_max/(kp2_divider);
               Serial.println(kp2_divider, 4);
           break;
 
           // INCREASE Ki
           case '3':
-              line_follow_PID_KI2 = line_follow_PID_KI2 + 0.00005;
+              line_follow_PID_KI2 = line_follow_PID_KI2 + 0.000025;
               Serial.println(line_follow_PID_KI2, 6);
           break;
 
 
           // DECREASE Ki
           case '4':
-              line_follow_PID_KI2 = line_follow_PID_KI2 - 0.00005;
+              line_follow_PID_KI2 = line_follow_PID_KI2 - 0.000025;
               Serial.println(line_follow_PID_KI2, 6);
           break;
 
@@ -380,9 +380,9 @@ void loop(){
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 105;
-      desired_enc2_value = enc2_value - 105;
+      desired_enc2_value = enc2_value - 135;
       twinky_one_speed = twinky_min;//twinky_min; //to reverse direction
-      twinky_two_speed = twinky_min - .07;;//twinky_min - .07;
+      twinky_two_speed = twinky_min;//twinky_min - .07;
       prev_twinky_time = millis();
       //twinky_two -= 40;
       //do reverse
@@ -413,7 +413,7 @@ void loop(){
       M2_stop();
 
       //send and recieve message
-      client_Flag = true; // should be true
+      client_Flag = false; // should be true
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
@@ -427,8 +427,8 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 288; //+340 without boost
-      desired_enc2_value = enc2_value + 288; //+340 without boost
+      desired_enc1_value = enc1_value + 150; 
+      desired_enc2_value = enc2_value + 150;
       prev_twinky_time = millis();
       prev_line_follow_time = millis();
       twinky_one_speed = twinky_max*6.3; // twinky_max + .061;

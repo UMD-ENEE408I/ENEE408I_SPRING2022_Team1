@@ -70,8 +70,8 @@ position = 0.0; // extern
 acc = 0.0; // extern
 kp2_divider = 1.00;
 line_follow_PID_KP2 = twinky_max/(kp2_divider); // extern 250 seems right, max error
-line_follow_PID_KI2 = 0.0001; // extern 
-line_follow_PID_KD2 = 70.0; // extern
+line_follow_PID_KI2 = 0.000; // extern 
+line_follow_PID_KD2 = 40.0; // extern
 //#################################
 }
 
