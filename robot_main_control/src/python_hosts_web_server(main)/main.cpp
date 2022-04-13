@@ -161,7 +161,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  
+  /*
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -172,7 +172,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  
+  */
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -424,7 +424,7 @@ void loop(){
       M2_stop();
 
       //send and recieve message
-      client_Flag = true; // should be true
+      client_Flag = false; // should be true
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
@@ -470,7 +470,7 @@ void loop(){
       M2_stop();
 
       //testing left turn 
-      /*
+      
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
       reset_variables();
@@ -505,7 +505,7 @@ void loop(){
       }
       M1_stop();
       M2_stop();
-      */
+      
 
       //testing right turn
       /*
@@ -627,7 +627,7 @@ void loop(){
         while(1){
           Serial.println("we are done");
         }
-        
+
       }else{
         Serial.println("Not good");
       }
