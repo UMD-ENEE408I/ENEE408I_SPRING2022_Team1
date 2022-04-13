@@ -354,6 +354,11 @@ void loop(){
     }
     
 
+    //If we are at middle
+    if(acc > 9){
+      exit(0);
+    }
+
     
 
     /*
@@ -440,7 +445,7 @@ void loop(){
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value + 450; 
       desired_enc2_value = enc2_value + 450;
-      twinky_one_speed = twinky_max*1.193; // twinky_max + .061;
+      twinky_one_speed = twinky_max*1.192; // twinky_max + .061;
       twinky_two_speed = twinky_max;
       twinky_one = twinky_one + 30; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value && enc2_value < desired_enc2_value){
