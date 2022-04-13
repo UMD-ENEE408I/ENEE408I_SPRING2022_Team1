@@ -440,7 +440,7 @@ void loop(){
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value + 440; 
       desired_enc2_value = enc2_value + 440;
-      twinky_one_speed = twinky_max*1.192; // twinky_max + .061;
+      twinky_one_speed = twinky_max*1.19; // twinky_max + .061;
       twinky_two_speed = twinky_max;
       twinky_one = twinky_one + 30; // this is to get left wheel to boost up, ask levi
       while(enc1_value < desired_enc1_value && enc2_value < desired_enc2_value){
@@ -624,8 +624,10 @@ void loop(){
         M2_stop();
 
       }else if(rec_Message == "WINNER\n"){
-        exit(0);
-
+        while(1){
+          Serial.println("we are done");
+        }
+        
       }else{
         Serial.println("Not good");
       }
