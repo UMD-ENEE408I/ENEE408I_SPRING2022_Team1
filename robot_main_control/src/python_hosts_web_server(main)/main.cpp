@@ -8,8 +8,8 @@ WiFiClient client; // extern
 String rec_Message = ""; // extern
 char holder; // extern                                   // FOR WIFI
 bool client_Flag = false; // extern
-const char* ssid = "ARRIS-93FA"; // extern ARRIS-93FA
-const char* password = "BSY89A602856"; // extern BSY89A602856
+const char* ssid = "DESKTOP-ori"; // extern ARRIS-93FA
+const char* password = "g425<7H7"; // extern BSY89A602856
 const uint16_t port = 8000; // extern
 const char* host = "192.168.0.14"; // extern 172.20.10.3
 //################################
@@ -161,7 +161,7 @@ void setup() {
 
   Serial.begin(115200);
 
-  /*
+  
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -172,7 +172,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  */
+  
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -352,12 +352,7 @@ void loop(){
 
       prev_twinky_time = current_time;
     }
-    
 
-    //If we are at middle
-    if(acc > 9){
-      exit(0);
-    }
 
     
 
@@ -429,7 +424,7 @@ void loop(){
       M2_stop();
 
       //send and recieve message
-      client_Flag = false; // should be true
+      client_Flag = true; // should be true
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
@@ -443,8 +438,8 @@ void loop(){
       foward_Flag = true;
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 450; 
-      desired_enc2_value = enc2_value + 450;
+      desired_enc1_value = enc1_value + 440; 
+      desired_enc2_value = enc2_value + 440;
       twinky_one_speed = twinky_max*1.192; // twinky_max + .061;
       twinky_two_speed = twinky_max;
       twinky_one = twinky_one + 30; // this is to get left wheel to boost up, ask levi
@@ -513,7 +508,7 @@ void loop(){
       */
 
       //testing right turn
-      
+      /*
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
       reset_variables();
@@ -548,7 +543,7 @@ void loop(){
       }
       M1_stop();
       M2_stop();
-      
+      */
 
 
 
@@ -629,7 +624,7 @@ void loop(){
         M2_stop();
 
       }else if(rec_Message == "WINNER\n"){
-        exit(1);
+        exit(0);
 
       }else{
         Serial.println("Not good");
