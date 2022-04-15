@@ -85,7 +85,7 @@ void reset_variables(){
   gyro_KP_divider = 1.00;
   gyro_PID_KP = twinky_max/gyro_KP_divider;
   gyro_PID_KI = 0.00;
-  gyro_PID_KD = 0.00;
+  gyro_PID_KD = 6.00;
   gyro_PID_out = 0.00;
   //#################################
 }

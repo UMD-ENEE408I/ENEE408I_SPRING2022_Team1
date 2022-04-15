@@ -184,6 +184,7 @@ extern float kp2_divider;
 extern long desired_enc1_value;
 extern long desired_enc2_value;                                                       //FOR Intersection Logic
 extern float dead_end_thresh;
+extern float desired_degree_value;
 //#######################################################################
 //#######################################################################
 

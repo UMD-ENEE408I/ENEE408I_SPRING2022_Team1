@@ -146,6 +146,7 @@ float line_follow_PID_KD2 = 78.0; // extern
 long desired_enc1_value = 0; // extern
 long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
 float dead_end_thresh = 410.00; // extern 410, 300
+float desired_degree_value = 0.00; // extern
 //#################################
 
 
@@ -163,7 +164,7 @@ float gyro_PID_D = 0.00;
 float gyro_KP_divider = 1.00;
 float gyro_PID_KP = twinky_max/gyro_KP_divider;
 float gyro_PID_KI = 0.00;
-float gyro_PID_KD = 0.00;
+float gyro_PID_KD = 6.00;
 float gyro_PID_out = 0.00;
 bool gyro_foward_flag = true;
 //#################################
@@ -261,22 +262,6 @@ void loop(){
   prev_line_follow_time = millis();
   //twinky_one_speed = .385;
   while(true){
-    
-    //send_and_recieve_message_to_client();
-    //Serial.println("scope check and FINAL -->> " + rec_Message);
-    //if(rec_Message == "Right\n"){
-    //  Serial.println("HEEEEEEEELLLLLO");
-    //}
-
-    //read_Light_bar();
-    //Serial.println("SCOPE Check ");
-    //Serial.print(adc1_buf[0]);
-    //Serial.println(adc2_buf[0]);
-    //delay(1000);
-
-    //enc1_value = enc1.read();
-    //enc2_value = enc2.read();
-    //Encoder_Print();
 
     if(Serial.available()){
               // GRAB INCOMING CHARACTERS
@@ -367,14 +352,14 @@ void loop(){
       prev_line_follow_time = current_time;
     }
     */
-    /*
+    
     //Line follow PID loop---- This is positional
     if((current_time - prev_line_follow_time) > 40){ // 35 for now
 
       pid_lf2_control();
       prev_line_follow_time = current_time;
     }
-    */
+    
 
     //Motor control PID loop----
     if((current_time - prev_twinky_time) > 20){
@@ -387,7 +372,8 @@ void loop(){
       prev_twinky_time = current_time;
     }
 
-    GYRO_PID_loop();
+    //gyro_foward_flag = true;
+    //GYRO_PID_loop(); // only run this with motor PID for testing
 
 
     //Serial.print("line_PID_error is ");
@@ -409,7 +395,327 @@ void loop(){
     //Serial.println(M2_PWM_VALUE);
 
 
+    //PID method
+    //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation. Back up by 109 ticks seems good
+    
+    if((adc1.readADC(6) < 500 && adc2.readADC(5) < 500 && adc1.readADC(5) < 500 && adc2.readADC(4) < 500 && adc1.readADC(4) < 500) || 
+       (adc1.readADC(0) < 500 && adc2.readADC(0) < 500 && adc1.readADC(1) < 500 && adc2.readADC(1) < 500 && adc1.readADC(2) < 500)){
+      M1_stop();
+      M2_stop();
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
 
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value - 105;
+      desired_enc2_value = enc2_value - 105; // make it the same
+      twinky_one_speed = twinky_min;//twinky_min; //to reverse direction
+      twinky_two_speed = twinky_min;//twinky_min - .07;
+      //prev_twinky_time = millis();
+      //twinky_two -= 40;
+      //do reverse
+      gyro_foward_flag = false; 
+      while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following? should be ||.
+        current_time = millis();
+        //Motor control PID loop----
+        if(current_time - prev_twinky_time > 20){
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        }
+
+        //Now activate the GYRO control to make sure it stays straight while going backward.
+        GYRO_PID_loop();
+
+
+        //check if satisfied and stop movement
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        if(enc1_value < desired_enc1_value){
+          twinky_one_speed = 0;
+          M1_stop();
+        }
+        if(enc2_value < desired_enc2_value){
+          twinky_two_speed = 0;
+          M2_stop();
+        }
+      }
+      M1_stop();
+      M2_stop();
+
+      //send and recieve message
+      client_Flag = false; // should be true
+      send_and_recieve_message_to_client();
+      client_Flag = false;
+      Serial.println("FINAL MESSAGE ->> " + rec_Message);
+      delay(2000);//debug
+
+      //now lets reset values and line follow back up
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+
+      gyro_foward_flag = true; 
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value + 427; 
+      desired_enc2_value = enc2_value + 427;
+      twinky_one_speed = twinky_max; // twinky_max + .061;
+      twinky_two_speed = twinky_max;
+      while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
+        current_time = millis();
+        //Motor control PID loop----
+        if((current_time - prev_twinky_time) > 20){
+          enc2_value = enc2.read()*-1; // should be -1.
+          enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        } 
+        //Now activate the GYRO control to make sure it stays straight while going backward.
+        GYRO_PID_loop();
+
+        //check if satisfied and stop movement
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        
+        if(enc1_value > desired_enc1_value){
+          twinky_one_speed = 0;
+          M1_stop();
+        }
+        if(enc2_value > desired_enc2_value){
+          twinky_two_speed = 0;
+          M2_stop();
+        }
+        
+      }
+      M1_stop();
+      M2_stop();
+
+      //testing left turn 
+      /*
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_degree_value = gyro_degrees + 90.00;
+      twinky_one_speed = twinky_min; // left motor reverse
+      twinky_two_speed = twinky_max; // right motor forward
+      prev_twinky_time = millis();
+      while(gyro_degrees < desired_degree_value){
+        current_time = millis();
+        if((current_time - prev_twinky_time) > 20){
+          enc2_value = enc2.read()*-1; // should be -1.
+          enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        }
+        //Now activate the GYRO control to make sure it stays straight while going backward.
+        sensors_event_t a, g, temp;
+        mpu.getEvent(&a, &g, &temp);
+        gyro_current_time = millis();
+        gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
+        gyro_prev_time = gyro_current_time;
+      }
+      M1_stop();
+      M2_stop();
+      */
+
+      //testing right turn
+      
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+
+      enc2_value = enc2.read()*-1;
+      enc1_value = enc1.read();
+      desired_enc1_value = enc1_value + 250; // +300 without boost
+      desired_enc2_value = enc2_value - 250; // -130 without boost
+      twinky_one_speed = twinky_max; // left motor 
+      twinky_two_speed = twinky_min; // right motor 
+      while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+
+        current_time = millis();
+        if((current_time - prev_twinky_time) > 20){
+          enc2_value = enc2.read()*-1; // should be -1.
+          enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+          pid_v1_control();
+          prev_twinky_time = current_time;
+        }
+
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        if(enc1_value > desired_enc1_value){
+          twinky_one_speed = 0;
+          M1_stop();
+        }
+        if(enc2_value < desired_enc2_value){
+          twinky_two_speed = 0;
+          M2_stop();
+        }
+
+      }
+      M1_stop();
+      M2_stop();
+      
+
+
+
+      //now check rec_message and do turn
+      if(rec_Message == "Foward\n"){
+        //reset values for both PID and continue;
+
+      }else if(rec_Message == "Left\n"){
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_degree_value = gyro_degrees + 90.00;
+        twinky_one_speed = twinky_min; // left motor reverse
+        twinky_two_speed = twinky_max; // right motor forward
+        prev_twinky_time = millis();
+        while(gyro_degrees < desired_degree_value){
+          current_time = millis();
+          if((current_time - prev_twinky_time) > 20){
+            enc2_value = enc2.read()*-1; // should be -1.
+            enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+            pid_v1_control();
+            prev_twinky_time = current_time;
+          }
+          //Now activate the GYRO control to make sure it stays straight while going backward.
+          sensors_event_t a, g, temp;
+          mpu.getEvent(&a, &g, &temp);
+          gyro_current_time = millis();
+          gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
+          gyro_prev_time = gyro_current_time;
+        }
+        M1_stop();
+        M2_stop();
+
+      }else if(rec_Message == "Right\n"){
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value + 250; // +300 without boost
+        desired_enc2_value = enc2_value - 250; // -130 without boost
+        twinky_one_speed = twinky_max; // left motor 
+        twinky_two_speed = twinky_min; // right motor 
+        while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+
+          current_time = millis();
+          if((current_time - prev_twinky_time) > 20){
+            enc2_value = enc2.read()*-1; // should be -1.
+            enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+            pid_v1_control();
+            prev_twinky_time = current_time;
+          }
+
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+          if(enc1_value > desired_enc1_value){
+            twinky_one_speed = 0;
+            M1_stop();
+          }
+          if(enc2_value < desired_enc2_value){
+            twinky_two_speed = 0;
+            M2_stop();
+          }
+
+        }
+        M1_stop();
+        M2_stop();
+
+      }else if(rec_Message == "WINNER\n"){
+        while(1){
+          Serial.println("we are done");
+        }
+
+      }else{
+        Serial.println("Not good");
+      }
+
+
+
+
+      
+      Serial.println("hello");
+      enc2_value = enc2.readAndReset()*-1;
+      enc1_value = enc1.readAndReset();
+      reset_variables();
+    }
+    
+    
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //now check if we are at dead end with light bar and 180 turn
+    /*
+    if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
+      adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
+      adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
+        
+        M1_stop();
+        M2_stop();
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value + 470;
+        desired_enc2_value = enc2_value - 470;
+        twinky_one_speed = twinky_max; // left motor reverse
+        twinky_two_speed = twinky_min; // right motor forward
+        prev_twinky_time = millis();
+        while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+          current_time = millis();
+          if((current_time - prev_twinky_time) > 20){
+            enc2_value = enc2.read()*-1; // should be -1.
+            enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+            pid_v1_control();
+            prev_twinky_time = current_time;
+          }
+          //check if satisfied and stop movement
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+        
+          if(enc1_value > desired_enc1_value){
+            twinky_one_speed = 0;
+          }
+          if(enc2_value < desired_enc2_value){
+            twinky_two_speed = 0;
+          }
+
+        }// END OF WHILE
+        M1_stop();
+        M2_stop();
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+      }
+      */
     
 
 
