@@ -607,11 +607,11 @@ void GYRO_PID_loop(){
   gyro_current_time = millis();
   gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI; 
   //print for debug
-  /*
+  
   Serial.print(gyro_degrees);
   Serial.print("\t");
   Serial.println("");
-  */
+  
 
   //ERROR
   gyro_PID_error = gyro_degrees; // If this is positive then it is leaning left and left wheel speed up 
