@@ -155,7 +155,7 @@ float desired_degree_value = 0.00; // extern
 Adafruit_MPU6050 mpu; // extern 
 unsigned long gyro_prev_time = 0; // extern 
 unsigned long gyro_current_time = 0; // extern 
-float gyro_degrees = 0.00;                  //FOR GYRO PID control
+float gyro_degrees = 0.00;                                      //FOR GYRO PID control
 float gyro_PID_error = 0.00;
 float gyro_PID_error_prev = 0.00;
 float gyro_PID_P = 0.00;
@@ -513,7 +513,7 @@ void loop(){
           pid_v1_control();
           prev_twinky_time = current_time;
         }
-        //Now activate the GYRO control to make sure it stays straight while going backward.
+        //Now activate the GYRO control 
         sensors_event_t a, g, temp;
         mpu.getEvent(&a, &g, &temp);
         gyro_current_time = millis();
@@ -532,12 +532,11 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 250; // +300 without boost
-      desired_enc2_value = enc2_value - 250; // -130 without boost
+      desired_degree_value = gyro_degrees - 90.00;
       twinky_one_speed = twinky_max; // left motor 
-      twinky_two_speed = twinky_min; // right motor 
-      while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+      twinky_two_speed = twinky_min; // right motor
 
+      while(gyro_degrees > desired_degree_value){
         current_time = millis();
         if((current_time - prev_twinky_time) > 20){
           enc2_value = enc2.read()*-1; // should be -1.
@@ -546,16 +545,14 @@ void loop(){
           prev_twinky_time = current_time;
         }
 
-        enc2_value = enc2.read()*-1;
-        enc1_value = enc1.read();
-        if(enc1_value > desired_enc1_value){
-          twinky_one_speed = 0;
-          M1_stop();
-        }
-        if(enc2_value < desired_enc2_value){
-          twinky_two_speed = 0;
-          M2_stop();
-        }
+        
+        //Now activate the GYRO control 
+        sensors_event_t a, g, temp;
+        mpu.getEvent(&a, &g, &temp);
+        gyro_current_time = millis();
+        gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
+        gyro_prev_time = gyro_current_time;
+        
 
       }
       M1_stop();

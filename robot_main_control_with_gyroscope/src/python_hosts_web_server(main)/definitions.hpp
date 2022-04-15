@@ -1,6 +1,6 @@
 #ifndef DEFINITIONS_HPP
 #define DEFINITIONS_HPP
-// Load Wi-Fi library
+// Load libraries
 #include <Arduino.h>
 #include <WiFi.h>
 #include <Wire.h>
@@ -187,6 +187,8 @@ extern float dead_end_thresh;
 extern float desired_degree_value;
 //#######################################################################
 //#######################################################################
+
+
 
 
 //#######################################################################

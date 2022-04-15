@@ -76,17 +76,17 @@ void reset_variables(){
   //#################################
   gyro_prev_time = millis(); // extern 
   gyro_current_time = millis(); // extern 
-  gyro_degrees = 0.00;                  //FOR GYRO PID control
-  gyro_PID_error = 0.00;
-  gyro_PID_error_prev = 0.00;
-  gyro_PID_P = 0.00;
-  gyro_PID_I = 0.00;
-  gyro_PID_D = 0.00;
-  gyro_KP_divider = 1.00;
-  gyro_PID_KP = twinky_max/gyro_KP_divider;
-  gyro_PID_KI = 0.00;
-  gyro_PID_KD = 6.00;
-  gyro_PID_out = 0.00;
+  gyro_degrees = 0.00; // extern                   
+  gyro_PID_error = 0.00; // extern 
+  gyro_PID_error_prev = 0.00; // extern 
+  gyro_PID_P = 0.00; // extern                                     //FOR GYRO PID control
+  gyro_PID_I = 0.00; // extern 
+  gyro_PID_D = 0.00; // extern 
+  gyro_KP_divider = 1.00; // extern 
+  gyro_PID_KP = twinky_max/gyro_KP_divider; // extern 
+  gyro_PID_KI = 0.00; // extern 
+  gyro_PID_KD = 6.00; // extern 
+  gyro_PID_out = 0.00; // extern 
   //#################################
 }
 
