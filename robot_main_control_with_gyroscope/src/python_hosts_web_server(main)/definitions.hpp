@@ -27,6 +27,8 @@ void motor_move();
 void pid_lf_control();
 void read_Light_bar2();
 void pid_lf2_control();
+void GYRO_PID_loop();
+
 //#######################################################################
 //#######################################################################
 extern WiFiClient client;
@@ -180,10 +182,31 @@ extern float kp2_divider;
 //#######################################################################
 //#######################################################################
 extern long desired_enc1_value;
-extern long desired_enc2_value;                                                               //FOR Intersection Logic
+extern long desired_enc2_value;                                                       //FOR Intersection Logic
 extern float dead_end_thresh;
 //#######################################################################
 //#######################################################################
 
+
+//#######################################################################
+//#######################################################################
+extern Adafruit_MPU6050 mpu;
+extern unsigned long gyro_prev_time;
+extern unsigned long gyro_current_time;                                                 //FOR GYRO PID control
+extern float gyro_degrees;
+extern float gyro_PID_error;
+extern float gyro_PID_error_prev;
+extern float gyro_PID_P;
+extern float gyro_PID_I;
+extern float gyro_PID_D;
+extern float gyro_KP_divider;
+extern float gyro_PID_KP;
+extern float gyro_PID_KI;
+extern float gyro_PID_KD;
+extern float gyro_PID_out;
+
+extern bool gyro_foward_flag;
+//#######################################################################
+//#######################################################################
 
 #endif

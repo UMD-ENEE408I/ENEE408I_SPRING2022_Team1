@@ -150,7 +150,23 @@ float dead_end_thresh = 410.00; // extern 410, 300
 
 
 
-
+//#################################
+Adafruit_MPU6050 mpu; // extern 
+unsigned long gyro_prev_time = 0; // extern 
+unsigned long gyro_current_time = 0; // extern 
+float gyro_degrees = 0.00;                  //FOR GYRO PID control
+float gyro_PID_error = 0.00;
+float gyro_PID_error_prev = 0.00;
+float gyro_PID_P = 0.00;
+float gyro_PID_I = 0.00;
+float gyro_PID_D = 0.00;
+float gyro_KP_divider = 1.00;
+float gyro_PID_KP = twinky_max/gyro_KP_divider;
+float gyro_PID_KI = 0.00;
+float gyro_PID_KD = 0.00;
+float gyro_PID_out = 0.00;
+bool gyro_foward_flag = true;
+//#################################
 
 
 //##################################################################################################
@@ -160,6 +176,24 @@ void setup() {
   delay(100);
 
   Serial.begin(115200);
+  /*
+  Serial.println("Adafruit MPU6050 test!");
+  // Try to initialize!
+  if (!mpu.begin()) {
+    Serial.println("Failed to find MPU6050 chip");
+    while (1) {
+      delay(10);
+    }
+  }
+  Serial.println("MPU6050 Found!");
+  mpu.setAccelerometerRange(MPU6050_RANGE_8_G);
+  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+  */
+
+
+
+
 
   /*
   // Connect to Wi-Fi network with SSID and password
@@ -254,42 +288,42 @@ void loop(){
 
           // INCREASE Kp
           case '1':
-              kp2_divider = kp2_divider + 0.005;
-              line_follow_PID_KP2 = twinky_max/(kp2_divider);
-              Serial.println(kp2_divider, 4);
+              gyro_KP_divider = gyro_KP_divider + 0.005;
+              gyro_PID_P = twinky_max/(gyro_KP_divider);
+              Serial.println(gyro_KP_divider, 4);
           break;
 
           // DECREASE Kp
           case '2':
-              kp2_divider = kp2_divider - 0.005;
-              line_follow_PID_KP2 = twinky_max/(kp2_divider);
-              Serial.println(kp2_divider, 4);
+              gyro_KP_divider = gyro_KP_divider - 0.005;
+              gyro_PID_P = twinky_max/(gyro_KP_divider);
+              Serial.println(gyro_KP_divider, 4);
           break;
 
           // INCREASE Ki
           case '3':
-              line_follow_PID_KI2 = line_follow_PID_KI2 + 0.000025;
-              Serial.println(line_follow_PID_KI2, 6);
+              gyro_PID_KI = gyro_PID_KI + 0.000025;
+              Serial.println(gyro_PID_KI, 6);
           break;
 
 
           // DECREASE Ki
           case '4':
-              line_follow_PID_KI2 = line_follow_PID_KI2 - 0.000025;
-              Serial.println(line_follow_PID_KI2, 6);
+              gyro_PID_KI = gyro_PID_KI - 0.000025;
+              Serial.println(gyro_PID_KI, 6);
           break;
 
           // INCREASE Kd
           case '5':
-              line_follow_PID_KD2 = line_follow_PID_KD2 + 2;
-              Serial.println(line_follow_PID_KD2, 8);
+              gyro_PID_KD = gyro_PID_KD + 2;
+              Serial.println(gyro_PID_KD, 8);
           break;
 
 
           // DECREASE Kd
           case '6':
-              line_follow_PID_KD2 = line_follow_PID_KD2 - 2;
-              Serial.println(line_follow_PID_KD2, 8);
+              gyro_PID_KD = gyro_PID_KD - 2;
+              Serial.println(gyro_PID_KD, 8);
           break;
 
           // INCREASE dead_end_thresh
@@ -333,14 +367,14 @@ void loop(){
       prev_line_follow_time = current_time;
     }
     */
-    
+    /*
     //Line follow PID loop---- This is positional
     if((current_time - prev_line_follow_time) > 40){ // 35 for now
 
       pid_lf2_control();
       prev_line_follow_time = current_time;
     }
-    
+    */
 
     //Motor control PID loop----
     if((current_time - prev_twinky_time) > 20){
@@ -353,28 +387,33 @@ void loop(){
       prev_twinky_time = current_time;
     }
 
+    //GYRO_PID_loop();
 
-    
+    for(int i =0; i < 6; i++){
+      Serial.print(adc1.readADC(i));
+      Serial.print(" ");
+      Serial.print(adc2.readADC(i));
+      Serial.print(" ");
+    }
 
-    /*
-    Serial.print("line_PID_error is ");
-    Serial.print(line_PID_error);
-    Serial.print("  ");
-    Serial.print("line_follow_PID_out is "); // line_PID_error * line_follow_PID_KP;
-    Serial.print(line_follow_PID_out, 6);
-    Serial.print("  ");
-    Serial.print("twinky_one_speed is ");
-    Serial.print(twinky_one_speed, 6);
-    Serial.print("  ");
-    Serial.print("twinky_two_speed is ");
-    Serial.print(twinky_two_speed, 6);
-    Serial.print("  |||||| ");
-    Serial.print("M1_PWM -->> ");
-    Serial.print(M1_PWM_VALUE);
-    Serial.print("  ");
-    Serial.print("M2_PWM -->> ");
-    Serial.println(M2_PWM_VALUE);
-    */
+    //Serial.print("line_PID_error is ");
+    //Serial.print(line_PID_error);
+    //Serial.print("  ");
+    //Serial.print("line_follow_PID_out is "); // line_PID_error * line_follow_PID_KP;
+    //Serial.print(line_follow_PID_out, 6);
+    //Serial.print("  ");
+    //Serial.print("twinky_one_speed is ");
+    //Serial.print(twinky_one_speed, 6);
+    //Serial.print("  ");
+    //Serial.print("twinky_two_speed is ");
+    //Serial.print(twinky_two_speed, 6);
+    //Serial.print("  |||||| ");
+    //Serial.print("M1_PWM -->> ");
+    //Serial.print(M1_PWM_VALUE);
+    //Serial.print("  ");
+    //Serial.print("M2_PWM -->> ");
+    //Serial.println(M2_PWM_VALUE);
+    Serial.println();
 
 
     //PID method
@@ -391,7 +430,7 @@ void loop(){
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 105;
-      desired_enc2_value = enc2_value - 137;
+      desired_enc2_value = enc2_value - 137; // make it the same
       twinky_one_speed = twinky_min;//twinky_min; //to reverse direction
       twinky_two_speed = twinky_min;//twinky_min - .07;
       //prev_twinky_time = millis();
@@ -407,6 +446,10 @@ void loop(){
           pid_v1_control();
           prev_twinky_time = current_time;
         }
+
+        //Now activate the GYRO control to make sure it stays straight while going backward.
+        //GYRO_PID_loop();
+
 
         //check if satisfied and stop movement
         enc2_value = enc2.read()*-1;
@@ -661,7 +704,7 @@ void loop(){
 
 
     //now check if we are at dead end with light bar and 180 turn
-    
+    /*
     if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
@@ -705,7 +748,7 @@ void loop(){
         enc1_value = enc1.readAndReset();
         reset_variables();
       }
-      
+      */
 
 
 

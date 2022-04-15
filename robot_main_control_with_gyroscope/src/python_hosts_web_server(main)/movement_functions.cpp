@@ -72,6 +72,22 @@ void reset_variables(){
   line_follow_PID_KI2 = 0.000; // extern 
   line_follow_PID_KD2 = 78.0; // extern
   //#################################
+
+  //#################################
+  gyro_prev_time = millis(); // extern 
+  gyro_current_time = millis(); // extern 
+  gyro_degrees = 0.00;                  //FOR GYRO PID control
+  gyro_PID_error = 0.00;
+  gyro_PID_error_prev = 0.00;
+  gyro_PID_P = 0.00;
+  gyro_PID_I = 0.00;
+  gyro_PID_D = 0.00;
+  gyro_KP_divider = 1.00;
+  gyro_PID_KP = twinky_max/gyro_KP_divider;
+  gyro_PID_KI = 0.00;
+  gyro_PID_KD = 0.00;
+  gyro_PID_out = 0.00;
+  //#################################
 }
 
 
@@ -544,8 +560,8 @@ void pid_lf2_control(){
       //Serial.print("  |||||| ");
       
       //OR THIS?
-      twinky_one_speed = twinky_max + line_follow_PID_out/2;
-      twinky_two_speed = twinky_max - line_follow_PID_out/2;
+      twinky_one_speed = twinky_max + line_follow_PID_out/2.00;
+      twinky_two_speed = twinky_max - line_follow_PID_out/2.00;
       
       
 
@@ -559,28 +575,107 @@ void pid_lf2_control(){
       //Serial.print("  |||||| ");
 
       //OR THIS?
-      twinky_one_speed = twinky_max - (-1 * line_follow_PID_out)/2; 
-      twinky_two_speed = twinky_max + (-1 * line_follow_PID_out)/2; 
+      twinky_one_speed = twinky_max - (-1.00 * line_follow_PID_out)/2.00; 
+      twinky_two_speed = twinky_max + (-1.00 * line_follow_PID_out)/2.00; 
       
     }
 
   }else{
     //For reverse direction, maybe dont need to do this.
     if(line_follow_PID_out >= 0){
-      twinky_one_speed = -1*(twinky_max + line_follow_PID_out/2);
-      twinky_two_speed = -1*(twinky_max - line_follow_PID_out/2);
+      twinky_one_speed = -1.00*(twinky_max + line_follow_PID_out/2.00);
+      twinky_two_speed = -1.00*(twinky_max - line_follow_PID_out/2.00);
 
       //twinky_two_speed = -1*(twinky_max -  line_follow_PID_out); 
 
     }else{
-      twinky_one_speed = -1*(twinky_max - (-1 * line_follow_PID_out)/2);
-      twinky_two_speed = -1*(twinky_max + (-1 * line_follow_PID_out)/2);
+      twinky_one_speed = -1.00*(twinky_max - (-1.00 * line_follow_PID_out)/2.00);
+      twinky_two_speed = -1.00*(twinky_max + (-1.00 * line_follow_PID_out)/2.00);
 
       //twinky_one_speed = -1*(twinky_max - (-1 * line_follow_PID_out)); 
 
     }
   }
 }
+
+
+
+void GYRO_PID_loop(){
+  /* Get new sensor events with the readings */
+  sensors_event_t a, g, temp;
+  mpu.getEvent(&a, &g, &temp);
+  gyro_current_time = millis();
+  gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI; 
+  //print for debug
+  /*
+  Serial.print(gyro_degrees);
+  Serial.print("\t");
+  Serial.println("");
+  */
+
+  //ERROR
+  gyro_PID_error = gyro_degrees; // If this is positive then it is leaning left and left wheel speed up 
+
+  //PROPORTIONAL
+  gyro_PID_P = gyro_PID_error * gyro_PID_KP;
+
+  //INTEGRAL
+  gyro_PID_I += (gyro_PID_error) * (float)(gyro_current_time - gyro_prev_time) * gyro_PID_KI;
+  if(line_follow_PID_I > 255) line_follow_PID_I = 255;
+  if(line_follow_PID_I < -255) line_follow_PID_I = -255;
+
+  //DERIVATIVE
+  gyro_PID_D = ((gyro_PID_error - gyro_PID_error_prev) / (float)(gyro_current_time - gyro_prev_time)) * gyro_PID_KD;
+  gyro_PID_error_prev = gyro_PID_error;
+
+  // SUMMATION
+  gyro_PID_out = gyro_PID_P + gyro_PID_I + gyro_PID_D;
+  if(gyro_PID_out > twinky_max) gyro_PID_out = twinky_max;
+  if(gyro_PID_out < twinky_min) gyro_PID_out = twinky_min;
+
+
+
+
+  if(gyro_foward_flag == true){
+    if(gyro_PID_out >= 0){
+      twinky_one_speed = twinky_max + gyro_PID_out/2;
+      twinky_two_speed = twinky_max - gyro_PID_out/2;
+
+    }else{
+      twinky_one_speed = twinky_max - (-1.00 * gyro_PID_out)/2; 
+      twinky_two_speed = twinky_max + (-1.00 * gyro_PID_out)/2; 
+      
+    }
+  }else{
+    if(gyro_PID_out >= 0){
+      twinky_one_speed = -1.00*(twinky_max - gyro_PID_out/2); 
+      twinky_two_speed = -1.00*(twinky_max + gyro_PID_out/2); 
+
+    }else{
+      twinky_one_speed = -1.00*(twinky_max + (-1.00*gyro_PID_out)/2);
+      twinky_two_speed = -1.00*(twinky_max - (-1.00*gyro_PID_out)/2);
+
+    }
+  }
+
+  gyro_prev_time = gyro_current_time;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
