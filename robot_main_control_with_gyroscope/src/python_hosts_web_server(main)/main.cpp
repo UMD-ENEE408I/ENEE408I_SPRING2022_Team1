@@ -410,11 +410,9 @@ void loop(){
       enc1_value = enc1.read();
       desired_enc1_value = enc1_value - 110;
       desired_enc2_value = enc2_value - 110; // make it the same
-      twinky_one_speed = twinky_min;//twinky_min; //to reverse direction
-      twinky_two_speed = twinky_min;//twinky_min - .07;
+      twinky_one_speed = twinky_min;
+      twinky_two_speed = twinky_min;
       //prev_twinky_time = millis();
-      //twinky_two -= 40;
-      //do reverse
       gyro_foward_flag = false; 
       while(enc2_value > desired_enc2_value || enc1_value > desired_enc1_value){ // should i also do reverse line_following? should be ||.
         current_time = millis();
@@ -450,9 +448,9 @@ void loop(){
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
-      delay(2000);//debug
+      //delay(2000);//debug
 
-      //now lets reset values and line follow back up
+      //now lets reset values and line follow up
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
       reset_variables();
