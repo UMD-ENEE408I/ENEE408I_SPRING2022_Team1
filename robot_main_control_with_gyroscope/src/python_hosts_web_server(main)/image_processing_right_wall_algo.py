@@ -117,7 +117,7 @@ def find_type_of_intersection(img):
     print(left_crop.sum())
     print(right_crop.sum())
     print(thresh_mask.sum())
-    #time.sleep(.5)
+    #time.sleep(.2)
     ###############################################################
 
     top_crop_sum = top_crop.sum()
@@ -127,7 +127,7 @@ def find_type_of_intersection(img):
 
     topThreshold = 200000
     LRThreshold = 400000
-    winThreshold = 25000000
+    winThreshold = 22000000
 
     if mask_sum > winThreshold: # WE ARE AT MIDDLE
         return (intersectionType.Middle_of_Maze)

@@ -196,7 +196,7 @@ void setup() {
 
 
 
-  /*
+  
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Connecting to ");
   Serial.println(ssid);
@@ -207,7 +207,7 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  */
+  
   // Print local IP address and start web server
   Serial.println("");
   Serial.println("WiFi connected.");
@@ -408,8 +408,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 105;
-      desired_enc2_value = enc2_value - 105; // make it the same
+      desired_enc1_value = enc1_value - 110;
+      desired_enc2_value = enc2_value - 110; // make it the same
       twinky_one_speed = twinky_min;//twinky_min; //to reverse direction
       twinky_two_speed = twinky_min;//twinky_min - .07;
       //prev_twinky_time = millis();
@@ -446,7 +446,7 @@ void loop(){
       M2_stop();
 
       //send and recieve message
-      client_Flag = false; // should be true
+      client_Flag = true; // should be true
       send_and_recieve_message_to_client();
       client_Flag = false;
       Serial.println("FINAL MESSAGE ->> " + rec_Message);
@@ -460,8 +460,8 @@ void loop(){
       gyro_foward_flag = true; 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 427; 
-      desired_enc2_value = enc2_value + 427;
+      desired_enc1_value = enc1_value + 403; 
+      desired_enc2_value = enc2_value + 403;
       twinky_one_speed = twinky_max; // twinky_max + .061;
       twinky_two_speed = twinky_max;
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
@@ -525,7 +525,7 @@ void loop(){
       */
 
       //testing right turn
-      
+      /*
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
       reset_variables();
@@ -557,7 +557,7 @@ void loop(){
       }
       M1_stop();
       M2_stop();
-      
+      */
 
 
 
@@ -601,12 +601,11 @@ void loop(){
 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value + 250; // +300 without boost
-        desired_enc2_value = enc2_value - 250; // -130 without boost
+        desired_degree_value = gyro_degrees - 90.00;
         twinky_one_speed = twinky_max; // left motor 
-        twinky_two_speed = twinky_min; // right motor 
-        while(enc1_value < desired_enc1_value || enc2_value > desired_enc2_value){
+        twinky_two_speed = twinky_min; // right motor
 
+        while(gyro_degrees > desired_degree_value){
           current_time = millis();
           if((current_time - prev_twinky_time) > 20){
             enc2_value = enc2.read()*-1; // should be -1.
@@ -615,16 +614,14 @@ void loop(){
             prev_twinky_time = current_time;
           }
 
-          enc2_value = enc2.read()*-1;
-          enc1_value = enc1.read();
-          if(enc1_value > desired_enc1_value){
-            twinky_one_speed = 0;
-            M1_stop();
-          }
-          if(enc2_value < desired_enc2_value){
-            twinky_two_speed = 0;
-            M2_stop();
-          }
+          
+          //Now activate the GYRO control 
+          sensors_event_t a, g, temp;
+          mpu.getEvent(&a, &g, &temp);
+          gyro_current_time = millis();
+          gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
+          gyro_prev_time = gyro_current_time;
+          
 
         }
         M1_stop();
@@ -643,7 +640,6 @@ void loop(){
 
 
       
-      Serial.println("hello");
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
       reset_variables();
@@ -668,7 +664,7 @@ void loop(){
 
 
     //now check if we are at dead end with light bar and 180 turn
-    /*
+    
     if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
@@ -712,7 +708,7 @@ void loop(){
         enc1_value = enc1.readAndReset();
         reset_variables();
       }
-      */
+      
     
 
 
