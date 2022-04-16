@@ -14,7 +14,6 @@ data = ""
 beginFlag = False
 myDict = dict()
 
-
 SERVER_HOST = '192.168.0.14'
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -23,11 +22,23 @@ s.bind((SERVER_HOST, SERVER_PORT))
 s.listen(0)
 s.settimeout(3)
 
-# s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# # s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-# s2.bind((SERVER_HOST, 8001))
-# s2.listen(0)
-# s2.settimeout(2)
+SERVER_HOST = '192.168.0.14'
+SERVER_PORT2 = 8001
+s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s2.bind((SERVER_HOST, SERVER_PORT2))
+s2.listen(0)
+s2.settimeout(3)
+
+SERVER_HOST = '192.168.0.14'
+SERVER_PORT3 = 8002
+s3 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s3.bind((SERVER_HOST, SERVER_PORT3))
+s3.listen(0)
+s3.settimeout(3)
+
+
 
 
 def get_message1():
@@ -39,7 +50,9 @@ def get_message1():
         return (client_connection, data)
     except socket.error as e:
         data = ""
-        print("8000 " + e)
+        print(SERVER_PORT + " " + e)
+
+
 
     return (None, data)
 
