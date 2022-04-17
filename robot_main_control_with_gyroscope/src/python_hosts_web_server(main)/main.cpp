@@ -458,7 +458,7 @@ void loop(){
       gyro_foward_flag = true; 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 395; 
+      desired_enc1_value = enc1_value + 395;
       desired_enc2_value = enc2_value + 395;
       twinky_one_speed = twinky_max; // twinky_max + .061;
       twinky_two_speed = twinky_max;
