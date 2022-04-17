@@ -50,7 +50,7 @@ def get_message1():
         return (client_connection, data)
     except socket.error as e:
         data = ""
-        print(SERVER_PORT + " " + e)
+        print(str(SERVER_PORT) + " " + str(e))
 
 
 
