@@ -11,7 +11,7 @@ bool client_Flag = false; // extern
 const char* ssid = "DESKTOP-ori"; // extern ARRIS-93FA
 const char* password = "g425<7H7"; // extern BSY89A602856
 const uint16_t port = 8000; // extern
-const char* host = "192.168.0.14"; // extern 172.20.10.3
+const char* host = "192.168.0.15"; // extern 192.168.0.14 for desktop
 //################################
 
 
@@ -408,8 +408,8 @@ void loop(){
 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value - 110;
-      desired_enc2_value = enc2_value - 110; // make it the same
+      desired_enc1_value = enc1_value - 105;
+      desired_enc2_value = enc2_value - 105; // make it the same
       twinky_one_speed = twinky_min;
       twinky_two_speed = twinky_min;
       //prev_twinky_time = millis();
@@ -458,8 +458,8 @@ void loop(){
       gyro_foward_flag = true; 
       enc2_value = enc2.read()*-1;
       enc1_value = enc1.read();
-      desired_enc1_value = enc1_value + 403; 
-      desired_enc2_value = enc2_value + 403;
+      desired_enc1_value = enc1_value + 395; 
+      desired_enc2_value = enc2_value + 395;
       twinky_one_speed = twinky_max; // twinky_max + .061;
       twinky_two_speed = twinky_max;
       while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
@@ -503,6 +503,8 @@ void loop(){
       twinky_one_speed = twinky_min; // left motor reverse
       twinky_two_speed = twinky_max; // right motor forward
       prev_twinky_time = millis();
+      gyro_prev_time = millis();
+      gyro_current_time = millis();
       while(gyro_degrees < desired_degree_value){
         current_time = millis();
         if((current_time - prev_twinky_time) > 20){
@@ -533,7 +535,9 @@ void loop(){
       desired_degree_value = gyro_degrees - 90.00;
       twinky_one_speed = twinky_max; // left motor 
       twinky_two_speed = twinky_min; // right motor
-
+      prev_twinky_time = millis();
+      gyro_prev_time = millis();
+      gyro_current_time = millis();
       while(gyro_degrees > desired_degree_value){
         current_time = millis();
         if((current_time - prev_twinky_time) > 20){
@@ -574,6 +578,8 @@ void loop(){
         twinky_one_speed = twinky_min; // left motor reverse
         twinky_two_speed = twinky_max; // right motor forward
         prev_twinky_time = millis();
+        gyro_prev_time = millis();
+        gyro_current_time = millis();
         while(gyro_degrees < desired_degree_value){
           current_time = millis();
           if((current_time - prev_twinky_time) > 20){
@@ -602,7 +608,9 @@ void loop(){
         desired_degree_value = gyro_degrees - 90.00;
         twinky_one_speed = twinky_max; // left motor 
         twinky_two_speed = twinky_min; // right motor
-
+        prev_twinky_time = millis();
+        gyro_prev_time = millis();
+        gyro_current_time = millis();
         while(gyro_degrees > desired_degree_value){
           current_time = millis();
           if((current_time - prev_twinky_time) > 20){
