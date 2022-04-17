@@ -51,7 +51,22 @@ def get_message1():
     except socket.error as e:
         data = ""
         print(str(SERVER_PORT) + " " + str(e))
-
+        try:
+            client_connection, client_address = s2.accept()
+            data = client_connection.recv(BUFFER_SIZE).decode().strip()
+            print("received data:", data)
+            return (client_connection, data)
+        except socket.error as e2:
+            data = ""
+            print(str(SERVER_PORT2) + " " + str(e2))
+            try:
+                client_connection, client_address = s3.accept()
+                data = client_connection.recv(BUFFER_SIZE).decode().strip()
+                print("received data:", data)
+                return (client_connection, data)
+            except socket.error as e3:
+                data = ""
+                print(str(SERVER_PORT3) + " " + str(e3))
 
 
     return (None, data)
