@@ -52,7 +52,7 @@ def find_type_of_intersection(img):
 
     topThreshold = 200000
     LRThreshold = 400000
-    winThreshold = 21000000
+    winThreshold = 26000000
 
     if mask_sum > winThreshold:  # WE ARE AT MIDDLE
         return (intersectionType.Middle_of_Maze)

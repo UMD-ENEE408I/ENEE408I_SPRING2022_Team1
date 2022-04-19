@@ -11,7 +11,7 @@ bool client_Flag = false; // extern
 const char* ssid = "DESKTOP-ori"; // extern ARRIS-93FA
 const char* password = "g425<7H7"; // extern BSY89A602856
 const uint16_t port = 8000; // extern
-const char* host = "192.168.0.15"; // extern 192.168.0.14 for desktop
+const char* host = "10.104.215.195"; // extern 192.168.0.14 for desktop
 //################################
 
 
@@ -23,8 +23,8 @@ const unsigned int ADC_1_CS = 2;
 const unsigned int ADC_2_CS = 17;
 int* adc1_buf = (int*) malloc(sizeof(int)*8); // extern  or could do "new int[8];"
 int adc2_buf[8]; // extern 
-int* adc_buf = (int*) malloc(sizeof(int)*12); //extern
-int* adc_buf2 = (int*) malloc(sizeof(int)*13); //extern
+int* adc_buf = (int*) malloc(sizeof(int)*12); //extern for lf
+int* adc_buf2 = (int*) malloc(sizeof(int)*13); //extern for
 
 //################################
 

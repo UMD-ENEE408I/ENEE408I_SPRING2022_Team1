@@ -14,7 +14,8 @@ data = ""
 beginFlag = False
 myDict = dict()
 
-SERVER_HOST = '192.168.0.15' # 192.168.0.14 for desktop on arris
+SERVER_HOST = '10.104.215.195' # 192.168.0.14 for desktop on arris
+
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -22,7 +23,6 @@ s.bind((SERVER_HOST, SERVER_PORT))
 s.listen(0)
 s.settimeout(2)
 
-SERVER_HOST = '192.168.0.15'
 SERVER_PORT2 = 8001
 s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -30,7 +30,6 @@ s2.bind((SERVER_HOST, SERVER_PORT2))
 s2.listen(0)
 s2.settimeout(2)
 
-SERVER_HOST = '192.168.0.15'
 SERVER_PORT3 = 8002
 s3 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -128,7 +127,7 @@ def find_type_of_intersection(img):
 
     #blur = cv.GaussianBlur(gray_img, (5, 5), 0) # dont need this
     ret2, thresh_mask = cv.threshold(gray_img, 70, 255, cv.THRESH_BINARY)
-    #cv.imshow('binary thresh feed', thresh_mask)
+    cv.imshow('binary thresh feed', thresh_mask)
 
 
     top_crop = thresh_mask[0:40, :] #maybe get more rows.
@@ -155,7 +154,7 @@ def find_type_of_intersection(img):
 
     topThreshold = 200000
     LRThreshold = 400000
-    winThreshold = 21000000
+    winThreshold = 26000000
 
     if mask_sum > winThreshold: # WE ARE AT MIDDLE
         return (intersectionType.Middle_of_Maze)
