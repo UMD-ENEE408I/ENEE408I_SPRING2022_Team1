@@ -24,7 +24,7 @@ def find_type_of_intersection(img):
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    ret2, thresh_mask = cv.threshold(gray_img, 70, 255, cv.THRESH_BINARY)
+    ret2, thresh_mask = cv.threshold(gray_img, 160, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
 
 
@@ -50,9 +50,9 @@ def find_type_of_intersection(img):
     right_crop_sum = right_crop.sum()
     mask_sum = thresh_mask.sum()
 
-    topThreshold = 200000
+    topThreshold = 300000
     LRThreshold = 400000
-    winThreshold = 26000000
+    winThreshold = 25500000
 
     if mask_sum > winThreshold:  # WE ARE AT MIDDLE
         return (intersectionType.Middle_of_Maze)
@@ -84,7 +84,7 @@ while True:
     img = img[0:380, :]
     cv.imshow('pure feed', img)
 
-    newimg = decrease_brightness(img, 190)
+    newimg = decrease_brightness(img, 120)
     cv.imshow('pure feed with brightness turned down', newimg)
 
 

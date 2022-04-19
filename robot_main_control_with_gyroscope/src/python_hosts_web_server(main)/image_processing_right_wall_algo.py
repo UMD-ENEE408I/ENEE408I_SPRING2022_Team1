@@ -14,28 +14,28 @@ data = ""
 beginFlag = False
 myDict = dict()
 
-SERVER_HOST = '10.104.215.195' # 192.168.0.14 for desktop on arris
+SERVER_HOST = '192.168.2.132' # 192.168.0.14 for desktop on arris 192.168.2.132
 
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind((SERVER_HOST, SERVER_PORT))
-s.listen(0)
-s.settimeout(2)
+s.listen(0) # or s.listen(0)??
+s.settimeout(1)
 
 SERVER_PORT2 = 8001
 s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s2.bind((SERVER_HOST, SERVER_PORT2))
 s2.listen(0)
-s2.settimeout(2)
+s2.settimeout(1)
 
 SERVER_PORT3 = 8002
 s3 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s3.bind((SERVER_HOST, SERVER_PORT3))
 s3.listen(0)
-s3.settimeout(2)
+s3.settimeout(1)
 
 
 
@@ -126,7 +126,7 @@ def find_type_of_intersection(img):
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     #blur = cv.GaussianBlur(gray_img, (5, 5), 0) # dont need this
-    ret2, thresh_mask = cv.threshold(gray_img, 70, 255, cv.THRESH_BINARY)
+    ret2, thresh_mask = cv.threshold(gray_img, 160, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
 
 
@@ -152,9 +152,9 @@ def find_type_of_intersection(img):
     right_crop_sum = right_crop.sum()
     mask_sum = thresh_mask.sum()
 
-    topThreshold = 200000
+    topThreshold = 300000
     LRThreshold = 400000
-    winThreshold = 26000000
+    winThreshold = 25500000
 
     if mask_sum > winThreshold: # WE ARE AT MIDDLE
         return (intersectionType.Middle_of_Maze)
@@ -200,10 +200,10 @@ while True:
         acc = 0
         setDict(myDict)
         #print("this is myDict", myDict)
-        while acc < 30:
+        while acc < 50:
             ret, img = cap.read()
             img = img[0:380, :]
-            newimg = decrease_brightness(img, 190)
+            newimg = decrease_brightness(img, 120)
             #cv.imshow('pure feed with brightness turned down in loop', newimg)
             type_of_inter = find_type_of_intersection(newimg).name # For debug
             #print(type_of_inter) # For debug

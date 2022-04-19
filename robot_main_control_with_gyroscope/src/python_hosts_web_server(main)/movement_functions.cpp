@@ -88,6 +88,14 @@ void reset_variables(){
   gyro_PID_KD = 6.00; // extern 
   gyro_PID_out = 0.00; // extern 
   //#################################
+
+
+  //#################################
+  right_most_flag = false;
+  middle_flag = false;                              //for INTERSECTION Logic
+  left_most_flag = false;
+  //#################################
+
 }
 
 
@@ -489,7 +497,7 @@ void read_Light_bar2(){
  position = -6.00;
  acc = 0.0;
  for(int i = 0; i < 13; i++){
-   if(adc_buf2[i]< dead_end_thresh){
+   if(adc_buf2[i] < dead_end_thresh){
      average += position;
      acc = acc + 1.00;
    }
@@ -608,9 +616,9 @@ void GYRO_PID_loop(){
   gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI; 
   //print for debug
   
-  Serial.print(gyro_degrees);
-  Serial.print("\t");
-  Serial.println("");
+  //Serial.print(gyro_degrees);
+  //Serial.print("\t");
+  //Serial.println("");
   
 
   //ERROR

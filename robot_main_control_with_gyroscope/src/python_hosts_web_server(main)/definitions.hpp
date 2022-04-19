@@ -185,6 +185,9 @@ extern long desired_enc1_value;
 extern long desired_enc2_value;                                                       //FOR Intersection Logic
 extern float dead_end_thresh;
 extern float desired_degree_value;
+extern bool right_most_flag;
+extern bool middle_flag;
+extern bool left_most_flag;
 //#######################################################################
 //#######################################################################
 
@@ -195,12 +198,12 @@ extern float desired_degree_value;
 //#######################################################################
 extern Adafruit_MPU6050 mpu;
 extern unsigned long gyro_prev_time;
-extern unsigned long gyro_current_time;                                                 //FOR GYRO PID control
+extern unsigned long gyro_current_time;                                                 
 extern float gyro_degrees;
 extern float gyro_PID_error;
 extern float gyro_PID_error_prev;
 extern float gyro_PID_P;
-extern float gyro_PID_I;
+extern float gyro_PID_I;                                                            //FOR GYRO PID control
 extern float gyro_PID_D;
 extern float gyro_KP_divider;
 extern float gyro_PID_KP;
