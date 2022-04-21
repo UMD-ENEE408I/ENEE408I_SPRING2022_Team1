@@ -8,10 +8,10 @@ WiFiClient client; // extern
 String rec_Message = ""; // extern
 char holder; // extern                                   // FOR WIFI
 bool client_Flag = false; // extern
-const char* ssid = "GoTerps"; // extern ARRIS-93FA
-const char* password = "goterps2022"; // extern BSY89A602856
+const char* ssid = "DESKTOP-ori"; // extern GoTerps
+const char* password = "g425<7H7"; // extern goterps2022
 const uint16_t port = 8000; // extern
-const char* host = "192.168.2.132"; // extern 192.168.0.14 for desktop
+const char* host = "192.168.0.14"; // extern 192.168.2.132
 //################################
 
 
@@ -437,11 +437,11 @@ void loop(){
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
         if(enc1_value < desired_enc1_value){
-          twinky_one_speed = 0;
+          twinky_one_speed = 0.0;
           M1_stop();
         }
         if(enc2_value < desired_enc2_value){
-          twinky_two_speed = 0;
+          twinky_two_speed = 0.0;
           M2_stop();
         }
       }

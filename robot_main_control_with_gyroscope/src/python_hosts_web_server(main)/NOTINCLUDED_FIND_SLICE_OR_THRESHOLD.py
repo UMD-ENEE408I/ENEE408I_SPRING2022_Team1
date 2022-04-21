@@ -19,13 +19,14 @@ myDict = dict()
 #positioned correctly 
 
 def find_type_of_intersection(img):
-
-
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+    cv.imshow("3 gray_img", gray_img)
 
-    #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    ret2, thresh_mask = cv.threshold(gray_img, 160, 255, cv.THRESH_BINARY)
-    cv.imshow('binary thresh feed', thresh_mask)
+    clean_gray_img = cv.fastNlMeansDenoising(gray_img, None, 90, 7, 21)
+    cv.imshow("4 clean_gray_img", clean_gray_img)
+
+    ret2, thresh_mask = cv.threshold(clean_gray_img, 100, 255, cv.THRESH_BINARY)
+    cv.imshow('5 binary thresh feed', thresh_mask)
 
 
     top_crop = thresh_mask[0:40, :] #maybe get more rows.
@@ -35,14 +36,14 @@ def find_type_of_intersection(img):
     #FOR DEBUGGING AND FINDING GOOD THRESHOLD VALUES
     ##############################################################
     #For  0:30, 110:160 and 480:530 ->
-    cv.imshow('top cropped feed', top_crop)
-    cv.imshow('left cropped feed', left_crop)
-    cv.imshow('right cropped feed', right_crop)
+    # cv.imshow('top cropped feed', top_crop)
+    # cv.imshow('left cropped feed', left_crop)
+    # cv.imshow('right cropped feed', right_crop)
     print(top_crop.sum())
     print(left_crop.sum())
     print(right_crop.sum())
     print(thresh_mask.sum())
-    time.sleep(.002)
+    # time.sleep(.002)
     ###############################################################
 
     top_crop_sum = top_crop.sum()
@@ -52,7 +53,7 @@ def find_type_of_intersection(img):
 
     topThreshold = 300000
     LRThreshold = 400000
-    winThreshold = 25500000
+    winThreshold = 27500000
 
     if mask_sum > winThreshold:  # WE ARE AT MIDDLE
         return (intersectionType.Middle_of_Maze)
@@ -81,11 +82,17 @@ while True:
 
 
     ret, img = cap.read()
-    img = img[0:380, :]
-    cv.imshow('pure feed', img)
+    cv.imshow("1 pure feed", img)
 
-    newimg = decrease_brightness(img, 120)
-    cv.imshow('pure feed with brightness turned down', newimg)
+    img = img[0:380, :]
+    # img_denoised = cv.fastNlMeansDenoisingColored(img, None, 10, 10, 7, 21)
+    # cv.imshow("img_denoised", img_denoised)
+
+    # img_denoised = img_denoised[0:380, :]
+    # cv.imshow('pure feed', img_denoised)
+
+    newimg = decrease_brightness(img, 160)
+    cv.imshow('2 pure feed with brightness turned down', newimg)
 
 
     type_of_inter = find_type_of_intersection(newimg) # For debug

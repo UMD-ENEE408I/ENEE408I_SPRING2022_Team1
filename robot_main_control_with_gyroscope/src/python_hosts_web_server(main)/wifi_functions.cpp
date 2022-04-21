@@ -8,7 +8,7 @@ void send_and_recieve_message_to_client(){
     while(!client.connect(host, port)){
       Serial.println("client connecting");
     }
-      
+    
     if (client.connected()) {
         Serial.println("client connected");
         client.flush();
