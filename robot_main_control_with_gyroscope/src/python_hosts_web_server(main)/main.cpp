@@ -147,9 +147,9 @@ long desired_enc1_value = 0; // extern
 long desired_enc2_value = 0; // extern                  //FOR Intersection Logic
 float dead_end_thresh = 410.00; // extern 410, 300
 float desired_degree_value = 0.00; // extern
-bool right_most_flag = false;
-bool middle_flag = false;
-bool left_most_flag = false;
+bool right_most_flag = false; // extern
+bool middle_flag = false; // extern
+bool left_most_flag = false; // extern
 //#################################
 
 
@@ -158,18 +158,18 @@ bool left_most_flag = false;
 Adafruit_MPU6050 mpu; // extern 
 unsigned long gyro_prev_time = 0; // extern 
 unsigned long gyro_current_time = 0; // extern 
-float gyro_degrees = 0.00;                                      //FOR GYRO PID control
-float gyro_PID_error = 0.00;
-float gyro_PID_error_prev = 0.00;
-float gyro_PID_P = 0.00;
-float gyro_PID_I = 0.00;
-float gyro_PID_D = 0.00;
-float gyro_KP_divider = 1.00;
-float gyro_PID_KP = twinky_max/gyro_KP_divider;
-float gyro_PID_KI = 0.00;
-float gyro_PID_KD = 6.00;
-float gyro_PID_out = 0.00;
-bool gyro_foward_flag = true;
+float gyro_degrees = 0.00; // extern                                      //FOR GYRO PID control
+float gyro_PID_error = 0.00; // extern
+float gyro_PID_error_prev = 0.00; // extern
+float gyro_PID_P = 0.00; // extern
+float gyro_PID_I = 0.00; // extern
+float gyro_PID_D = 0.00; // extern
+float gyro_KP_divider = 1.00; // extern
+float gyro_PID_KP = twinky_max/gyro_KP_divider; // extern
+float gyro_PID_KI = 0.00; // extern
+float gyro_PID_KD = 6.00; // extern
+float gyro_PID_out = 0.00; // extern
+bool gyro_foward_flag = true; // extern
 //#################################
 
 
