@@ -497,7 +497,9 @@ void loop(){
       M1_stop();
       M2_stop();
       */
-      //testing left turn 
+
+
+      //testing left turn
       /*
       enc2_value = enc2.readAndReset()*-1;
       enc1_value = enc1.readAndReset();
@@ -519,16 +521,31 @@ void loop(){
           pid_v1_control();
           prev_twinky_time = current_time;
         }
-        //Now activate the GYRO control 
+        //Now activate the GYRO control to make sure it stays straight while going backward.
         sensors_event_t a, g, temp;
         mpu.getEvent(&a, &g, &temp);
         gyro_current_time = millis();
         gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
         gyro_prev_time = gyro_current_time;
+
+        //do checks to make sure there is no overshoot
+        if(adc1.readADC(6) < 500){
+          left_most_flag = true;
+        }
+        if(left_most_flag == true && adc1.readADC(3) < 500){
+          middle_flag = true;
+        }
+        if(left_most_flag == true && middle_flag == true){
+          M1_stop();
+          M2_stop();
+          break;
+        }
+
       }
       M1_stop();
       M2_stop();
       */
+
 
       //testing right turn
       /*
@@ -561,6 +578,19 @@ void loop(){
         gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
         gyro_prev_time = gyro_current_time;
         
+        //do checks to make sure there is no overshoot
+        if(adc1.readADC(0) < 500){
+          right_most_flag = true;
+            
+        }
+        if(right_most_flag == true && adc1.readADC(3) < 500){
+          middle_flag = true;
+        }
+        if(right_most_flag == true && middle_flag == true){
+          M1_stop();
+          M2_stop();
+          break;
+        }
 
       }
       M1_stop();
@@ -791,7 +821,6 @@ void loop(){
         }
         M1_stop();
         M2_stop();
-
 
 
       }else if(rec_Message == "WINNER\n"){
