@@ -14,7 +14,7 @@ data = ""
 beginFlag = False
 myDict = dict()
 
-SERVER_HOST = '192.168.0.21' # 192.168.2.132
+SERVER_HOST = '192.168.0.15' # 192.168.2.132
 
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -128,6 +128,7 @@ def find_type_of_intersection(img):
     clean_gray_img = cv.fastNlMeansDenoising(gray_img, None, 90, 7, 21)
 
     #blur = cv.GaussianBlur(gray_img, (5, 5), 0) # dont need this
+
     ret2, thresh_mask = cv.threshold(clean_gray_img, 100, 255, cv.THRESH_BINARY)
     cv.imshow('binary thresh feed', thresh_mask)
 
