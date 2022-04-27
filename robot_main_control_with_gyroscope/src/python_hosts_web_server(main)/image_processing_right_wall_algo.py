@@ -1,6 +1,3 @@
-from email.message import Message
-from typing import Dict
-from webbrowser import get
 from intersectionType import *
 import socket
 import time
@@ -121,7 +118,6 @@ def send_message(type_of_intersec, the_client_connection):
 #
 #when the beginFlag is made true in the while loop, we can assume the arduino/platformIO code has the mouse
 #positioned correctly
-
 def find_type_of_intersection(img):
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
@@ -203,7 +199,7 @@ while True:
         acc = 0
         setDict(myDict)
         #print("this is myDict", myDict)
-        while acc < 50:
+        while acc < 30: # 50 before
             ret, img = cap.read()
             img = img[0:380, :]
             newimg = decrease_brightness(img, 160)

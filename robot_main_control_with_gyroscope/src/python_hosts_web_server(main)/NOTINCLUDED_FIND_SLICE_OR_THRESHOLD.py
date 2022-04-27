@@ -1,11 +1,9 @@
-from typing import Dict
 import time
+from numba import jit, cuda
 from intersectionType import *
 
 beginFlag = True
 myDict = dict()
-
-
 
 
 
@@ -16,8 +14,9 @@ myDict = dict()
 #now we need to create protocol for intersection detection
 #
 #when the beginFlag is made true in the while loop, we can assume the arduino/platformIO code has the mouse 
-#positioned correctly 
+#positioned correctly
 
+@jit(forceobj=True)
 def find_type_of_intersection(img):
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     cv.imshow("3 gray_img", gray_img)
@@ -85,11 +84,6 @@ while True:
     cv.imshow("1 pure feed", img)
 
     img = img[0:380, :]
-    # img_denoised = cv.fastNlMeansDenoisingColored(img, None, 10, 10, 7, 21)
-    # cv.imshow("img_denoised", img_denoised)
-
-    # img_denoised = img_denoised[0:380, :]
-    # cv.imshow('pure feed', img_denoised)
 
     newimg = decrease_brightness(img, 160)
     cv.imshow('2 pure feed with brightness turned down', newimg)
