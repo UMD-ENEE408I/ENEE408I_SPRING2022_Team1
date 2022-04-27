@@ -14,7 +14,7 @@ data = ""
 beginFlag = False
 myDict = dict()
 
-SERVER_HOST = '192.168.0.15' # 192.168.2.132
+SERVER_HOST = '192.168.0.21' # 192.168.2.132
 
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
