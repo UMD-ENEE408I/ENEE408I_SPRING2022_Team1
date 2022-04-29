@@ -11,7 +11,7 @@ bool client_Flag = false; // extern
 const char* ssid = "DESKTOP-ori"; // extern GoTerps DESKTOP-ori
 const char* password = "g425<7H7"; // extern goterps2022 g425<7H7
 const uint16_t port = 8000; // extern
-const char* host = "192.168.0.15"; // extern 192.168.2.132 192.168.0.15
+const char* host = "192.168.0.21"; // extern 192.168.2.132 192.168.0.15
 //################################
 
 
