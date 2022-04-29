@@ -8,6 +8,7 @@ import time
 BUFFER_SIZE = 5
 MESSAGE = ""
 data = ""
+string_traversal_path = ""
 beginFlag = False
 myDict = dict()
 
@@ -20,19 +21,19 @@ s.bind((SERVER_HOST, SERVER_PORT))
 s.listen(0) # or s.listen()??
 s.settimeout(1)
 
-SERVER_PORT2 = 8001
+SERVER_PORT2 = 8002
 s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s2.bind((SERVER_HOST, SERVER_PORT2))
 s2.listen(0)
-s2.settimeout(1)
+s2.settimeout(1000)
 
-SERVER_PORT3 = 8002
+SERVER_PORT3 = 8003
 s3 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s3.bind((SERVER_HOST, SERVER_PORT3))
 s3.listen(0)
-s3.settimeout(1)
+s3.settimeout(1000)
 
 
 
@@ -47,22 +48,7 @@ def get_message1():
     except socket.error as e:
         data = ""
         print(str(SERVER_PORT) + " " + str(e))
-        try:
-            client_connection, client_address = s2.accept()
-            data = client_connection.recv(BUFFER_SIZE).decode().strip()
-            print("received data:", data)
-            return (client_connection, data)
-        except socket.error as e2:
-            data = ""
-            print(str(SERVER_PORT2) + " " + str(e2))
-            try:
-                client_connection, client_address = s3.accept()
-                data = client_connection.recv(BUFFER_SIZE).decode().strip()
-                print("received data:", data)
-                return (client_connection, data)
-            except socket.error as e3:
-                data = ""
-                print(str(SERVER_PORT3) + " " + str(e3))
+
 
 
     return (None, data)
@@ -70,6 +56,8 @@ def get_message1():
 
 def send_message(type_of_intersec, the_client_connection):
     global MESSAGE
+    global string_traversal_path
+
     if type_of_intersec == "Left_and_Forward":
         MESSAGE = "Forward\n"
         the_client_connection.send(MESSAGE.encode())
@@ -199,7 +187,7 @@ while True:
         acc = 0
         setDict(myDict)
         #print("this is myDict", myDict)
-        while acc < 30: # 50 before
+        while acc < 20: # 50 before
             ret, img = cap.read()
             img = img[0:380, :]
             newimg = decrease_brightness(img, 160)
@@ -221,59 +209,70 @@ while True:
         data = ""
         rec_msg = ""
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ############################################################################
-    ##################Otsu's THRESHOLDING########################################
-    #####################################################################################
-    # Otsu's thresholding
-    # ret2, th2 = cv.threshold(gray_img, 205, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    # cv.imshow('otsu thresh feed', th2)
-
-    # Otsu's thresholding after Gaussian filtering
-    # blur = cv.GaussianBlur(gray_img, (9, 9), 0)
-    # ret3, th3 = cv.threshold(blur, 205, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    # cv.imshow('gauss and otsu thresh feed', th3)
-
-    ############################################################################
-    ##################ADAPTIVE THRESHOLDING########################################
-    #####################################################################################
-    # th4 = cv.adaptiveThreshold(gray_img, 30, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 2)
-    # cv.imshow('adapt thresh 1 feed', th4)
-
-    # th5 = cv.adaptiveThreshold(gray_img, 30, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 3, 2)
-    # cv.imshow('adapt thresh 2 feed', th5)
-
-    ############################################################################
-    ##################CANNY########################################
-    #####################################################################################
-    #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    #canny = cv.Canny(blur, 10, 70)
-    #ret, mask = cv.threshold(canny, 70, 255, cv.THRESH_BINARY)
-    #cv.imshow('canny feed', mask)
-
-
+        string_traversal_path = string_traversal_path + MESSAGE.strip() + ","
+        if "WINNER" in string_traversal_path:
+            string_traversal_path = string_traversal_path[0:len(string_traversal_path)-1] + "\n" # This is to get rid of the last comma
+            break
 
 
     if cv.waitKey(1) == 13:
         break
 
+print(string_traversal_path)
 cap.release()
 cv.destroyAllWindows()
+
+
+
+
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+#################### NOW SEND PATH TO THE OTHER TWO MOUSES##############################################################
+########################################################################################################################
+########################################################################################################################
+########################################################################################################################
+
+
+try:
+    client_connection2, client_address2 = s2.accept()
+    data = client_connection2.recv(BUFFER_SIZE).decode().strip()
+    print("received data from mouse 2:", data)
+    if data == "Begin":
+        client_connection2.send(string_traversal_path.encode())
+        time.sleep(.1)
+        client_connection2.close()
+
+except socket.error as e2:
+    data = ""
+    print(str(SERVER_PORT2) + " " + str(e2))
+
+time.sleep(10)
+
+try:
+    client_connection3, client_address3 = s3.accept()
+    data = client_connection3.recv(BUFFER_SIZE).decode().strip()
+    print("received data from mouse 3:", data)
+    if data == "Begin":
+        client_connection3.send(string_traversal_path.encode())
+        time.sleep(.1)
+        client_connection3.close()
+
+except socket.error as e3:
+    data = ""
+    print(str(SERVER_PORT3) + " " + str(e3))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
