@@ -8,10 +8,10 @@ WiFiClient client; // extern
 String rec_Message = ""; // extern
 char holder; // extern                                   // FOR WIFI
 bool client_Flag = false; // extern
-const char* ssid = "DESKTOP-ori"; // extern GoTerps DESKTOP-ori
-const char* password = "g425<7H7"; // extern goterps2022 g425<7H7
+const char* ssid = "GoTerps"; // extern GoTerps DESKTOP-ori
+const char* password = "goterps2022"; // extern goterps2022 g425<7H7
 const uint16_t port = 8000; // extern
-const char* host = "192.168.0.21"; // extern 192.168.2.132 192.168.0.15
+const char* host = "192.168.2.132"; // extern 192.168.2.132 192.168.0.15
 //################################
 
 
@@ -402,9 +402,9 @@ void loop(){
 
     //PID method
     //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation. Back up by 109 ticks seems good
-    
-    if((adc1.readADC(6) < 500 && adc2.readADC(5) < 500 && adc1.readADC(5) < 500 && adc2.readADC(4) < 500 && adc1.readADC(4) < 500) || 
-       (adc1.readADC(0) < 500 && adc2.readADC(0) < 500 && adc1.readADC(1) < 500 && adc2.readADC(1) < 500 && adc1.readADC(2) < 500)){
+    // adc1.readADC(4) < 500 , adc1.readADC(2) < 500
+    if((adc1.readADC(6) < 500 && adc2.readADC(5) < 500 && adc1.readADC(5) < 500 && adc2.readADC(4) < 500) || 
+       (adc1.readADC(0) < 500 && adc2.readADC(0) < 500 && adc1.readADC(1) < 500 && adc2.readADC(1) < 500)){
       M1_stop();
       M2_stop();
       enc2_value = enc2.readAndReset()*-1;
@@ -610,8 +610,8 @@ void loop(){
         gyro_foward_flag = true; 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value + 290;
-        desired_enc2_value = enc2_value + 290;
+        desired_enc1_value = enc1_value + 280;
+        desired_enc2_value = enc2_value + 280;
         twinky_one_speed = twinky_max; // twinky_max + .061;
         twinky_two_speed = twinky_max;
         while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
@@ -865,6 +865,15 @@ void loop(){
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
         
+
+
+
+
+
+
+        
+
+        //Do a 180 turn
         M1_stop();
         M2_stop();
         enc2_value = enc2.readAndReset()*-1;
