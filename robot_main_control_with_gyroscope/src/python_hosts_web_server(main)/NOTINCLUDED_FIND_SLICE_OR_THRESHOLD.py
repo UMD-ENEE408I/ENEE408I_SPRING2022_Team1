@@ -1,5 +1,4 @@
 import time
-from numba import jit, cuda
 from intersectionType import *
 
 beginFlag = True
@@ -16,7 +15,7 @@ myDict = dict()
 #when the beginFlag is made true in the while loop, we can assume the arduino/platformIO code has the mouse 
 #positioned correctly
 
-@jit(forceobj=True)
+
 def find_type_of_intersection(img):
     gray_img = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     cv.imshow("3 gray_img", gray_img)
@@ -91,56 +90,6 @@ while True:
 
     type_of_inter = find_type_of_intersection(newimg) # For debug
     print(type_of_inter.name) # For debug
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ############################################################################
-    ##################Otsu's THRESHOLDING########################################
-    #####################################################################################
-    # Otsu's thresholding
-    # ret2, th2 = cv.threshold(gray_img, 205, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    # cv.imshow('otsu thresh feed', th2)
-
-    # Otsu's thresholding after Gaussian filtering
-    # blur = cv.GaussianBlur(gray_img, (9, 9), 0)
-    # ret3, th3 = cv.threshold(blur, 205, 255, cv.THRESH_BINARY + cv.THRESH_OTSU)
-    # cv.imshow('gauss and otsu thresh feed', th3)
-
-    ############################################################################
-    ##################ADAPTIVE THRESHOLDING########################################
-    #####################################################################################
-    # th4 = cv.adaptiveThreshold(gray_img, 30, cv.ADAPTIVE_THRESH_MEAN_C, cv.THRESH_BINARY, 3, 2)
-    # cv.imshow('adapt thresh 1 feed', th4)
-
-    # th5 = cv.adaptiveThreshold(gray_img, 30, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 3, 2)
-    # cv.imshow('adapt thresh 2 feed', th5)
-
-    ############################################################################
-    ##################CANNY########################################
-    #####################################################################################
-    #blur = cv.GaussianBlur(gray_img, (5, 5), 0)
-    #canny = cv.Canny(blur, 10, 70)
-    #ret, mask = cv.threshold(canny, 70, 255, cv.THRESH_BINARY)
-    #cv.imshow('canny feed', mask)
-
 
 
 
