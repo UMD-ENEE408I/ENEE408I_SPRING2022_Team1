@@ -28,15 +28,15 @@ def find_type_of_intersection(img):
 
 
     top_crop = thresh_mask[0:40, :] #maybe get more rows.
-    left_crop = thresh_mask[:, 90:140]
-    right_crop = thresh_mask[:, 500:550]
+    left_crop = thresh_mask[:, 40:90]
+    right_crop = thresh_mask[:, 550:600]
 
     #FOR DEBUGGING AND FINDING GOOD THRESHOLD VALUES
     ##############################################################
     #For  0:30, 110:160 and 480:530 ->
-    # cv.imshow('top cropped feed', top_crop)
-    # cv.imshow('left cropped feed', left_crop)
-    # cv.imshow('right cropped feed', right_crop)
+    cv.imshow('top cropped feed', top_crop)
+    cv.imshow('left cropped feed', left_crop)
+    cv.imshow('right cropped feed', right_crop)
     print(top_crop.sum())
     print(left_crop.sum())
     print(right_crop.sum())

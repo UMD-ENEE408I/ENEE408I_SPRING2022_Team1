@@ -12,7 +12,7 @@ string_traversal_path = ""
 beginFlag = False
 myDict = dict()
 
-SERVER_HOST = '192.168.2.132' # 192.168.2.132 192.168.0.15
+SERVER_HOST = '192.168.0.2' # 192.168.2.132 192.168.0.15
 
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -118,8 +118,8 @@ def find_type_of_intersection(img):
 
 
     top_crop = thresh_mask[0:40, :] #maybe get more rows.
-    left_crop = thresh_mask[:, 90:140]
-    right_crop = thresh_mask[:, 500:550]
+    left_crop = thresh_mask[:, 40:90]
+    right_crop = thresh_mask[:, 550:600]
 
     #FOR DEBUGGING AND FINDING GOOD THRESHOLD VALUES
     ##############################################################
@@ -233,7 +233,7 @@ cv.destroyAllWindows()
 ########################################################################################################################
 ########################################################################################################################
 
-
+print("trying 2")
 try:
     client_connection2, client_address2 = s2.accept()
     data = client_connection2.recv(BUFFER_SIZE).decode().strip()
@@ -248,7 +248,7 @@ except socket.error as e2:
     print(str(SERVER_PORT2) + " " + str(e2))
 
 time.sleep(80)
-
+print("trying mouse 3")
 try:
     client_connection3, client_address3 = s3.accept()
     data = client_connection3.recv(BUFFER_SIZE).decode().strip()

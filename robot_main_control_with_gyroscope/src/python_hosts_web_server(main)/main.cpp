@@ -8,10 +8,10 @@ WiFiClient client; // extern
 String rec_Message = ""; // extern
 char holder; // extern                                   // FOR WIFI
 bool client_Flag = false; // extern
-const char* ssid = "GoTerps"; // extern GoTerps DESKTOP-ori
-const char* password = "goterps2022"; // extern goterps2022 g425<7H7
+const char* ssid = "DESKTOP-ori"; // extern GoTerps DESKTOP-ori
+const char* password = "g425<7H7"; // extern goterps2022 g425<7H7
 const uint16_t port = 8000; // extern
-const char* host = "192.168.2.132"; // extern 192.168.2.132 192.168.0.15
+const char* host = "192.168.0.2"; // extern 192.168.2.132 192.168.0.15
 //################################
 
 
@@ -610,8 +610,8 @@ void loop(){
         gyro_foward_flag = true; 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value + 280;
-        desired_enc2_value = enc2_value + 280;
+        desired_enc1_value = enc1_value + 220;
+        desired_enc2_value = enc2_value + 220;
         twinky_one_speed = twinky_max; // twinky_max + .061;
         twinky_two_speed = twinky_max;
         while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
