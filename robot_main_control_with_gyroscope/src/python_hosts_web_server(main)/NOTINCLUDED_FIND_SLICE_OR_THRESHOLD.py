@@ -85,7 +85,7 @@ while True:
     img = img[0:380, :]
 
     newimg = decrease_brightness(img, 160)
-    cv.imshow('2 pure feed with brightness turned down', newimg)
+    cv.imshow('2 pure feed after slice and with brightness turned down', newimg)
 
 
     type_of_inter = find_type_of_intersection(newimg) # For debug
