@@ -233,7 +233,7 @@ cv.destroyAllWindows()
 ########################################################################################################################
 ########################################################################################################################
 
-print("trying 2")
+print("trying mouse 2")
 try:
     client_connection2, client_address2 = s2.accept()
     data = client_connection2.recv(BUFFER_SIZE).decode().strip()
