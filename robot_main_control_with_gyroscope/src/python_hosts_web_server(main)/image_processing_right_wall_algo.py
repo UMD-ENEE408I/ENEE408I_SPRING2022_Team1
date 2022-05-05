@@ -12,7 +12,7 @@ string_traversal_path = ""
 beginFlag = False
 myDict = dict()
 
-SERVER_HOST = '192.168.0.2' # 192.168.2.132 192.168.0.15
+SERVER_HOST = '192.168.2.132' # 192.168.2.132 192.168.0.2
 
 SERVER_PORT = 8000
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -247,7 +247,7 @@ except socket.error as e2:
     data = ""
     print(str(SERVER_PORT2) + " " + str(e2))
 
-time.sleep(80)
+time.sleep(30)
 print("trying mouse 3")
 try:
     client_connection3, client_address3 = s3.accept()

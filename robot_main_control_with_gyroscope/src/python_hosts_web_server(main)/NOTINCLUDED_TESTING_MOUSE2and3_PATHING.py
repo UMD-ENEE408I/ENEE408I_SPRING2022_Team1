@@ -4,10 +4,10 @@ import time
 BUFFER_SIZE = 5
 MESSAGE = ""
 data = ""
-string_traversal_path = "Right,Right,Forward,Right,WINNER\n"
+string_traversal_path = "Right,Right,Forward,Right,Left,Right,Right,Right,Forward,Left,WINNER\n"
 
 
-SERVER_HOST = '192.168.0.15' # 192.168.2.132
+SERVER_HOST = '192.168.2.132' # 192.168.2.132
 
 
 SERVER_PORT2 = 8002

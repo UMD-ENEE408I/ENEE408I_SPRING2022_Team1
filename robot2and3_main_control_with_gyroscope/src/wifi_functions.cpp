@@ -12,6 +12,7 @@ void send_and_recieve_message_to_client(){
     if (client.connected()) {
         Serial.println("client connected");
         client.flush();
+        delay(100);
         client.write("Begin");
 
         while(client.available() == 0){

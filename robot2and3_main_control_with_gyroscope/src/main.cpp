@@ -8,10 +8,10 @@ WiFiClient client; // extern
 String rec_Message = ""; // extern
 char holder; // extern                                   // FOR WIFI
 bool client_Flag = false; // extern
-const char* ssid = "DESKTOP-ori"; // extern GoTerps DESKTOP-ori
-const char* password = "g425<7H7"; // extern goterps2022 g425<7H7
-const uint16_t port = 8002; // extern
-const char* host = "192.168.0.2"; // extern 192.168.2.132 192.168.0.15 192.168.0.21
+const char* ssid = "GoTerps"; // extern GoTerps DESKTOP-ori
+const char* password = "goterps2022"; // extern goterps2022 g425<7H7
+const uint16_t port = 8003; // extern
+const char* host = "192.168.2.132"; // extern 192.168.2.132 192.168.0.15 192.168.0.21
 String move_to_make; // extern
 //int index = 0; // extern
 int prev_index = 0; // extern
