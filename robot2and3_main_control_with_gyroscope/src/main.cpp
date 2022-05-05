@@ -10,7 +10,7 @@ char holder; // extern                                   // FOR WIFI
 bool client_Flag = false; // extern
 const char* ssid = "GoTerps"; // extern GoTerps DESKTOP-ori
 const char* password = "goterps2022"; // extern goterps2022 g425<7H7
-const uint16_t port = 8003; // extern
+const uint16_t port = 8002; // extern
 const char* host = "192.168.2.132"; // extern 192.168.2.132 192.168.0.15 192.168.0.21
 String move_to_make; // extern
 //int index = 0; // extern
@@ -267,7 +267,8 @@ void loop(){
 
   prev_twinky_time = millis();
   prev_line_follow_time = millis();
-
+  enc1.readAndReset();
+  enc2.readAndReset();
   while(true){  
     current_time = millis();
     
@@ -615,7 +616,7 @@ void loop(){
           gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
           gyro_prev_time = gyro_current_time;
 
-
+          /*
           //do checks to make sure there is no overshoot
           if(adc1.readADC(0) < 500){
             right_most_flag = true;
@@ -629,7 +630,7 @@ void loop(){
             M2_stop();
             break;
           }
-
+          */
         }// END OF WHILE
 
         M1_stop();

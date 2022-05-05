@@ -25,15 +25,15 @@ SERVER_PORT2 = 8002
 s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s2.bind((SERVER_HOST, SERVER_PORT2))
-s2.listen(0)
-s2.settimeout(1000)
+# s2.listen(0) # moved to bottom
+# s2.settimeout(1000) # moved to bottom
 
 SERVER_PORT3 = 8003
 s3 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s3.bind((SERVER_HOST, SERVER_PORT3))
-s3.listen(0)
-s3.settimeout(1000)
+# s3.listen(0) # moved to bottom
+# s3.settimeout(1000) # moved to bottom
 
 
 
@@ -233,6 +233,9 @@ cv.destroyAllWindows()
 ########################################################################################################################
 ########################################################################################################################
 
+
+s2.listen(0)
+s2.settimeout(1000)
 print("trying mouse 2")
 try:
     client_connection2, client_address2 = s2.accept()
@@ -247,7 +250,13 @@ except socket.error as e2:
     data = ""
     print(str(SERVER_PORT2) + " " + str(e2))
 
+
+
 time.sleep(30)
+
+
+s3.listen(0)
+s3.settimeout(1000)
 print("trying mouse 3")
 try:
     client_connection3, client_address3 = s3.accept()

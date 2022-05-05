@@ -14,7 +14,7 @@ SERVER_PORT2 = 8002
 s2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 #s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s2.bind((SERVER_HOST, SERVER_PORT2))
-s2.listen(0)
+s2.listen()
 s2.settimeout(1000)
 
 
