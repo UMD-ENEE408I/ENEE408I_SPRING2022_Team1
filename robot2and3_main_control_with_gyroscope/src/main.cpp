@@ -577,7 +577,48 @@ void loop(){
     if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
-        
+        /*
+        //now lets reset values and line follow up
+        enc2_value = enc2.readAndReset()*-1;
+        enc1_value = enc1.readAndReset();
+        reset_variables();
+
+        gyro_foward_flag = true; 
+        enc2_value = enc2.read()*-1;
+        enc1_value = enc1.read();
+        desired_enc1_value = enc1_value + 200;
+        desired_enc2_value = enc2_value + 200;
+        twinky_one_speed = twinky_max; 
+        twinky_two_speed = twinky_max;
+        while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
+          current_time = millis();
+          //Motor control PID loop----
+          if((current_time - prev_twinky_time) > 20){
+            enc2_value = enc2.read()*-1; // should be -1.
+            enc1_value = enc1.read(); // This should be in pid_v1_control() but since enc1 and enc2 cannot be extern I have to read() here.
+            pid_v1_control();
+            prev_twinky_time = current_time;
+          } 
+          //Now activate the GYRO control to make sure it stays straight while going backward.
+          GYRO_PID_loop();
+
+          //check if satisfied and stop movement
+          enc2_value = enc2.read()*-1;
+          enc1_value = enc1.read();
+          
+          if(enc1_value > desired_enc1_value){
+            twinky_one_speed = 0;
+            M1_stop();
+          }
+          if(enc2_value > desired_enc2_value){
+            twinky_two_speed = 0;
+            M2_stop();
+          }
+          
+        }
+        M1_stop();
+        M2_stop();
+        */
 
 
 
@@ -638,10 +679,9 @@ void loop(){
         enc2_value = enc2.readAndReset()*-1;
         enc1_value = enc1.readAndReset();
         reset_variables();
+
       }
       
-    
-
 
 
   }
