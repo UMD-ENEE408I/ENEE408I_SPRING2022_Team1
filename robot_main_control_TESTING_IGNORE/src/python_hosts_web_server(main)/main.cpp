@@ -276,42 +276,42 @@ void loop(){
 
           // INCREASE Kp
           case '1':
-              gyro_KP_divider = gyro_KP_divider + 0.005;
-              gyro_PID_P = twinky_max/(gyro_KP_divider);
-              Serial.println(gyro_KP_divider, 4);
+              kp2_divider = kp2_divider + 0.005;
+              line_follow_PID_KP2 = twinky_max/(kp2_divider);
+              Serial.println(kp2_divider, 4);
           break;
 
           // DECREASE Kp
           case '2':
-              gyro_KP_divider = gyro_KP_divider - 0.005;
-              gyro_PID_P = twinky_max/(gyro_KP_divider);
-              Serial.println(gyro_KP_divider, 4);
+              kp2_divider = kp2_divider - 0.005;
+              line_follow_PID_KP2 = twinky_max/(kp2_divider);
+              Serial.println(kp2_divider, 4);
           break;
 
           // INCREASE Ki
           case '3':
-              gyro_PID_KI = gyro_PID_KI + 0.000025;
-              Serial.println(gyro_PID_KI, 6);
+              line_follow_PID_KI2 = line_follow_PID_KI2 + 0.000025;
+              Serial.println(line_follow_PID_KI2, 6);
           break;
 
 
           // DECREASE Ki
           case '4':
-              gyro_PID_KI = gyro_PID_KI - 0.000025;
-              Serial.println(gyro_PID_KI, 6);
+              line_follow_PID_KI2 = line_follow_PID_KI2 - 0.000025;
+              Serial.println(line_follow_PID_KI2, 6);
           break;
 
           // INCREASE Kd
           case '5':
-              gyro_PID_KD = gyro_PID_KD + 2;
-              Serial.println(gyro_PID_KD, 8);
+              line_follow_PID_KD2 = line_follow_PID_KD2 + 2;
+              Serial.println(line_follow_PID_KD2, 8);
           break;
 
 
           // DECREASE Kd
           case '6':
-              gyro_PID_KD = gyro_PID_KD - 2;
-              Serial.println(gyro_PID_KD, 8);
+              line_follow_PID_KD2 = line_follow_PID_KD2 - 2;
+              Serial.println(line_follow_PID_KD2, 8);
           break;
 
           // INCREASE dead_end_thresh
