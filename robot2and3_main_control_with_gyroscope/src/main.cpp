@@ -296,8 +296,8 @@ void loop(){
     //PID method
     //Now add logic to halt, back up with PID control, and send/recieve message, then switch case and do operation. Back up by 109 ticks seems good
     // && adc1.readADC(4) < 500 , && adc1.readADC(2) < 500
-    if((adc1.readADC(6) < 500 && adc2.readADC(5) < 500 && adc1.readADC(5) < 500 && adc2.readADC(4) < 500) || 
-       (adc1.readADC(0) < 500 && adc2.readADC(0) < 500 && adc1.readADC(1) < 500 && adc2.readADC(1) < 500 )){
+    if((adc1.readADC(6) < 500 && adc2.readADC(5) < 500 && adc1.readADC(5) < 500 && adc2.readADC(4) < 500 && adc1.readADC(4) < 500) || 
+       (adc1.readADC(0) < 500 && adc2.readADC(0) < 500 && adc1.readADC(1) < 500 && adc2.readADC(1) < 500 && adc1.readADC(2) < 500)){
       M1_stop();
       M2_stop();
 
@@ -577,7 +577,7 @@ void loop(){
     if(adc1.readADC(0) > dead_end_thresh && adc2.readADC(0) > dead_end_thresh && adc1.readADC(1) > dead_end_thresh && adc2.readADC(1) > dead_end_thresh && adc1.readADC(2)  > dead_end_thresh &&
       adc2.readADC(2) > dead_end_thresh && adc1.readADC(3) > dead_end_thresh && adc2.readADC(3) > dead_end_thresh && adc1.readADC(4) > dead_end_thresh && adc2.readADC(4) > dead_end_thresh &&
       adc1.readADC(5) > dead_end_thresh && adc2.readADC(5) > dead_end_thresh && adc1.readADC(6) > dead_end_thresh){
-        /*
+        
         //now lets reset values and line follow up
         enc2_value = enc2.readAndReset()*-1;
         enc1_value = enc1.readAndReset();
@@ -586,8 +586,8 @@ void loop(){
         gyro_foward_flag = true; 
         enc2_value = enc2.read()*-1;
         enc1_value = enc1.read();
-        desired_enc1_value = enc1_value + 200;
-        desired_enc2_value = enc2_value + 200;
+        desired_enc1_value = enc1_value + 320;
+        desired_enc2_value = enc2_value + 320;
         twinky_one_speed = twinky_max; 
         twinky_two_speed = twinky_max;
         while(enc1_value < desired_enc1_value || enc2_value < desired_enc2_value){
@@ -618,7 +618,7 @@ void loop(){
         }
         M1_stop();
         M2_stop();
-        */
+        
 
 
 
@@ -657,7 +657,7 @@ void loop(){
           gyro_degrees += (g.gyro.z + .010403) * (((float)gyro_current_time)/1000.00 - ((float)gyro_prev_time)/1000.00)*180.00/PI;
           gyro_prev_time = gyro_current_time;
 
-          /*
+          
           //do checks to make sure there is no overshoot
           if(adc1.readADC(0) < 500){
             right_most_flag = true;
@@ -671,7 +671,7 @@ void loop(){
             M2_stop();
             break;
           }
-          */
+          
         }// END OF WHILE
 
         M1_stop();

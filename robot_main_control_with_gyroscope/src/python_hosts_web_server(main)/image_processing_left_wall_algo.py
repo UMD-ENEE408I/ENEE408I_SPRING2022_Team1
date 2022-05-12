@@ -59,17 +59,17 @@ def send_message(type_of_intersec, the_client_connection):
     global string_traversal_path
 
     if type_of_intersec == "Left_and_Forward":
-        MESSAGE = "Forward\n"
+        MESSAGE = "Left\n"
         the_client_connection.send(MESSAGE.encode())
         time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Right_and_Forward":
-        MESSAGE = "Right\n"
+        MESSAGE = "Forward\n"
         the_client_connection.send(MESSAGE.encode())
         time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "T":
-        MESSAGE = "Right\n"
+        MESSAGE = "Left\n"
         the_client_connection.send(MESSAGE.encode())
         time.sleep(.1)
         the_client_connection.close()
@@ -84,7 +84,7 @@ def send_message(type_of_intersec, the_client_connection):
         time.sleep(.1)
         the_client_connection.close()
     elif type_of_intersec == "Three_Way":
-        MESSAGE = "Right\n"
+        MESSAGE = "Left\n"
         the_client_connection.send(MESSAGE.encode())
         time.sleep(.1)
         the_client_connection.close()
@@ -188,9 +188,6 @@ while True:
         setDict(myDict)
         #print("this is myDict", myDict)
         while acc < 20: # 50 before
-
-
-
             ret, img = cap.read()
             img = img[0:380, :]
             newimg = decrease_brightness(img, 160)
