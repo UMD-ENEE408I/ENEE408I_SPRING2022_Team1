@@ -886,7 +886,7 @@ void loop(){
             pid_v1_control();
             prev_twinky_time = current_time;
           } 
-          //Now activate the GYRO control to make sure it stays straight while going backward.
+
           GYRO_PID_loop();
 
           //check if satisfied and stop movement
